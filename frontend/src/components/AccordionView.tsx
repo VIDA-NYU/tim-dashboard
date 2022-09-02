@@ -12,6 +12,7 @@ import { AudioCard } from './AudioCard';
 import { getAudioPath, getVideoPath} from '../api/rest';
 import { dataType, streamingType } from '../api/types';
 import { MediaState } from './HistoricalDataView';
+import {EyeDataCard} from "./3dvis/eye-data-vis/card";
 
 interface Data {
   id: number,
@@ -88,6 +89,14 @@ const AccordionView = ({ type, title, data, recordingName, state, onProgress, on
         </Grid>
       </Box>
       }
+          {
+              type === dataType.EYE &&
+              <Box sx={{ flexGrow: 1 }}>
+                  <Grid container spacing={{ xs: 1, md: 2 }} >
+                      <EyeDataCard data={data}></EyeDataCard>
+                  </Grid>
+              </Box>
+          }
       {/* <JSONPretty id="json-pretty" data={jsonData}></JSONPretty> */}
       </AccordionDetails>
     </Accordion> 

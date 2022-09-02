@@ -217,8 +217,8 @@ function RecordingsDataView() {
         ></AccordionView>
         }
         {
-          Object.keys(recordingData.streams).includes(streamingType.EYE) &&
-          <AccordionView type={dataType.JSON} data={eyeData} title={"Eye Data"} ></AccordionView>
+              Object.keys(recordingData.streams).includes(streamingType.EYE) &&
+              <AccordionView type={dataType.EYE} data={eyeData} title={"Eye Data"} ></AccordionView>
         }
         {
           Object.keys(recordingData.streams).includes(streamingType.HAND) &&

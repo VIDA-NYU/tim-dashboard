@@ -35,6 +35,7 @@ export enum dataType {
     VIDEO = 'VIDEO',
     JSON = 'JSON',
     AUDIO = 'AUDIO',
+    EYE = "EYE"
   }
   
 export enum streamingType {
