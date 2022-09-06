@@ -3,7 +3,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import HistoricalDataView from './HistoricalDataView';
+import HistoricalDataView from './HistoricalDataView/HistoricalDataView';
 import LiveDataView from './LiveDataView';
 import RecipesView from './RecipesView';
 

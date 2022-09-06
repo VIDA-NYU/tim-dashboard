@@ -11,7 +11,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AudioCard } from './AudioCard';
 import { getAudioPath, getVideoPath} from '../api/rest';
 import { dataType, streamingType } from '../api/types';
-import { MediaState } from './HistoricalDataView';
+import { MediaState } from './HistoricalDataView/HistoricalDataView';
 
 interface Data {
   id: number,
@@ -60,7 +60,7 @@ const AccordionView = ({ type, title, data, recordingName, state, onProgress, on
               },
             }}>
             {JSON.stringify(data)}
-          </Box>
+        </Box>
       }
       {
         type === dataType.VIDEO && 

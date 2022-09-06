@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import ReactPlayer from 'react-player';
-import { MediaState } from "./HistoricalDataView";
+import { MediaState } from "./HistoricalDataView/HistoricalDataView";
 import { onProgressType } from "./VideoCard";
 
 interface AudioCardProps {

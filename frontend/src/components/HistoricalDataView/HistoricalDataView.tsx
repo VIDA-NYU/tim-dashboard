@@ -1,20 +1,36 @@
 import React, { useEffect, useRef } from 'react';
-import Box from '@mui/material/Box';
-import { onProgressType } from './VideoCard';
+import screenful from "screenfull";
+import { ConfirmationDeleteDialog, DeleteRecordingDialog, format, formatTotalDuration } from '../Helpers';
+
+// api
+import { TokenProvider, useToken } from '../../api/TokenContext';
+import { getAudioPath, getEyeData, getHandData, getVideoPath, useDeleteRecording, useGetAllRecordings, useGetRecording } from '../../api/rest';
+import { dataType, RequestStatus, streamingType } from '../../api/types';
+
+// material 
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { TokenProvider, useToken } from '../api/TokenContext';
-import { getAudioPath, getEyeData, getHandData, getVideoPath, useDeleteRecording, useGetAllRecordings, useGetRecording } from '../api/rest';
-import { dataType, RequestStatus, streamingType } from '../api/types';
-import Controls from './Controls';
-import screenful from "screenfull";
-import { ConfirmationDeleteDialog, DeleteRecordingDialog, format, formatTotalDuration } from './Helpers';
-import AccordionView from './AccordionView';
-import Button from '@mui/material/Button';
-import DeleteIcon from '@mui/icons-material/Delete';
-import PointCloudViewer from './PointCloudViewer';
+import Box from '@mui/material/Box';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Typography from '@mui/material/Typography';
+
+
+// components
+import PointCloudViewer from '../PointCloudViewer/PointCloudViewer';
+import AccordionView from '../AccordionView';
+import Controls from '../Controls';
+import { onProgressType } from '../VideoCard';
+
+// styles
+import './HistoricalDataView.css';
+
 
 export interface MediaState {
   pip?: boolean;
@@ -100,7 +116,8 @@ function RecordingsDataView() {
       const fetchEyeData = async () => {
         try {
           const jsonFile = await getEyeData(recordingName);
-          setEyeData(jsonFile.slice(0, 20));
+          // setEyeData(jsonFile.slice(0, 20));
+          setEyeData(jsonFile);
         } catch (error) {
                 // console.log("error", error);
                 setEyeData("404 Not Found. Eye data was not found.");
@@ -120,6 +137,8 @@ function RecordingsDataView() {
         Object.keys(recordingData.streams).includes(streamingType.EYE) && fetchEyeData();
         Object.keys(recordingData.streams).includes(streamingType.HAND) && fetchHandData();
       }
+
+      console.log('recording data: ', recordingData);
 
     }, [recordingData]);
 
@@ -218,11 +237,50 @@ function RecordingsDataView() {
         ></AccordionView>
         }
         {
-          <PointCloudViewer></PointCloudViewer>
+          <Accordion defaultExpanded={true} >      
+
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Eyes Data</Typography>
+            </AccordionSummary>
+
+              <div className='pointcloud-list-container'>
+                <div className='pointcloud-container'>
+                    <PointCloudViewer points={eyeData} attribute={'GazeOrigin'} timestamp={state} initialtimestamp={recordingData['first-entry'].split('-')[0]}></PointCloudViewer>
+                </div>
+
+                <div className='pointcloud-container'>
+                    <PointCloudViewer points={eyeData} attribute={'GazeDirection'} timestamp={state} initialtimestamp={recordingData['first-entry'].split('-')[0]}></PointCloudViewer>
+                </div>
+              </div>
+             
+            <AccordionDetails></AccordionDetails>
+          </Accordion>
+
           // Object.keys(recordingData.streams).includes(streamingType.EYE) &&
           // <AccordionView type={dataType.JSON} data={eyeData} title={"Eye Data"}></AccordionView>
         }
         {
+
+          // <Accordion defaultExpanded={true} >      
+
+          //   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          //       <Typography>Hands Data</Typography>
+          //   </AccordionSummary>
+
+          //     <div className='pointcloud-list-container'>
+          //       <div className='pointcloud-container'>
+          //           <PointCloudViewer points={handData} attribute={'GazeOrigin'}></PointCloudViewer>
+          //       </div>
+
+          //       <div className='pointcloud-container'>
+          //           <PointCloudViewer points={handData} attribute={'GazeDirection'}></PointCloudViewer>
+          //       </div>
+          //     </div>
+            
+          //   <AccordionDetails></AccordionDetails>
+          // </Accordion>
+
+
           Object.keys(recordingData.streams).includes(streamingType.HAND) &&
         <AccordionView type={dataType.JSON} data={handData} title={"Hand Data"}></AccordionView>
         

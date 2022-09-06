@@ -4,7 +4,7 @@ import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import ReactPlayer from 'react-player';
-import { MediaState } from "./HistoricalDataView";
+import { MediaState } from "./HistoricalDataView/HistoricalDataView";
 
 interface VideoCardProps {
     title: string;

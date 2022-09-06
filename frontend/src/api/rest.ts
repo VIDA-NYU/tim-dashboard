@@ -1,7 +1,7 @@
 import axios, {AxiosResponse, AxiosRequestConfig} from 'axios';
 import React from 'react';
 import useSWR, { Key } from 'swr';
-import { DeleteInfo } from '../components/HistoricalDataView';
+import { DeleteInfo } from '../components/HistoricalDataView/HistoricalDataView';
 import { API_URL, RECORDINGS_STATIC_PATH } from '../config';
 import { RequestStatus } from './types';
 
