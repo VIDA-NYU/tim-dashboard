@@ -65,20 +65,20 @@ const AccordionView = ({ type, title, data, recordingName, state, onProgress, on
       {
         type === dataType.VIDEO && 
         <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={{ xs: 1, md: 2 }} >
-              {
-              videoStreamingsIDs.map((name, index) => {
-                const streams = Object.keys(data.streams);
-                if (streams.includes(name)){ //verify if stream exists.
-                  return <Grid key={index} item xs={2}>
-                    <VideoCard title={videoStreamings[name]} state={state}
-                    onSeek={res => onSeek(res)} onProgress={(res) => onProgress(res)} path={getVideoPath(recordingName, name)} />
-                  </Grid>
-                }
-              })
+          <Grid container spacing={{ xs: 1, md: 2 }} >
+            {
+            videoStreamingsIDs.map((name, index) => {
+              const streams = Object.keys(data.streams);
+              if (streams.includes(name)){ //verify if stream exists.
+                return <Grid key={index} item xs={2}>
+                  <VideoCard title={videoStreamings[name]} state={state}
+                  onSeek={res => onSeek(res)} onProgress={(res) => onProgress(res)} path={getVideoPath(recordingName, name)} />
+                </Grid>
               }
-            </Grid>
-          </Box>
+            })
+            }
+          </Grid>
+        </Box>
       }
       {
       type === dataType.AUDIO &&

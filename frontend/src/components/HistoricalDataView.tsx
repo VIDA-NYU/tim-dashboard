@@ -14,6 +14,7 @@ import { ConfirmationDeleteDialog, DeleteRecordingDialog, format, formatTotalDur
 import AccordionView from './AccordionView';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PointCloudViewer from './PointCloudViewer';
 
 export interface MediaState {
   pip?: boolean;
@@ -217,12 +218,14 @@ function RecordingsDataView() {
         ></AccordionView>
         }
         {
-          Object.keys(recordingData.streams).includes(streamingType.EYE) &&
-          <AccordionView type={dataType.JSON} data={eyeData} title={"Eye Data"} ></AccordionView>
+          <PointCloudViewer></PointCloudViewer>
+          // Object.keys(recordingData.streams).includes(streamingType.EYE) &&
+          // <AccordionView type={dataType.JSON} data={eyeData} title={"Eye Data"}></AccordionView>
         }
         {
           Object.keys(recordingData.streams).includes(streamingType.HAND) &&
-        <AccordionView type={dataType.JSON} data={handData} title={"Hand Data"} ></AccordionView>
+        <AccordionView type={dataType.JSON} data={handData} title={"Hand Data"}></AccordionView>
+        
         }
         </>
     }
