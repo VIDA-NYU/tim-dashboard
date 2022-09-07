@@ -25,13 +25,13 @@ function buildHandJointIndex(handData){
     return jointIndex;
 }
 
-function buildOffsets(data){
+function buildOffsets(data, seq){
 
     if(data.length){
         let firstFrameData = data[0];
 
-        let leftJoint = data[0].left.items[2].pose.position;
-        let rightJoint = data[0].right.items[2].pose.position;
+        let leftJoint = data[seq % data.length].left.items[2].pose.position;
+        let rightJoint = data[seq % data.length].right.items[2].pose.position;
 
         return [{x: 0, y: 0, z: 0}, {x: leftJoint.x, y: leftJoint.y, z: leftJoint.z}, {x: rightJoint.x, y: rightJoint.y, z: rightJoint.z}]
     }else{
@@ -92,7 +92,7 @@ function HandsModel(props) {
 
     let frameData = props.data[seq % props.data.length];
 
-    let offsets = buildOffsets(props.data);
+    let offsets = buildOffsets(props.data, seq);
 
     let renderJointLink = (jointLink, offset) => {
         const points = [

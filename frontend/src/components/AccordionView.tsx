@@ -72,7 +72,6 @@ const AccordionView = ({ type, title, data, recordingName, state, onProgress, on
               {
               videoStreamingsIDs.map((name, index) => {
                 const streams = Object.keys(data.streams);
-                console.log(title, videoStreamings[name], recordingName)
                   if (streams.includes(name) && name === "main" && (recordingName === "coffee-test-1" || recordingName === "coffee-test-2")) {
                       return <Grid key={index} item xs={4}>
                           <VideoCardWithBoundingBox title={videoStreamings[name]} state={state}
