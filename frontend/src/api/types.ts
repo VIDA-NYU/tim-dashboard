@@ -35,6 +35,7 @@ export enum dataType {
     VIDEO = 'VIDEO',
     JSON = 'JSON',
     AUDIO = 'AUDIO',
+    OBJECTDETECTION ='OBJECTDETECTION'
   }
   
 export enum streamingType {
@@ -61,4 +62,9 @@ export interface responseServer {
     response: any,
     error: any,
     status: RequestStatus,
+  }
+
+export enum objectDetectionType {
+    YOLO = 'yolo', // YOLO Object Detector
+    // R_CNN = "rcnn"
   }

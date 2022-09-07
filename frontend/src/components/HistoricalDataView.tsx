@@ -209,6 +209,8 @@ function RecordingsDataView() {
   const renderStreamings= () => {
     if (recordingData !== undefined && recordingData &&  recordingData.streams){
       return <>
+        <AccordionView type={dataType.OBJECTDETECTION} data={recordingData} title={"Video Stream Analysis"} state={state} recordingName={recordingName} onProgress={(res) => handleProgress(res)} onSeek={res => handleSeekingFromVideoCard(res)}
+        ></AccordionView>
         <AccordionView type={dataType.VIDEO} data={recordingData} title={"Cameras"} state={state} recordingName={recordingName} onProgress={(res) => handleProgress(res)} onSeek={res => handleSeekingFromVideoCard(res)}
         ></AccordionView>
         {

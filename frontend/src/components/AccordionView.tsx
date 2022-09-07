@@ -9,8 +9,8 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AudioCard } from './AudioCard';
-import { getAudioPath, getVideoPath} from '../api/rest';
-import { dataType, streamingType } from '../api/types';
+import { getAnnotatedVideoPath, getAudioPath, getVideoPath} from '../api/rest';
+import { dataType, streamingType, objectDetectionType } from '../api/types';
 import { MediaState } from './HistoricalDataView';
 
 interface Data {
@@ -38,7 +38,11 @@ const AccordionView = ({ type, title, data, recordingName, state, onProgress, on
                      [streamingType.VIDEO_GRF]: 'Grey Right-Front',
                      [streamingType.VIDEO_GRR]: 'Grey Right-Right'
   };
+  const objectDetections = { [objectDetectionType.YOLO]: 'YOLO Object Detector',
+  };
   const videoStreamingsIDs = Object.keys(videoStreamings);
+  const objectDetectionsIDs = Object.keys(objectDetections);
+
   return (
     <Accordion defaultExpanded={true} >
       <AccordionSummary
@@ -63,6 +67,21 @@ const AccordionView = ({ type, title, data, recordingName, state, onProgress, on
           </Box>
       }
       {
+        type === dataType.OBJECTDETECTION &&
+        <Box sx={{ flexGrow: 1 }}>
+            <Grid container spacing={{ xs: 1, md: 2 }} >
+              {
+              objectDetectionsIDs.map((objectDetectionName, index) => {
+                  return <Grid key={index} item xs={6}>
+                    <VideoCard title={objectDetections[objectDetectionName]} state={state} onSeek={res => onSeek(res)}
+                     onProgress={(res) => onProgress(res)} path={getAnnotatedVideoPath(recordingName, "main", objectDetectionName)} chip={true}/>
+                  </Grid>
+              })
+              }
+            </Grid>
+          </Box>
+      }
+      {
         type === dataType.VIDEO && 
         <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={{ xs: 1, md: 2 }} >
@@ -72,7 +91,7 @@ const AccordionView = ({ type, title, data, recordingName, state, onProgress, on
                 if (streams.includes(name)){ //verify if stream exists.
                   return <Grid key={index} item xs={2}>
                     <VideoCard title={videoStreamings[name]} state={state}
-                    onSeek={res => onSeek(res)} onProgress={(res) => onProgress(res)} path={getVideoPath(recordingName, name)} />
+                    onSeek={res => onSeek(res)} onProgress={(res) => onProgress(res)} path={getVideoPath(recordingName, name)} chip={false}/>
                   </Grid>
                 }
               })
