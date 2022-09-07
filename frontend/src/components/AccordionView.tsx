@@ -13,6 +13,8 @@ import { getAudioPath, getVideoPath} from '../api/rest';
 import { dataType, streamingType } from '../api/types';
 import { MediaState } from './HistoricalDataView';
 import {EyeDataCard} from "./3dvis/eye-data-vis/card";
+import {VideoCardWithBoundingBox} from "./bounding-box/card";
+import {HandsDataCard} from "./3dvis/hand-data-vis/card";
 
 interface Data {
   id: number,
@@ -70,7 +72,15 @@ const AccordionView = ({ type, title, data, recordingName, state, onProgress, on
               {
               videoStreamingsIDs.map((name, index) => {
                 const streams = Object.keys(data.streams);
-                if (streams.includes(name)){ //verify if stream exists.
+                console.log(title, videoStreamings[name], recordingName)
+                  if (streams.includes(name) && name === "main" && (recordingName === "coffee-test-1" || recordingName === "coffee-test-2")) {
+                      return <Grid key={index} item xs={4}>
+                          <VideoCardWithBoundingBox title={videoStreamings[name]} state={state}
+                                                    recordingName={recordingName}
+                                     onSeek={res => onSeek(res)} onProgress={(res) => onProgress(res)} path={getVideoPath(recordingName, name)} />
+                      </Grid>
+                  }
+                else if (streams.includes(name)){ //verify if stream exists.
                   return <Grid key={index} item xs={2}>
                     <VideoCard title={videoStreamings[name]} state={state}
                     onSeek={res => onSeek(res)} onProgress={(res) => onProgress(res)} path={getVideoPath(recordingName, name)} />
@@ -94,6 +104,14 @@ const AccordionView = ({ type, title, data, recordingName, state, onProgress, on
               <Box sx={{ flexGrow: 1 }}>
                   <Grid container spacing={{ xs: 1, md: 2 }} >
                       <EyeDataCard data={data}></EyeDataCard>
+                  </Grid>
+              </Box>
+          }
+          {
+              type === dataType.HANDS &&
+              <Box sx={{ flexGrow: 1 }}>
+                  <Grid container spacing={{ xs: 1, md: 2 }} >
+                      <HandsDataCard data={data}></HandsDataCard>
                   </Grid>
               </Box>
           }

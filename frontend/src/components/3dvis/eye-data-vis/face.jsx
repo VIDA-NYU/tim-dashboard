@@ -14,8 +14,6 @@ import GazeLine from "./gaze/gaze-line";
 
 function FaceModel(props) {
 
-    console.log(props.data)
-
     return (
         <group position={[0, 0, 0]}>
 

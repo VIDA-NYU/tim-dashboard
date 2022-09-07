@@ -222,7 +222,7 @@ function RecordingsDataView() {
         }
         {
           Object.keys(recordingData.streams).includes(streamingType.HAND) &&
-        <AccordionView type={dataType.JSON} data={handData} title={"Hand Data"} ></AccordionView>
+        <AccordionView type={dataType.HANDS} data={handData} title={"Hand Data"} ></AccordionView>
         }
         </>
     }
