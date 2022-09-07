@@ -153,6 +153,11 @@ export function getVideoPath(recordingName, videoName) {
     return API_URL + RECORDINGS_STATIC_PATH + `${recordingName}/${videoName}.mp4`
 }
 
+export function getAnnotatedVideoPath(recordingName, videoName, objectDetectionType) {
+    //  https://api.ptg.poly.edu/recordings/static/coffee-test-2/main.yolo.mp4
+    return API_URL + RECORDINGS_STATIC_PATH + `${recordingName}/${videoName}.${objectDetectionType}.mp4`
+}
+
 export function getAudioPath(recordingName) {
     return API_URL + RECORDINGS_STATIC_PATH + `${recordingName}/mic0.wav`;
 }
