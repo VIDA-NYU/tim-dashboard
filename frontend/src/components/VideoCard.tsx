@@ -5,6 +5,8 @@ import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import ReactPlayer from 'react-player';
 import { MediaState } from "./HistoricalDataView";
+import Chip from "@mui/material/Chip";
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
 
 interface VideoCardProps {
     title: string;
@@ -13,6 +15,7 @@ interface VideoCardProps {
     state?: MediaState;
     onProgress?: (changeState: onProgressType) => void;
     onSeek?: (seek: number) => void;
+    chip: boolean;
   }
 
 export interface onProgressType {
@@ -57,16 +60,24 @@ function VideoCard(props: VideoCardProps) {
       const handleSeeking = (e) => {
           props.onSeek(e);
       }
-
+      const usedCameras= () => {
+        if (props.chip){
+          return <>
+          <Chip icon={<CameraAltIcon fontSize="small"/>} label="Main" size="small" />
+          <Chip icon={<CameraAltIcon fontSize="small"/>} label="Depth" size="small" style={{marginLeft: 8}} />
+          </>
+        }
+        return <></>;
+      }
     return (
         <>
-        <Card sx={{ maxWidth: 600 }}>
+        <Card sx={{ maxWidth: 1600 }}>
         <CardHeader
             titleTypographyProps={{
                 fontSize: 16,
             }}
             title={props.title}
-            // subheader={this.props.path}
+            subheader={usedCameras()}
         />
         <CardContent>
             <ReactPlayer
