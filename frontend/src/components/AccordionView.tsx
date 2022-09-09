@@ -12,6 +12,8 @@ import { AudioCard } from './AudioCard';
 import { getAudioPath, getVideoPath} from '../api/rest';
 import { dataType, streamingType } from '../api/types';
 import { MediaState } from './HistoricalDataView';
+import {VideoCardWithBoundingBox} from "./bounding-box/card";
+
 
 interface Data {
   id: number,
@@ -69,7 +71,14 @@ const AccordionView = ({ type, title, data, recordingName, state, onProgress, on
               {
               videoStreamingsIDs.map((name, index) => {
                 const streams = Object.keys(data.streams);
-                if (streams.includes(name)){ //verify if stream exists.
+                  if (streams.includes(name) && name === "main" && (recordingName === "coffee-test-1" || recordingName === "coffee-test-2")) {
+                      return <Grid key={index} item xs={4}>
+                          <VideoCardWithBoundingBox title={videoStreamings[name]} state={state}
+                                                    recordingName={recordingName}
+                                                    onSeek={res => onSeek(res)} onProgress={(res) => onProgress(res)} path={getVideoPath(recordingName, name)} />
+                      </Grid>
+                  }
+                else if (streams.includes(name)){ //verify if stream exists.
                   return <Grid key={index} item xs={2}>
                     <VideoCard title={videoStreamings[name]} state={state}
                     onSeek={res => onSeek(res)} onProgress={(res) => onProgress(res)} path={getVideoPath(recordingName, name)} />
