@@ -12,9 +12,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 
-import { useToken } from '../api/TokenContext';
-import {TEST_USER, TEST_PASS} from '../config';
-import { LoginCredential, Recipe } from '../api/types';
+import { Recipe } from '../api/types';
 import { useGetRecipe, useGetRecipes } from '../api/rest';
 
 /* 
