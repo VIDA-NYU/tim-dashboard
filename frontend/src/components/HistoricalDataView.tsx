@@ -364,7 +364,7 @@ const RecordingsList = ({ sortby='first-entry' }) => {
       <Box display='flex' flexWrap='wrap' gap={2} mt={5} m={'2em'} justifyContent='center'>
         {recordings && recordings
           .filter(d=>d.duration && !d.duration.startsWith('0:00:0'))
-          .sort((a, b) => -(a[sortby]||'').localeCompare(b[sortby]||''))
+          .sort((a, b) => (a[sortby]||'').localeCompare(b[sortby]||''))
           .map((recording, index: number) => 
             <RecordingCard recording={recording} key={recording.name} />)
         || (Array.from({length: 16}, (x, i) => i).map(i => <Skeleton variant="rectangular" width={300} height={220} />))
