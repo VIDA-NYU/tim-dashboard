@@ -1,12 +1,16 @@
 import React, { useEffect, useRef } from 'react';
+import { NavLink, Link, useParams, useNavigate, useLocation, matchPath } from "react-router-dom";
 import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 import { onProgressType } from './VideoCard';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useToken } from '../api/TokenContext';
-import { getAudioPath, getEyeData, getHandData, getVideoPath, useDeleteRecording, useGetAllRecordings, useGetRecording } from '../api/rest';
+import { getAudioPath, getEyeData, getHandData, getVideoPath, useDeleteRecording, useGetAllRecordings, useGetRecording, useGetAllRecordingInfo } from '../api/rest';
 import { dataType, RequestStatus, streamingType } from '../api/types';
 import Controls from './Controls';
 import screenful from "screenfull";
@@ -14,6 +18,14 @@ import { ConfirmationDeleteDialog, DeleteRecordingDialog, format, formatTotalDur
 import AccordionView from './AccordionView';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
+
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import Skeleton from '@mui/material/Skeleton';
+
 
 export interface MediaState {
   pip?: boolean;
@@ -34,10 +46,9 @@ export interface DeleteInfo {
   confirmation: boolean,
 }
 
-function RecordingsDataView() {
-    const [recordings, setRecordings] = React.useState([]);
-    const [recordingID, setRecordingID] = React.useState<number>(0);
-    const [recordingName, setRecordingName] = React.useState<string>('');
+function RecordingsDataView({ recordingName }) {
+    const navigate = useNavigate();
+
     const [eyeData, setEyeData] = React.useState({});
     const [handData, setHandData] = React.useState({});
 
@@ -84,16 +95,10 @@ function RecordingsDataView() {
 
     // query the streamings endpoint (only if we have a token)
     // fetch list of available recordings 
-    const {response: recordingsList} = useGetAllRecordings(token, fetchAuth);
+    const {response: recordings} = useGetAllRecordings();
     // fetch data available of an specific recording
     const {response: recordingData} = useGetRecording(token, fetchAuth, recordingName);
     const {response: deletedRecord, status: statusDel} = useDeleteRecording(token, fetchAuth, delData);
-
-    useEffect(() => {
-      // Setup/initialize recording name.
-      recordingsList && setRecordingName(recordingsList[0]);
-      recordingsList && setRecordings(recordingsList);
-    }, [recordingsList]);
 
     useEffect(() => {
       const fetchEyeData = async () => {
@@ -128,19 +133,10 @@ function RecordingsDataView() {
         setOpenConfDelDialog(true);
         setDelData({name: "", confirmation: false});
 
-        const index = 0;
-        setRecordingID(index);
-        recordings && setRecordingName(recordings[index]);
+        navigate(`/recordings`)
         setState({ ...state, totalDuration: "0:0" });
       }
     }, [deletedRecord]);
-
-    const handleChangeRecording = (event: SelectChangeEvent) => {
-      const index = Number(event.target.value);
-      setRecordingID(index);
-      recordings && setRecordingName(recordings[index]);
-      setState({ ...state, totalDuration: "0:0" });
-    };
 
     const handleSeekMouseDown = (e) => {
       // console.log({ value: e.target });
@@ -253,13 +249,13 @@ function RecordingsDataView() {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={recordingID.toString()}
+            value={recordingName}
             label="Select Data"
-            onChange={handleChangeRecording}
+            onChange={e => navigate(`/recordings/${e.target.value}`)}
           >
           {
-            recordings && Array.from(Array(recordings.length)).map((_, index) => (
-                <MenuItem key={'menu-item-' + index} value={index}>{recordings[index]}</MenuItem>
+            recordings && recordings.map((rid) => (
+                <MenuItem key={rid} value={rid}>{rid}</MenuItem>
             ))
           }
           </Select>
@@ -315,4 +311,77 @@ function RecordingsDataView() {
   );
 }
 
-export default RecordingsDataView;
+
+
+const RecordingCard = ({ recording }) => {
+  const navigate = useNavigate();
+  // console.log(recording)
+  const files = recording?.files || [];
+  // console.log(files)
+  return (
+    <Card sx={{ maxWidth: 345, display: 'flex', flexDirection: 'column' }}>
+      {/* <CardMedia
+        component="img"
+        height="140"
+        image="/static/images/cards/contemplative-reptile.jpg"
+        alt="green iguana"
+      /> */}
+      <CardContent sx={{ flexGrow: 1 }}>
+        <Typography gutterBottom variant="h6" component="div">
+          <Button onClick={() => navigate(`/recordings/${recording.name}`)}>
+            {recording.name}
+          </Button>
+        </Typography>
+        <Typography variant="h5" color="text.secondary">
+          <b>{(recording.duration||'').split('.')[0]}s</b>
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {recording['first-entry-time']}
+        </Typography>
+        <Stack direction="row" spacing={1} overflow='auto'>
+          {recording.files?.map(f => <Chip key={f} label={f} size='small' />)}
+        </Stack>
+        <Stack direction="row" spacing={1} flexWrap='wrap'>
+          {Object.entries(recording.streams||{}).map(([sid, d]) => {
+            const f = files.find(f=>f.startsWith(sid));
+            return <Tooltip title={f||''}>
+              <Chip key={sid} label={sid} size='small' color={f ? 'primary' : 'default'} />
+            </Tooltip>
+          })}
+        </Stack>
+      </CardContent>
+      <CardActions>
+        <Button size="small" onClick={() => navigate(`/recordings/${recording.name}`)}>View</Button>
+      </CardActions>
+    </Card>
+  );
+}
+
+const RecordingsList = ({ sortby='first-entry' }) => {
+  const {response: recordings} = useGetAllRecordingInfo();
+  console.log(recordings)
+  return (
+      <Box display='flex' flexWrap='wrap' gap={2} mt={5} m={'2em'} justifyContent='center'>
+        {recordings && recordings
+          .filter(d=>d.duration && !d.duration.startsWith('0:00:0'))
+          .sort((a, b) => -(a[sortby]||'').localeCompare(b[sortby]||''))
+          .map((recording, index: number) => 
+            <RecordingCard recording={recording} key={recording.name} />)
+        || (Array.from({length: 16}, (x, i) => i).map(i => <Skeleton variant="rectangular" width={300} height={220} />))
+        }
+      </Box>
+  )
+}
+
+const RecordingsView = () => {
+  let { recordingId } = useParams();
+  
+  return <Box mt={3}>
+    {recordingId ? 
+        <RecordingsDataView recordingName={recordingId} /> : 
+        <RecordingsList />}
+  </Box>
+}
+
+
+export default RecordingsView;

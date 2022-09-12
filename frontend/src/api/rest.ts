@@ -14,11 +14,27 @@ Using SWR React hooks "useSWR" in an external API service layer: This will be po
 */
 
 /* fetch list of available recordings */
-export function useGetAllRecordings(token, fetchAuth) {
+export function useGetAllRecordings() {
+    const { fetchAuth } = useToken();
     // get the authenticated fetch function
-    const fetcher = (url: string) => fetchAuth(url).then((res) => res.json());
+    const fetcher = (url: string) => fetchAuth && fetchAuth(url).then((res) => res.json());
     // query the streamings endpoint (only if we have a token)
-    const uid: Key = token && `${API_URL}/recordings`;
+    const uid: Key = fetchAuth && `${API_URL}/recordings`;
+    const random = React.useRef(Date.now());
+    const { data: response, error } = useSWR([uid, random], fetcher);
+    return {
+        data: response && response.data,
+        response,
+        error
+    };
+}
+/* fetch list of available recordings */
+export function useGetAllRecordingInfo() {
+    const { fetchAuth } = useToken();
+    // get the authenticated fetch function
+    const fetcher = (url: string) => fetchAuth && fetchAuth(url).then((res) => res.json());
+    // query the streamings endpoint (only if we have a token)
+    const uid: Key = fetchAuth && `${API_URL}/recordings?info=true`;
     const random = React.useRef(Date.now());
     const { data: response, error } = useSWR([uid, random], fetcher);
     return {
@@ -43,11 +59,13 @@ export function useGetRecording(token, fetchAuth, recordingName) {
 }
 
 /* fetch recipes */
-export function useGetRecipes(token, fetchAuth) {
+export function useGetRecipes() {
+    // get the token and authenticated fetch function
+    const { fetchAuth } = useToken();
     // get the authenticated fetch function
-    const fetcher = (url: string) => fetchAuth(url).then((res) => res.json());
+    const fetcher = (url: string) => fetchAuth && fetchAuth(url).then((res) => res.json());
     // query the streamings endpoint (only if we have a token)
-    const uid: Key = token && `${API_URL}/recipes`;
+    const uid: Key = fetchAuth && `${API_URL}/recipes`;
     const { data: response, error } = useSWR(uid, fetcher);
     return {
         data: response && response.data,
@@ -55,6 +73,23 @@ export function useGetRecipes(token, fetchAuth) {
         error
     };
 }
+
+/* fetch recipes */
+export function useGetRecipe(recipeId) {
+    // get the token and authenticated fetch function
+    const { fetchAuth } = useToken();
+    // get the authenticated fetch function
+    const fetcher = (url: string) => fetchAuth && fetchAuth(url).then((res) => res.json());
+    // query the streamings endpoint (only if we have a token)
+    const uid: Key = fetchAuth && `${API_URL}/recipes/${recipeId}`;
+    const { data: response, error } = useSWR(uid, fetcher);
+    return {
+        data: response && response.data,
+        response,
+        error
+    };
+}
+
 
 /* fetch current recording info */
 export function useGetCurrentRecordingInfo(token, fetchAuth) {

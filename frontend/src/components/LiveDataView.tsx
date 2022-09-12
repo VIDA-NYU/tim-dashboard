@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
 import { Alert, Box, Button, Paper } from '@mui/material';
 import { useToken } from '../api/TokenContext';
-import { Login } from './RecipesView';
-import { TEST_PASS, TEST_USER } from '../config';
-
 import LoadingButton from '@mui/lab/LoadingButton';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
@@ -167,9 +164,7 @@ const ClipOutputsView = ({ data }: ClipOutputsViewProps) => {
 const MainVideo = () => {
   const { token } = useToken();
   return <Box display='flex' justifyContent='center' alignItems='center' height='100%'>
-    <Paper>
-      {token ? <LiveVideo /> : <Login username={TEST_USER} password={TEST_PASS} />}
-    </Paper>
+    <Paper><LiveVideo /></Paper>
   </Box>
 }
 

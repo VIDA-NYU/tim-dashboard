@@ -9,25 +9,7 @@ import DashboardTabs from './components/DashboardTabs';
 
 export default function App() {
   return (
-    <div className="App">
-        <Box sx={{ display: "flex" }}>
-          <AppBar component="nav">
-              <Toolbar>
-              <IconButton
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  sx={{ mr: 2 }}
-              >
-                  <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                  TIM Dashboard
-              </Typography>
-              </Toolbar>
-          </AppBar>
-        </Box>
+    <div className="App" style={{ width: '100vw', overflow: 'hidden' }}>
         <DashboardTabs />
     </div>
   );
