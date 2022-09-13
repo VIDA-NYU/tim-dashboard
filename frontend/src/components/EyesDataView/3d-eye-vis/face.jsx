@@ -18,7 +18,7 @@ function FaceModel(props) {
         <group position={[0, 0, 0]}>
 
             <Model></Model>
-            { props.data !== {} && <GazeLine data={props.data}></GazeLine>}
+            { props.data !== {} && <GazeLine data={props.data} state={props.state}></GazeLine>}
         </group>
     )
 

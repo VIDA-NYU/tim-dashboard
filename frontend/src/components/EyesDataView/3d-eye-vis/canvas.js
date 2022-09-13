@@ -49,7 +49,7 @@ export function EyeCanvas(props) {
                 <OrthographicCamera makeDefault={true} far={100000} near={-100000} position={[0, 0, 1000]} />
                 <hemisphereLight intensity={0.5} color="#eaeaea" position={[0, 1, 0]} />
                 <OrbitControls />
-                <FaceModel data={props.data} position={[0, 0, -10]}> </FaceModel>
+                <FaceModel data={props.data} state={props.state} position={[0, 0, -10]}> </FaceModel>
             </Canvas>
         </ContentContainer>
     )

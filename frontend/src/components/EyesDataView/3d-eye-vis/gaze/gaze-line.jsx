@@ -21,11 +21,22 @@ function processGazeDirection(direction){
     };
 }
 
+function getPlayedIndex(played, seqLen){
+
+    console.log(played, seqLen)
+    if(played < 1){
+        return Math.floor(played * seqLen);
+    }else{
+        return  seqLen - 1;
+    }
+}
+
 function GazeLine(props){
 
     const ref = useRef(null);
     const refGazeOrigin = useRef(null);
 
+    let played = props.state.played;
 
     const points = []
 
@@ -34,7 +45,8 @@ function GazeLine(props){
     let index = 0;
     const gazeData = props.data;
     useFrame((state) => {
-        let dataIndex = (Math.floor(index / 30) % gazeData.length);
+        // let dataIndex = (Math.floor(index / 30) % gazeData.length);
+        let dataIndex = getPlayedIndex(played, gazeData.length);
         let gazeDirection = processGazeDirection(gazeData[dataIndex]['GazeDirection']);
         ref.current.geometry.setFromPoints([new THREE.Vector3(RIGHT_EYE_OFFSET_X, RIGHT_EYE_OFFSET_Y, RIGHT_EYE_OFFSET_Z), new THREE.Vector3(RIGHT_EYE_OFFSET_X + gazeDirection.x, RIGHT_EYE_OFFSET_Y + gazeDirection.y, RIGHT_EYE_OFFSET_Z + gazeDirection.z)])
         index++;
