@@ -1,11 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import Card from "@mui/material/Card";
+
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import ReactPlayer from 'react-player';
 import { MediaState } from "../HistoricalDataView";
 import VideoBoundingBoxPlayer, {onProgressType} from "./player";
+
+// material
+import Card from "@mui/material/Card";
+import Box from '@mui/material/Box';
+import { Typography } from "@mui/material";
 
 interface VideoCardBoundingBoxProps {
     title: string;
@@ -21,15 +26,12 @@ function VideoCardWithBoundingBox({path, onSeek, onProgress, state, title, subti
 
     return (
         <>
-            <Card sx={{ maxWidth: 1200, width: 500 }}>
-                <CardHeader
-                    titleTypographyProps={{
-                        fontSize: 16,
-                    }}
-                    title={title}
-                    // subheader={this.props.path}
-                />
-                <CardContent>
+        <Card sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ height: '50px', width: '100%', display: 'flex', alignItems: 'center', paddingLeft: '10px'}}>
+                <Typography>{title}</Typography>
+            </Box>
+
+            <Box sx={{ height: 'calc(100% - 50px)', width: '100%', position: 'relative' }}>
                     <VideoBoundingBoxPlayer
                         recordingName={recordingName}
                         path={path}
@@ -37,8 +39,8 @@ function VideoCardWithBoundingBox({path, onSeek, onProgress, state, title, subti
                         onSeek={onSeek}
                         state={state}
                     ></VideoBoundingBoxPlayer>
-                </CardContent>
-            </Card>
+            </Box>            
+        </Card>
         </>
     );
 }
