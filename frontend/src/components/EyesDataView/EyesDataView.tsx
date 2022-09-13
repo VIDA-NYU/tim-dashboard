@@ -13,8 +13,11 @@ const EyesDataView = ({ type, title, data, recordingName, state, onProgress, onS
   
   return (
     <AccordionView title='Eyes Data' height={300}>
-        <Box sx={{ display: 'flex', width: '100%', height: '100%', overflow: 'auto' }}>
+        <Box sx={{ alignItems: "center", display: 'flex', width: '50%', height: '100%', overflow: 'auto', flexDirection: "row" }}>
             <EyeCanvas state={state} data={data} />
+            <Box sx={{overflowY: "scroll", overflow: "auto"}}>
+                <JSONPretty data={data}></JSONPretty>
+            </Box>
         </Box>
     </AccordionView>
   )

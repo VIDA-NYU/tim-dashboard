@@ -22,7 +22,7 @@ export function EyeCanvas(props) {
     return (
         <ContentContainer ref={container} className="content-container">
             {/* Container for the HTML view */}
-            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', overflow: 'hidden' }} ref={domContent} />
+            <div style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '100%', overflow: 'hidden' }} ref={domContent} />
             {/* Container for THREEJS */}
             <Canvas
                 shadows
