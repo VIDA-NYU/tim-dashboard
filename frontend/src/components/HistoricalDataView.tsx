@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, Link, useParams, useNavigate, useLocation, matchPath } from "react-router-dom";
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
@@ -13,11 +13,14 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
 import { onProgressType } from './VideoDataView/VideoCard/VideoCard';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
+// import InputLabel from '@mui/material/InputLabel';
+// import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+// import Select, { SelectChangeEvent } from '@mui/material/Select';
 import DeleteIcon from '@mui/icons-material/Delete';
+// import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
+// import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { useToken } from '../api/TokenContext';
 import { getAudioPath, getEyeData, getHandData, getVideoPath, useDeleteRecording, useGetAllRecordings, useGetRecording, useGetAllRecordingInfo } from '../api/rest';
@@ -265,8 +268,11 @@ function RecordingsDataView({ recordingName, toggleDrawer }) {
   return (
     <div>
       <Box sx={{ flexGrow: 1 }}>
-        <FormControl sx={{ m: 1, minWidth: 340 }} size="small">
-          <Button onClick={()=>toggleDrawer()}>{recordingName}</Button>
+        <FormControl sx={{ m: 1, mx: 3 }} size="small">
+          <Button variant="outlined" onClick={()=>toggleDrawer()}>
+            {/* <ArrowBackIosNewIcon /> */}
+            {recordingName}
+          </Button>
         </FormControl>
         
         {/*
@@ -335,29 +341,30 @@ const RecordingCard = ({ recording, onClick=null }) => {
         image="/static/images/cards/contemplative-reptile.jpg"
         alt="green iguana"
       /> */}
-      <CardContent sx={{ flexGrow: 1 }}>
-        <Typography gutterBottom variant="h6" component="div">
-          <Button onClick={() => { navigate(`/recordings/${recording.name}`);onClick && onClick() }}>
-            {recording.name}
-          </Button>
-        </Typography>
-        <Typography variant="h5" color="text.secondary">
+      <CardContent sx={{ flexGrow: 1, px: 2, py: 0.5, pt: 0.2 }}>
+        <Button variant="outlined" onClick={() => { navigate(`/recordings/${recording.name}`);onClick && onClick() }}>
+          {recording.name}
+          <ArrowForwardIosIcon />
+        </Button>
+
+        <Typography variant="h6" color="text.secondary">
           <b>{(recording.duration||'').split('.')[0]}s</b>
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {recording['first-entry-time']}
         </Typography>
-        <Stack direction="row" spacing={1} overflow='auto'>
-          {recording.files?.map(f => <Chip key={f} label={f} size='small' />)}
-        </Stack>
-        <Stack direction="row" spacing={1} flexWrap='wrap'>
+
+        <SeeMoreStack label='Recorded streams:'>
           {Object.entries(recording.streams||{}).map(([sid, d]) => {
             const f = files.find(f=>f.startsWith(sid));
             return <Tooltip title={f||''} key={sid}>
               <Chip label={sid} size='small' color={f ? 'primary' : 'default'} />
             </Tooltip>
           })}
-        </Stack>
+        </SeeMoreStack>
+        <SeeMoreStack label='Available files:'>
+          {recording.files?.map(f => <Chip key={f} label={f} size='small' />)}
+        </SeeMoreStack>
       </CardContent>
       {/* <CardActions>
         <Button size="small" onClick={() => navigate(`/recordings/${recording.name}`)}>View</Button>
@@ -366,12 +373,29 @@ const RecordingCard = ({ recording, onClick=null }) => {
   );
 }
 
+const SeeMoreStack = ({ children, label=null, limit=4, defaultCollapsed=true }) => {
+  const [ collapsed, setCollapsed ] = useState(defaultCollapsed)
+  children = children || [];
+  const nMore = Math.max(children.length - limit, 0);
+  return <Box my={0.1}>
+    {label && <small><i>{label} </i></small>}
+    {nMore ? (
+          <small style={{ cursor: 'pointer' }} onClick={() => setCollapsed(!collapsed)}>
+            <i>{collapsed ? `See ${nMore} more` : 'hide'}</i>
+          </small> 
+      ) : null}
+    <Stack direction="row" spacing={1} flexWrap='wrap'>
+      {collapsed && nMore ? children.slice(0, limit) : children}
+    </Stack>
+  </Box>
+}
+
 const RecordingsList = ({ sortby='first-entry', ...props }) => {
   const {response: recordings} = useGetAllRecordingInfo();
   // console.log(recordings)
   return (
     // display='flex' flexWrap='wrap' gap={2} mt={5} m={'2em'} justifyContent='center'
-      <Box display='flex' flexWrap='wrap' gap={2} flexDirection='column'>
+      <Box display='flex' flexWrap='wrap' gap={2} pt={2} flexDirection='column'>
         {recordings && recordings
           .filter(d=>d.duration && !d.duration.startsWith('0:00:0'))
           .sort((a, b) => (a[sortby]||'').localeCompare(b[sortby]||''))
