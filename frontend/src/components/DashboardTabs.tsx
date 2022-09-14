@@ -1,86 +1,97 @@
 import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useMatch } from "react-router-dom";
+import List from '@mui/material/List';
+import ListItemText from '@mui/material/ListItemText';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import HistoricalDataView from './HistoricalDataView';
 import LiveDataView from './LiveDataView';
-import RecipesView, { Login } from './RecipesView';
+import RecipesView from './RecipesView';
+import Login from './Login';
+import { useToken, Logout } from '../api/TokenContext';
 import { TEST_PASS, TEST_USER } from '../config';
+import { ListItemButton } from '@mui/material';
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
 
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+const DashboardRoutes = ({}) => {
+  const { token } = useToken();
+  
+  const pages = [
+    {label: "Live", to: '/'},
+    {label: "Recordings", to: '/recordings'},
+    {label: "Recipes", to: '/recipes'},
+  ]
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 2 }}>
-          <Typography component={'div'}>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
-
-export default function DashboardTabs() {
-  const [value, setValue] = React.useState(0);
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-  return (
-    <Box sx={{ pt: 9, pl: 1,  width: '100%' }} component="main">
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }} >
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Live Data" {...a11yProps(0)} />
-          <Tab label="Historical Data" {...a11yProps(1)} />
-          <Tab label="Recipe Collection" {...a11yProps(2)} />
-        </Tabs>
+    
+    <Box sx={{ width: '100%' }} component="main">
+      <Box sx={{ display: "flex" }}>
+        <AppBar component="nav" position="static">
+            <Toolbar sx={{ flexWrap: 'wrap' }}>
+            <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                sx={{ mr: 2 }}
+            >
+                {/* <MenuIcon /> */}
+            </IconButton>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                TIM Dashboard
+            </Typography>
+            <List sx={{ display: 'flex' }}>
+              {pages && pages.map((page, i) => (
+                <NavButton {...page} key={page.to} />
+              ))}
+            </List>
+            </Toolbar>
+        </AppBar>
       </Box>
-      <TabPanel value={value} index={0}>
-        <LiveDataView />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <HistoricalDataView />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <RecipesView />
-      </TabPanel>
-    </Box>
+      <Box px={2}>
+      {!token ? 
+      <Login username={TEST_USER} password={TEST_PASS} />
+    : 
+      <Routes>
+        <Route path='/' element={<LiveDataView />} />
+        <Route path='/recordings'>
+          <Route path="" element={<Navigate to="/recordings/coffee-test-1" replace />} />
+          <Route path=":recordingId" element={<HistoricalDataView />} />
+        </Route>
+        <Route path='/recipes'>
+          <Route path="" element={<Navigate to="/recipes/pinwheels" replace />} />
+          <Route path=":recipeId" element={<RecipesView />} />
+        </Route>
+        <Route path="/login" element={<Login username={TEST_USER} password={TEST_PASS} />} />
+        <Route path="/logout" element={<Logout to='/login' />} />
+        {/* <Route path="*" element={<Error404 />} /> */}
+      </Routes>}
+      </Box>
+  </Box>)
+}
+
+function NavButton({ to, label }) {
+  // add the wild card to match deeper URLs
+  let match = useMatch(to + "/*");
+  const navigate = useNavigate();
+  return (
+    <ListItemButton 
+      key={to} onClick={() => navigate(to)} 
+      selected={!!match}
+      sx={{
+        borderBottom: `2px solid transparent`,
+        "&.Mui-selected": {borderBottom: `2px solid white`}
+      }}>
+    <ListItemText primary={label} />
+  </ListItemButton>
   );
 }
 
-      // <BrowserRouter>
-      //   <Routes>
-      //     <Route exact path = '/' element={<LiveDataView />} />
-      //     <Route path='/recordings'>
-      //       <Route path="" element={<HistoricalDataView />} />
-      //       {/* <Route path=":recordingId" element={<HistoricalDataView />} /> */}
-      //     </Route>
-      //     <Route path='/recipes'>
-      //       <Route path="" element={<RecipesView />} />
-      //       {/* <Route path=":recipeId" element={<RecipesView />} /> */}
-      //     </Route>
-      //     <Route path="/login" element={<Login username={TEST_USER} password={TEST_PASS} />} />
-      //     <Route path="/logout" element={<Logout redirectUri='/' />} />
-      //     <Route path="*" element={<Error404 />} />
-      //   </Routes>
-      // </BrowserRouter>
+const DashboardRouter = (props) => {
+  return <BrowserRouter><DashboardRoutes {...props} /></BrowserRouter>
+}
+export default DashboardRouter;

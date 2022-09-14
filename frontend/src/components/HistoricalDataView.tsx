@@ -1,22 +1,39 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { NavLink, Link, useParams, useNavigate, useLocation, matchPath } from "react-router-dom";
 import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import Drawer from '@mui/material/Drawer';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import Skeleton from '@mui/material/Skeleton';
 import { onProgressType } from './VideoDataView/VideoCard/VideoCard';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
+// import InputLabel from '@mui/material/InputLabel';
+// import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+// import Select, { SelectChangeEvent } from '@mui/material/Select';
+import DeleteIcon from '@mui/icons-material/Delete';
+// import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
+// import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
 import { useToken } from '../api/TokenContext';
-import { getAudioPath, getEyeData, getHandData, getVideoPath, useDeleteRecording, useGetAllRecordings, useGetRecording } from '../api/rest';
+import { getAudioPath, getEyeData, getHandData, getVideoPath, useDeleteRecording, useGetAllRecordings, useGetRecording, useGetAllRecordingInfo } from '../api/rest';
 import { dataType, RequestStatus, streamingType } from '../api/types';
 import Controls from './Controls';
 import screenful from "screenfull";
 import { ConfirmationDeleteDialog, DeleteRecordingDialog, format, formatTotalDuration } from './Helpers';
-
 // custom components
 import AudioDataView from './AudioDataView/AudioDataView';
 import VideoDataView from './VideoDataView/VideoDataView';
 import EyesDataView from './EyesDataView/EyesDataView';
 import HandsDataView from './HandsDataView/HandsDataView';
+
 
 
 export interface MediaState {
@@ -38,10 +55,9 @@ export interface DeleteInfo {
   confirmation: boolean,
 }
 
-function RecordingsDataView() {
-    const [recordings, setRecordings] = React.useState([]);
-    const [recordingID, setRecordingID] = React.useState<number>(0);
-    const [recordingName, setRecordingName] = React.useState<string>('');
+function RecordingsDataView({ recordingName, toggleDrawer }) {
+    const navigate = useNavigate();
+
     const [eyeData, setEyeData] = React.useState({});
     const [handData, setHandData] = React.useState({});
 
@@ -86,18 +102,9 @@ function RecordingsDataView() {
     // get the token and authenticated fetch function
     const { token, fetchAuth } = useToken();
 
-    // query the streamings endpoint (only if we have a token)
-    // fetch list of available recordings 
-    const {response: recordingsList} = useGetAllRecordings(token, fetchAuth);
     // fetch data available of an specific recording
     const {response: recordingData} = useGetRecording(token, fetchAuth, recordingName);
     const {response: deletedRecord, status: statusDel} = useDeleteRecording(token, fetchAuth, delData);
-
-    useEffect(() => {
-      // Setup/initialize recording name.
-      recordingsList && setRecordingName(recordingsList[0]);
-      recordingsList && setRecordings(recordingsList);
-    }, [recordingsList]);
 
     useEffect(() => {
       const fetchEyeData = async () => {
@@ -132,19 +139,10 @@ function RecordingsDataView() {
         setOpenConfDelDialog(true);
         setDelData({name: "", confirmation: false});
 
-        const index = 0;
-        setRecordingID(index);
-        recordings && setRecordingName(recordings[index]);
+        navigate(`/recordings`)
         setState({ ...state, totalDuration: "0:0" });
       }
     }, [deletedRecord]);
-
-    const handleChangeRecording = (event: SelectChangeEvent) => {
-      const index = Number(event.target.value);
-      setRecordingID(index);
-      recordings && setRecordingName(recordings[index]);
-      setState({ ...state, totalDuration: "0:0" });
-    };
 
     const handleSeekMouseDown = (e) => {
       // console.log({ value: e.target });
@@ -229,10 +227,8 @@ function RecordingsDataView() {
     // const totalDurationValue = format(totalDuration);
     const totalDurationValue = (recordingData && recordingData.duration) ? formatTotalDuration(recordingData.duration) : "0:0";
 
-    const renderStreamings= () => {
-      if (recordingData !== undefined && recordingData &&  recordingData.streams){
-        return <>
-
+    const renderStreamings= () => (
+      (recordingData !== undefined && recordingData &&  recordingData.streams) && <>
           <VideoDataView 
             type={dataType.VIDEO} 
             data={recordingData} 
@@ -264,33 +260,21 @@ function RecordingsDataView() {
             data={handData} 
             title={"Hands Data"}>
           </HandsDataView>
-          
-          </>
-      }
-      return <></>;
-    }
+        </>
+    )
 
 
 
   return (
     <div>
       <Box sx={{ flexGrow: 1 }}>
-        <FormControl sx={{ m: 1, minWidth: 340 }} size="small">
-          <InputLabel id="demo-simple-select-label">Select Data </InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={recordingID.toString()}
-            label="Select Data"
-            onChange={handleChangeRecording}
-          >
-          {
-            recordings && Array.from(Array(recordings.length)).map((_, index) => (
-                <MenuItem key={'menu-item-' + index} value={index}>{recordings[index]}</MenuItem>
-            ))
-          }
-          </Select>
+        <FormControl sx={{ m: 1, mx: 3 }} size="small">
+          <Button variant="outlined" onClick={()=>toggleDrawer()}>
+            {/* <ArrowBackIosNewIcon /> */}
+            {recordingName}
+          </Button>
         </FormControl>
+        
         {/*
         // Disable Delete recording
         <FormControl sx={{ m: 1, minWidth: 140 }} size="small">
@@ -342,4 +326,97 @@ function RecordingsDataView() {
   );
 }
 
-export default RecordingsDataView;
+
+
+const RecordingCard = ({ recording, onClick=null }) => {
+  const navigate = useNavigate();
+  // console.log(recording)
+  const files = recording?.files || [];
+  // console.log(files)
+  return (
+    <Card sx={{ maxWidth: 345, display: 'flex', flexDirection: 'column' }}>
+      {/* <CardMedia
+        component="img"
+        height="140"
+        image="/static/images/cards/contemplative-reptile.jpg"
+        alt="green iguana"
+      /> */}
+      <CardContent sx={{ flexGrow: 1, px: 2, py: 0.5, pt: 0.2 }}>
+        <Button variant="outlined" onClick={() => { navigate(`/recordings/${recording.name}`);onClick && onClick() }}>
+          {recording.name}
+          <ArrowForwardIosIcon />
+        </Button>
+
+        <Typography variant="h6" color="text.secondary">
+          <b>{(recording.duration||'').split('.')[0]}s</b>
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {recording['first-entry-time']}
+        </Typography>
+
+        <SeeMoreStack label='Recorded streams:'>
+          {Object.entries(recording.streams||{}).map(([sid, d]) => {
+            const f = files.find(f=>f.startsWith(sid));
+            return <Tooltip title={f||''} key={sid}>
+              <Chip label={sid} size='small' color={f ? 'primary' : 'default'} />
+            </Tooltip>
+          })}
+        </SeeMoreStack>
+        <SeeMoreStack label='Available files:'>
+          {recording.files?.map(f => <Chip key={f} label={f} size='small' />)}
+        </SeeMoreStack>
+      </CardContent>
+      {/* <CardActions>
+        <Button size="small" onClick={() => navigate(`/recordings/${recording.name}`)}>View</Button>
+      </CardActions> */}
+    </Card>
+  );
+}
+
+const SeeMoreStack = ({ children, label=null, limit=4, defaultCollapsed=true }) => {
+  const [ collapsed, setCollapsed ] = useState(defaultCollapsed)
+  children = children || [];
+  const nMore = Math.max(children.length - limit, 0);
+  return <Box my={0.1}>
+    {label && <small><i>{label} </i></small>}
+    {nMore ? (
+          <small style={{ cursor: 'pointer' }} onClick={() => setCollapsed(!collapsed)}>
+            <i>{collapsed ? `See ${nMore} more` : 'hide'}</i>
+          </small> 
+      ) : null}
+    <Stack direction="row" spacing={1} flexWrap='wrap'>
+      {collapsed && nMore ? children.slice(0, limit) : children}
+    </Stack>
+  </Box>
+}
+
+const RecordingsList = ({ sortby='first-entry', ...props }) => {
+  const {response: recordings} = useGetAllRecordingInfo();
+  // console.log(recordings)
+  return (
+    // display='flex' flexWrap='wrap' gap={2} mt={5} m={'2em'} justifyContent='center'
+      <Box display='flex' flexWrap='wrap' gap={2} pt={2} flexDirection='column'>
+        {recordings && recordings
+          .filter(d=>d.duration && !d.duration.startsWith('0:00:0'))
+          .sort((a, b) => (a[sortby]||'').localeCompare(b[sortby]||''))
+          .map((recording) => <RecordingCard recording={recording} key={recording.name} {...props} />)
+        || (Array.from({length: 6}, (x, i) => i).map(i => <Skeleton variant="rectangular" width={300} height={220} key={i} />))
+        }
+      </Box>
+  )
+}
+
+const RecordingsView = () => {
+  let { recordingId } = useParams();
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  return <Box mt={3}>
+    <Drawer anchor='left' sx={{ maxWidth: '80vw' }} open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+      <RecordingsList onClick={() => setDrawerOpen(false)} />
+    </Drawer>
+    {recordingId && <RecordingsDataView recordingName={recordingId} toggleDrawer={() => setDrawerOpen(!drawerOpen)} />}
+  </Box>
+}
+
+
+export default RecordingsView;

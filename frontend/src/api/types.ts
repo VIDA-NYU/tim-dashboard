@@ -19,7 +19,7 @@ export interface ProviderProps {
 // });
 
 export interface Recipe {
-    id: string;
+    _id: string;
     name: string;
     ingredients: string [];
     tools: string [];
