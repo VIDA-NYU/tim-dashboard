@@ -34,7 +34,7 @@ const RecipeView = ({ recipeId }) => {
   // query the recipes endpoint
   const {response: recipe} = useGetRecipe(recipeId);
   return (
-    recipe && <div className="mt-2 mr-2 ml-2">
+    recipe &&  <Paper sx={{ p: 2, mt: 2, mb: 2, maxWidth: '50rem' }}>
       <ul>
         <div>
             <h1>{recipe.name}</h1>
@@ -46,7 +46,7 @@ const RecipeView = ({ recipeId }) => {
             <ListValues list={recipe.instructions}/>
         </div>
       </ul>
-    </div>
+    </Paper>
   )
 }
 
@@ -64,9 +64,7 @@ const RecipeCard = ({ recipe }) => {
         <Typography gutterBottom variant="h5" component="div">
           {recipe.name}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          <ul><ListValues list={recipe.ingredients}/></ul>
-        </Typography>
+        <ul><ListValues list={recipe.ingredients}/></ul>
       </CardContent>
       <CardActions>
         <Button size="small" onClick={() => navigate(`/recipes/${recipe._id}`)}>View</Button>
@@ -78,7 +76,7 @@ const RecipeCard = ({ recipe }) => {
 const RecipeList = () => {
   const {response: recipes} = useGetRecipes();
   return (
-      <Box display='flex' gap={2} mt={5} m={'2em'} justifyContent='stretch' flexWrap='wrap'>
+      <Box display='flex' gap={2} mt={5} m={'2em'} justifyContent='center' flexWrap='wrap'>
         {recipes && recipes.map((recipe: Recipe, index: number) => 
             <RecipeCard recipe={recipe} key={recipe._id} />)}
       </Box>
@@ -90,7 +88,7 @@ const Main = () => {
   let { recipeId } = useParams();
   return <Box>
     <Box display='flex' justifyContent='center' alignItems='center' height='100%'>
-      {recipeId && <Paper sx={{ p: 2, mt: 2, mb: 2, maxWidth: '50rem' }}><RecipeView recipeId={recipeId} /></Paper>}
+      {recipeId && <RecipeView recipeId={recipeId} />}
     </Box>
     <RecipeList />
   </Box>

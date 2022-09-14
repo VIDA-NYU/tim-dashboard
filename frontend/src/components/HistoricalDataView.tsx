@@ -18,6 +18,7 @@ import { ConfirmationDeleteDialog, DeleteRecordingDialog, format, formatTotalDur
 import AccordionView from './AccordionView';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Drawer from '@mui/material/Drawer';
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -46,7 +47,7 @@ export interface DeleteInfo {
   confirmation: boolean,
 }
 
-function RecordingsDataView({ recordingName }) {
+function RecordingsDataView({ recordingName, toggleDrawer }) {
     const navigate = useNavigate();
 
     const [eyeData, setEyeData] = React.useState({});
@@ -93,9 +94,6 @@ function RecordingsDataView({ recordingName }) {
     // get the token and authenticated fetch function
     const { token, fetchAuth } = useToken();
 
-    // query the streamings endpoint (only if we have a token)
-    // fetch list of available recordings 
-    const {response: recordings} = useGetAllRecordings();
     // fetch data available of an specific recording
     const {response: recordingData} = useGetRecording(token, fetchAuth, recordingName);
     const {response: deletedRecord, status: statusDel} = useDeleteRecording(token, fetchAuth, delData);
@@ -225,9 +223,6 @@ function RecordingsDataView({ recordingName }) {
     return <></>;
   }
 
-  const handleClickDelButton = () => {
-    setOpenDelDialog(true);
-  }
   const handleCloseDeleteDialog = (value) => {
     setOpenDelDialog(false);
     if (value) { // if confirmation is true
@@ -245,21 +240,9 @@ function RecordingsDataView({ recordingName }) {
     <div>
       <Box sx={{ flexGrow: 1 }}>
         <FormControl sx={{ m: 1, minWidth: 340 }} size="small">
-          <InputLabel id="demo-simple-select-label">Select Data </InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={recordingName}
-            label="Select Data"
-            onChange={e => navigate(`/recordings/${e.target.value}`)}
-          >
-          {
-            recordings && recordings.map((rid) => (
-                <MenuItem key={rid} value={rid}>{rid}</MenuItem>
-            ))
-          }
-          </Select>
+          <Button onClick={()=>toggleDrawer()}>{recordingName}</Button>
         </FormControl>
+        
         {/*
         // Disable Delete recording
         <FormControl sx={{ m: 1, minWidth: 140 }} size="small">
@@ -313,7 +296,7 @@ function RecordingsDataView({ recordingName }) {
 
 
 
-const RecordingCard = ({ recording }) => {
+const RecordingCard = ({ recording, onClick=null }) => {
   const navigate = useNavigate();
   // console.log(recording)
   const files = recording?.files || [];
@@ -328,7 +311,7 @@ const RecordingCard = ({ recording }) => {
       /> */}
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography gutterBottom variant="h6" component="div">
-          <Button onClick={() => navigate(`/recordings/${recording.name}`)}>
+          <Button onClick={() => { navigate(`/recordings/${recording.name}`);onClick && onClick() }}>
             {recording.name}
           </Button>
         </Typography>
@@ -344,30 +327,30 @@ const RecordingCard = ({ recording }) => {
         <Stack direction="row" spacing={1} flexWrap='wrap'>
           {Object.entries(recording.streams||{}).map(([sid, d]) => {
             const f = files.find(f=>f.startsWith(sid));
-            return <Tooltip title={f||''}>
-              <Chip key={sid} label={sid} size='small' color={f ? 'primary' : 'default'} />
+            return <Tooltip title={f||''} key={sid}>
+              <Chip label={sid} size='small' color={f ? 'primary' : 'default'} />
             </Tooltip>
           })}
         </Stack>
       </CardContent>
-      <CardActions>
+      {/* <CardActions>
         <Button size="small" onClick={() => navigate(`/recordings/${recording.name}`)}>View</Button>
-      </CardActions>
+      </CardActions> */}
     </Card>
   );
 }
 
-const RecordingsList = ({ sortby='first-entry' }) => {
+const RecordingsList = ({ sortby='first-entry', ...props }) => {
   const {response: recordings} = useGetAllRecordingInfo();
   console.log(recordings)
   return (
-      <Box display='flex' flexWrap='wrap' gap={2} mt={5} m={'2em'} justifyContent='center'>
+    // display='flex' flexWrap='wrap' gap={2} mt={5} m={'2em'} justifyContent='center'
+      <Box display='flex' flexWrap='wrap' gap={2} flexDirection='column'>
         {recordings && recordings
           .filter(d=>d.duration && !d.duration.startsWith('0:00:0'))
           .sort((a, b) => (a[sortby]||'').localeCompare(b[sortby]||''))
-          .map((recording, index: number) => 
-            <RecordingCard recording={recording} key={recording.name} />)
-        || (Array.from({length: 16}, (x, i) => i).map(i => <Skeleton variant="rectangular" width={300} height={220} />))
+          .map((recording) => <RecordingCard recording={recording} key={recording.name} {...props} />)
+        || (Array.from({length: 6}, (x, i) => i).map(i => <Skeleton variant="rectangular" width={300} height={220} key={i} />))
         }
       </Box>
   )
@@ -375,11 +358,13 @@ const RecordingsList = ({ sortby='first-entry' }) => {
 
 const RecordingsView = () => {
   let { recordingId } = useParams();
-  
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
   return <Box mt={3}>
-    {recordingId ? 
-        <RecordingsDataView recordingName={recordingId} /> : 
-        <RecordingsList />}
+    <Drawer anchor='left' sx={{ maxWidth: '80vw' }} open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+      <RecordingsList onClick={() => setDrawerOpen(false)} />
+    </Drawer>
+    {recordingId && <RecordingsDataView recordingName={recordingId} toggleDrawer={() => setDrawerOpen(!drawerOpen)} />}
   </Box>
 }
 

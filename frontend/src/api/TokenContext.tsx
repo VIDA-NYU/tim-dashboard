@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
+import { Navigate } from "react-router-dom";
 import {API_URL} from '../config';
 import { ContextProps, ProviderProps } from './types';
 
@@ -10,15 +11,16 @@ TokenContext, TokenProvider, and useToken allow us to use the token globally
 const TokenContext = React.createContext<ContextProps | undefined>(undefined);
 
 const TokenProvider: React.FC<ProviderProps> = ({ children }) => {
-  const [ token, setToken ] = useState<string | undefined>();
-  const [ [ username, password ], login ] = useState<[string | null, string | null]>([null, null]);
+  // check the login token
+  let [ token, setToken ] = useState<string | undefined>();
+  let savedToken = useMemo(() => window.localStorage.getItem(`access_token`), []); // get the token on first render
+  token = token || savedToken;
 
+  const [ [ username, password ], login ] = useState<[string | null, string | null]>([null, null]);
+  
   useEffect(() => {
-    // check the login token
-    let savedToken = window.localStorage.getItem(`access_token`);
     // no need to login again
-    if(savedToken) {
-      setToken(savedToken)
+    if(token) {
       return;
     }
     // no login without credentials
@@ -73,6 +75,11 @@ const useToken = () => {
     throw new Error('useToken must be used within an TokenProvider')
   }
   return context
+}
+
+export const Logout = ({ to='/login' }) => {
+  window.localStorage.removeItem('access_token')
+  return <Navigate to={to} />
 }
 
 export { TokenProvider, useToken }

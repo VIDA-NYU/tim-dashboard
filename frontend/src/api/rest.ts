@@ -36,9 +36,15 @@ export function useGetAllRecordingInfo() {
     // query the streamings endpoint (only if we have a token)
     const uid: Key = fetchAuth && `${API_URL}/recordings?info=true`;
     const random = React.useRef(Date.now());
-    const { data: response, error } = useSWR([uid, random], fetcher);
+    const { data: response, error, mutate } = useSWR([uid, random], fetcher, {
+        revalidateOnFocus: false,
+        revalidateOnMount: false,
+        revalidateOnReconnect: false
+    });
+    console.log(response)
+    useEffect(() => {(response === undefined) && mutate(undefined, true)}, [])
     return {
-        data: response && response.data,
+        data: response?.data,
         response,
         error
     };

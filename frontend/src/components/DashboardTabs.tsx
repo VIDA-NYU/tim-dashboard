@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useMatch } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useMatch } from "react-router-dom";
 import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
 import AppBar from '@mui/material/AppBar';
@@ -12,7 +12,7 @@ import HistoricalDataView from './HistoricalDataView';
 import LiveDataView from './LiveDataView';
 import RecipesView from './RecipesView';
 import Login from './Login';
-import { useToken } from '../api/TokenContext';
+import { useToken, Logout } from '../api/TokenContext';
 import { TEST_PASS, TEST_USER } from '../config';
 import { ListItemButton } from '@mui/material';
 
@@ -27,9 +27,7 @@ const DashboardRoutes = ({}) => {
   ]
 
   return (
-    !token ? 
-      <Login username={TEST_USER} password={TEST_PASS} />
-    : 
+    
     <Box sx={{ width: '100%' }} component="main">
       <Box sx={{ display: "flex" }}>
         <AppBar component="nav" position="static">
@@ -41,7 +39,7 @@ const DashboardRoutes = ({}) => {
                 aria-label="menu"
                 sx={{ mr: 2 }}
             >
-                <MenuIcon />
+                {/* <MenuIcon /> */}
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 TIM Dashboard
@@ -54,20 +52,23 @@ const DashboardRoutes = ({}) => {
             </Toolbar>
         </AppBar>
       </Box>
+      {!token ? 
+      <Login username={TEST_USER} password={TEST_PASS} />
+    : 
       <Routes>
         <Route path='/' element={<LiveDataView />} />
         <Route path='/recordings'>
-          <Route path="" element={<HistoricalDataView />} />
+          <Route path="" element={<Navigate to="/recordings/coffee-test-1" replace />} />
           <Route path=":recordingId" element={<HistoricalDataView />} />
         </Route>
         <Route path='/recipes'>
-          <Route path="" element={<RecipesView />} />
+          <Route path="" element={<Navigate to="/recipes/pinwheels" replace />} />
           <Route path=":recipeId" element={<RecipesView />} />
         </Route>
         <Route path="/login" element={<Login username={TEST_USER} password={TEST_PASS} />} />
-        {/* <Route path="/logout" element={<Logout redirectUri='/' />} /> */}
+        <Route path="/logout" element={<Logout to='/login' />} />
         {/* <Route path="*" element={<Error404 />} /> */}
-      </Routes>
+      </Routes>}
   </Box>)
 }
 
