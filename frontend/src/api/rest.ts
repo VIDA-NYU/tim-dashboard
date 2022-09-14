@@ -41,7 +41,7 @@ export function useGetAllRecordingInfo() {
         revalidateOnMount: false,
         revalidateOnReconnect: false
     });
-    console.log(response)
+    // console.log(response)
     useEffect(() => {(response === undefined) && mutate(undefined, true)}, [])
     return {
         data: response?.data,

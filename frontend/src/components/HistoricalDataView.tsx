@@ -368,7 +368,7 @@ const RecordingCard = ({ recording, onClick=null }) => {
 
 const RecordingsList = ({ sortby='first-entry', ...props }) => {
   const {response: recordings} = useGetAllRecordingInfo();
-  console.log(recordings)
+  // console.log(recordings)
   return (
     // display='flex' flexWrap='wrap' gap={2} mt={5} m={'2em'} justifyContent='center'
       <Box display='flex' flexWrap='wrap' gap={2} flexDirection='column'>
