@@ -12,8 +12,8 @@ import data from "bootstrap/js/src/dom/data";
 
 
 const ContentContainer = styled("div")({
-    width: 1080,
-    height: 200
+    width: 600,
+    height: 200,
 })
 
 export function EyeCanvas(props) {
@@ -22,7 +22,7 @@ export function EyeCanvas(props) {
     return (
         <ContentContainer ref={container} className="content-container">
             {/* Container for the HTML view */}
-            <div style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '100%', overflow: 'hidden' }} ref={domContent} />
+            <div style={{ position: 'absolute', top: 0, left: 0, width: props.width, height: '100%', overflow: 'hidden' }} ref={domContent} />
             {/* Container for THREEJS */}
             <Canvas
                 shadows
@@ -48,7 +48,7 @@ export function EyeCanvas(props) {
                 </directionalLight>
                 <OrthographicCamera makeDefault={true} far={100000} near={-100000} position={[0, 0, 1000]} />
                 <hemisphereLight intensity={0.5} color="#eaeaea" position={[0, 1, 0]} />
-                <OrbitControls />
+                <OrbitControls/>
                 <FaceModel data={props.data} state={props.state} position={[0, 0, -10]}> </FaceModel>
             </Canvas>
         </ContentContainer>

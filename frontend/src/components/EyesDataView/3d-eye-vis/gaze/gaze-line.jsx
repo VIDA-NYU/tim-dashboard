@@ -23,7 +23,6 @@ function processGazeDirection(direction){
 
 function getPlayedIndex(played, seqLen){
 
-    console.log(played, seqLen)
     if(played < 1){
         return Math.floor(played * seqLen);
     }else{
