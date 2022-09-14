@@ -3,29 +3,34 @@ import { NavLink, Link, useParams, useNavigate, useLocation, matchPath } from "r
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
-import { onProgressType } from './VideoCard';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useToken } from '../api/TokenContext';
-import { getAudioPath, getEyeData, getHandData, getVideoPath, useDeleteRecording, useGetAllRecordings, useGetRecording, useGetAllRecordingInfo } from '../api/rest';
-import { dataType, RequestStatus, streamingType } from '../api/types';
-import Controls from './Controls';
-import screenful from "screenfull";
-import { ConfirmationDeleteDialog, DeleteRecordingDialog, format, formatTotalDuration } from './Helpers';
-import AccordionView from './AccordionView';
 import Button from '@mui/material/Button';
-import DeleteIcon from '@mui/icons-material/Delete';
+import Tooltip from '@mui/material/Tooltip';
 import Drawer from '@mui/material/Drawer';
-
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
+import { onProgressType } from './VideoDataView/VideoCard/VideoCard';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+import { useToken } from '../api/TokenContext';
+import { getAudioPath, getEyeData, getHandData, getVideoPath, useDeleteRecording, useGetAllRecordings, useGetRecording, useGetAllRecordingInfo } from '../api/rest';
+import { dataType, RequestStatus, streamingType } from '../api/types';
+import Controls from './Controls';
+import screenful from "screenfull";
+import { ConfirmationDeleteDialog, DeleteRecordingDialog, format, formatTotalDuration } from './Helpers';
+// custom components
+import AudioDataView from './AudioDataView/AudioDataView';
+import VideoDataView from './VideoDataView/VideoDataView';
+import EyesDataView from './EyesDataView/EyesDataView';
+import HandsDataView from './HandsDataView/HandsDataView';
+
 
 
 export interface MediaState {
@@ -151,6 +156,8 @@ function RecordingsDataView({ recordingName, toggleDrawer }) {
     };
 
     const handleProgress  = (changeState: onProgressType) => {
+      console.log('Handling progress..');
+
       const newDuration = changeState.totalDuration;
       // We only want to update time slider if we are not currently seeking
       if (!state.seeking) {
@@ -192,6 +199,23 @@ function RecordingsDataView({ recordingName, toggleDrawer }) {
       screenful.toggle(playerContainerRef.current);
     };
 
+    const handleClickDelButton = () => {
+      setOpenDelDialog(true);
+    }
+
+    const handleCloseDeleteDialog = (value) => {
+      setOpenDelDialog(false);
+      if (value) { // if confirmation is true
+        //Delete recording
+        setDelData({name: recordingName, confirmation: value});
+      } else {
+        // Do nothing
+      }
+    };
+    const handleCloseConfDeleteDialog = () => {
+      setOpenConfDelDialog(false);
+    };
+
     const elapsedTime =
       timeDisplayFormat == "normal"
         ? format(currentTime) : "0:0";
@@ -200,41 +224,43 @@ function RecordingsDataView({ recordingName, toggleDrawer }) {
     // const totalDurationValue = format(totalDuration);
     const totalDurationValue = (recordingData && recordingData.duration) ? formatTotalDuration(recordingData.duration) : "0:0";
 
-  const renderStreamings= () => {
-    if (recordingData !== undefined && recordingData &&  recordingData.streams){
-      return <>
-        <AccordionView type={dataType.VIDEO} data={recordingData} title={"Cameras"} state={state} recordingName={recordingName} onProgress={(res) => handleProgress(res)} onSeek={res => handleSeekingFromVideoCard(res)}
-        ></AccordionView>
-        {
-          Object.keys(recordingData.streams).includes(streamingType.MIC) &&
-          <AccordionView type={dataType.AUDIO} data={recordingData} title={"Audio Data"} state={state} recordingName={recordingName} onProgress={(res) => handleProgress(res)} onSeek={res => handleSeekingFromVideoCard(res)}
-        ></AccordionView>
-        }
-        {
-          Object.keys(recordingData.streams).includes(streamingType.EYE) &&
-          <AccordionView type={dataType.JSON} data={eyeData} title={"Eye Data"} ></AccordionView>
-        }
-        {
-          Object.keys(recordingData.streams).includes(streamingType.HAND) &&
-        <AccordionView type={dataType.JSON} data={handData} title={"Hand Data"} ></AccordionView>
-        }
-        </>
-    }
-    return <></>;
-  }
+    const renderStreamings= () => (
+      (recordingData !== undefined && recordingData &&  recordingData.streams) && <>
+          <VideoDataView 
+            type={dataType.VIDEO} 
+            data={recordingData} 
+            title={"Cameras"} 
+            state={state} 
+            recordingName={recordingName} 
+            onProgress={(res) => handleProgress(res)} 
+            onSeek={res => handleSeekingFromVideoCard(res)}>
+          </VideoDataView>
 
-  const handleCloseDeleteDialog = (value) => {
-    setOpenDelDialog(false);
-    if (value) { // if confirmation is true
-      //Delete recording
-      setDelData({name: recordingName, confirmation: value});
-    } else {
-      // Do nothing
-    }
-  };
-  const handleCloseConfDeleteDialog = () => {
-    setOpenConfDelDialog(false);
-  };
+          <AudioDataView 
+            type={dataType.AUDIO} 
+            data={recordingData} 
+            title={"Audio"} 
+            state={state} 
+            recordingName={recordingName} 
+            onProgress={(res) => handleProgress(res)} 
+            onSeek={res => handleSeekingFromVideoCard(res)}>  
+          </AudioDataView>
+
+          <EyesDataView 
+            type={dataType.JSON} 
+            data={eyeData} 
+            title={"Eye Data"}>  
+          </EyesDataView>
+
+          <HandsDataView
+            type={dataType.JSON} 
+            data={handData} 
+            title={"Hands Data"}>
+          </HandsDataView>
+        </>
+    )
+
+
 
   return (
     <div>
