@@ -52,6 +52,7 @@ const DashboardRoutes = ({}) => {
             </Toolbar>
         </AppBar>
       </Box>
+      <Box px={2}>
       {!token ? 
       <Login username={TEST_USER} password={TEST_PASS} />
     : 
@@ -69,6 +70,7 @@ const DashboardRoutes = ({}) => {
         <Route path="/logout" element={<Logout to='/login' />} />
         {/* <Route path="*" element={<Error404 />} /> */}
       </Routes>}
+      </Box>
   </Box>)
 }
 
