@@ -16,7 +16,7 @@ Using SWR React hooks "useSWR" in an external API service layer: This will be po
 /* fetch list of available recordings */
 export function useGetAllRecordings(token, fetchAuth) {
     // get the authenticated fetch function
-    const fetcher = (url: string) => fetchAuth(url).then((res) => res.json());
+    const fetcher = (url: string) => fetchAuth(url, {mode:'cors'}).then((res) => res.json());
     // query the streamings endpoint (only if we have a token)
     const uid: Key = token && `${API_URL}/recordings`;
     const random = React.useRef(Date.now());
@@ -31,7 +31,7 @@ export function useGetAllRecordings(token, fetchAuth) {
 /* fetch data available of an specific recording */
 export function useGetRecording(token, fetchAuth, recordingName) {
     // get the authenticated fetch function
-    const fetcher = (url: string) => fetchAuth(url).then((res) => res.json());
+    const fetcher = (url: string) => fetchAuth(url, {mode:'cors'}).then((res) => res.json());
     // query the streamings endpoint (only if we have a token)
     const uid: Key = token  && recordingName && `${API_URL}/recordings/` + recordingName;
     const { data: response, error } = useSWR(uid, fetcher);
@@ -257,6 +257,13 @@ export async function getEyeData(recordingName) {
 export async function getHandData (recordingName) {
     // const url ="https://api.ptg.poly.edu/recordings/static/coffee-test-1/hand.json";
     const url = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/hand.json`;
+    const response = await fetch(url).then((res) => res.json());
+    return response;
+}
+
+export async function getObjects (recordingName) {
+    // const url ="https://api.ptg.poly.edu/recordings/static/coffee-test-1/hand.json";
+    const url = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/detic:image.json`;
     const response = await fetch(url).then((res) => res.json());
     return response;
 }
