@@ -116,7 +116,12 @@ function VideoBoundingBoxPlayer({recordingName, state, onSeek, onProgress, path}
                     ctx.rect(object.loc2D.x * videoWidth, object.loc2D.y * videoHeight,
                         object.width * videoWidth, object.height * videoHeight);
                     ctx.font = "10px Arial";
-                    ctx.fillStyle = "#ff00ff";
+                    if(object.seen){
+                        ctx.fillStyle = "#ff00ff";
+                    }
+                    else{
+                        ctx.filter = "#c3c3c3";
+                    }
                     ctx.fillText(`${object.object}: ${object.instruction}`, object.loc2D.x * videoWidth, object.loc2D.y * videoHeight);
                     ctx.stroke();
                     ;

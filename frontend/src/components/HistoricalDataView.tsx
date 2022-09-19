@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useToken } from '../api/TokenContext';
-import { getAudioPath, getEyeData, getHandData, getObjectsData, getVideoPath, useDeleteRecording, useGetAllRecordings, useGetRecording } from '../api/rest';
+import { getAudioPath, getEyeData, getHandData, getVideoPath, useDeleteRecording, useGetAllRecordings, useGetRecording } from '../api/rest';
 import { dataType, RequestStatus, streamingType } from '../api/types';
 import Controls from './Controls';
 import screenful from "screenfull";
@@ -119,15 +119,15 @@ function RecordingsDataView() {
           setHandData("404 Not Found. Hand data was not found.");
         }
       };
-      const fetchObjectsData = async () => {
-        try {
-          const jsonFile = await getObjectsData(recordingName);
-          setObjectsData(jsonFile.slice(0, 20));
-        } catch (error) {
-          // console.log("error", error);
-          setObjectsData("404 Not Found. Hand data was not found.");
-        }
-      };
+      // const fetchObjectsData = async () => {
+      //   try {
+      //     const jsonFile = await getObjectsData(recordingName);
+      //     setObjectsData(jsonFile.slice(0, 20));
+      //   } catch (error) {
+      //     // console.log("error", error);
+      //     setObjectsData("404 Not Found. Hand data was not found.");
+      //   }
+      // };
 
       if (recordingData && recordingData.streams){
         Object.keys(recordingData.streams).includes(streamingType.EYE) && fetchEyeData();
