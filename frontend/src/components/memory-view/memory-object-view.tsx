@@ -27,10 +27,10 @@ export const memoryFormatter = msg => msg ? JSON.parse(msg) : msg
 const jsonFormatter = msg => msg? JSON.parse(msg) : msg;
 
 function extractGazeInfo(eyeData: any) : GazeInfo{
-    if(!eyeData ){
+    if(!eyeData){
         return {
             gazeOrigin: [0, 0, 0],
-            gazeDirection: [0, 1, 2]
+            gazeDirection: [-0.1, 0.3, -0.2]
         }
     }
     return {

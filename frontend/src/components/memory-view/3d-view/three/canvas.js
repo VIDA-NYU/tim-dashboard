@@ -83,18 +83,6 @@ export function MemoryCanvas(props) {
                 <BoundingBoxEnvironment></BoundingBoxEnvironment>
                 <FaceModel  position={[0, 0, 0]} gazeInfo={props.gazeInfo}> </FaceModel>
                 <MemoryObjects memoryObjects={props.memoryObjects}></MemoryObjects>
-
-                <mesh
-                    position={[1000, 500, 500]}
-                >
-                    <textGeometry
-                            args={[ "?????s?"  , {
-                                font: font,
-                                size:50, height: 10}]}/>
-
-
-                    <meshLambertMaterial attach='material' color={'#c3c3c3'}/>
-                </mesh>
             </Canvas>
             {/*<Canvas>*/}
             {/*    <CameraController />*/}

@@ -13,6 +13,20 @@ import GazeLine from "./gaze/gaze-line";
 import {multiplyVector3D} from "./utils/utils";
 import gazeLine from "./gaze/gaze-line";
 
+function calcAngle(adjacent, hypotenuse) {
+    return Math.acos(adjacent / hypotenuse);
+}
+
+function computeRotationAngle(gazeDirection){
+    let hypotenuse = Math.sqrt(Math.pow(gazeDirection[2], 2) + Math.pow(gazeDirection[0],2));
+    let angle = calcAngle(gazeDirection[2], hypotenuse);
+    let sinAngle = Math.asin(gazeDirection[0] / hypotenuse);
+    if(sinAngle > 0){
+        return -angle
+    }else{
+        return angle
+    }
+}
 
 function FaceModel(props) {
 
@@ -40,9 +54,11 @@ function FaceModel(props) {
         groupRef.current.position.y = newCoordinate[1];
         groupRef.current.position.z = newCoordinate[2];
 
-
+        let rotationAngle = computeRotationAngle(props.gazeInfo.gazeDirection);
         // faceRef.current.rotation.x = 0 // rotationMultiplier * props.gazeInfo.gazeDirection[0];
         faceRef.current.rotation.y = Math.PI + rotationMultiplier * props.gazeInfo.gazeDirection[1];
+        console.log(rotationAngle)
+        faceRef.current.rotation.y = Math.PI - rotationAngle;
         // faceRef.current.rotation.z = 0 // rotationMultiplier * props.gazeInfo.gazeDirection[2];
         // faceRef.current.position = multiplyVector3D(1000, props.gazeInfo.gazeOrigin);
     }, [props.gazeInfo])
