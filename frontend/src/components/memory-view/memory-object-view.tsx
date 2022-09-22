@@ -2,14 +2,15 @@ import {GazeInfo, MemoryObject} from "./types";
 import Card from "@mui/material/Card";
 import {useStreamData} from "../../api/rest";
 import React, {useEffect, useMemo, useState} from "react";
-import {prettyJSON} from "../LiveStream";
+
 import MemoryObjectList from "./memory-object-list";
 import {processMemoryStream} from "./utils";
-import {StreamInfo} from "../LiveStream";
+import {StreamView} from "../StreamDataView/LiveStream";
 import Memory3DScatter from "./3d-view/3d-scatter";
 import {FormControlLabel, styled, Switch} from "@mui/material";
 import SampleData from "./sample.json";
 import {MemoryThreeView} from "./3d-view/three-viewer";
+import {StreamInfo} from "./stream";
 
 interface MemoryObjectCardProps{
     memoryObject: MemoryObject

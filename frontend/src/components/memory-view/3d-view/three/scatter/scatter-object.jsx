@@ -25,33 +25,6 @@ const font = new FontLoader().parse(fontFile);
 
 export default function ScatterObject(props){
 
-    const {scene, camera, gl} = useThree();
-
-    let textGeometry = new THREE.TextGeometry('Hello three.js!', {
-        font: font,
-        size: 80,
-        height: 20,
-        curveSegments: 12,
-        bevelEnabled: true,
-        bevelThickness: 10,
-        bevelSize: 8,
-        bevelSegments: 5
-    });
-    let material = new THREE.MeshLambertMaterial({
-        color: 0xF3FFE2
-    });
-    let mesh = new THREE.Mesh(textGeometry, material);
-    mesh.position.set(180, 0, 0);
-
-
-    scene.add(mesh);
-
-    function animate() {
-        requestAnimationFrame(animate)
-        gl.render(scene, camera)
-    }
-
-    animate()
 
 
 
