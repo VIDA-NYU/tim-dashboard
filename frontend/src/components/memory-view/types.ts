@@ -9,4 +9,9 @@ interface MemoryObject {
     seenBefore: boolean
 }
 
-export type {MemoryObject};
+interface GazeInfo {
+    gazeOrigin: number[],
+    gazeDirection: number[]
+}
+
+export type {MemoryObject, GazeInfo};

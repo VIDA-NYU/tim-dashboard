@@ -11,6 +11,7 @@ import { getLiveVideo, useGetCurrentRecordingInfo, useGetRecording, useStartReco
 import { RequestStatus, responseServer } from '../api/types';
 import { LogsView, ImageView } from './LiveStream';
 import {MemoryObjectView} from "./memory-view/memory-object-view";
+import {EnvironmentView} from "./environment-view/environment-view";
 
 let interval = null;
 
@@ -71,16 +72,14 @@ function LiveVideo() {
         Live View
       </Typography> */}
       <ImageView streamId='main' />
-      <LogsView streamId={'clip:action:steps'} formatter={str => (<ClipOutputsView data={JSON.parse(str)} />)} />
+      {/*<LogsView streamId={'clip:action:steps'} formatter={str => (<ClipOutputsView data={JSON.parse(str)} />)} />*/}
       <LogsView streamId={'detic:image'} />
-      <LogsView streamId={'reasoning'} />
-        <MemoryObjectView streamId={"detic:memory"}></MemoryObjectView>
+      {/*<LogsView streamId={'reasoning'} />*/}
+        <MemoryObjectView streamId={"detic:memory"} eyeStreamId={"eye"}></MemoryObjectView>
+      <EnvironmentView streamId={"pointcloud"}></EnvironmentView>
     </Box>
   )
 }
-
-
-
 
 
 interface ClipOutputsViewProps { data: { [key: string]: number; } }
