@@ -14,6 +14,7 @@ import { DeticHandsChart } from './StreamDataView/LiveCharts';
 import { ImageView } from './StreamDataView/ImageView';
 import { ClipOutputsLiveView } from './StreamDataView/PerceptionOutputsView';
 import { ReasoningOutputsView } from './StreamDataView/ReasoningOutputsView';
+import {MemoryObjectView} from "./memory-view/memory-object-view";
 
 
 const RecordingControls = () => {
@@ -77,6 +78,8 @@ function LiveVideo() {
               "M M M M r r"
               "M M M M b b"
               "M M M M b b"
+              "M M M M k k"
+              "M M M M k k"
               "g g g g g g"
               "c c d d e e"
           `,
@@ -106,6 +109,9 @@ function LiveVideo() {
             {data => (<Box><ReasoningOutputsView data={JSON.parse(data)} /></Box>)}
           </StreamView>
         </Box>
+          <Box sx={{ gridArea: 'k' }}>
+              <MemoryObjectView streamId={"detic:memory"} eyeStreamId={"eye"}></MemoryObjectView>
+          </Box>
       </Box>
     </Box>
   )
