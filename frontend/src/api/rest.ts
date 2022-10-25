@@ -292,6 +292,22 @@ export async function getHandData (recordingName) {
     return response;
 }
 
+export async function getIMUData (recordingName) {
+    // const accelurl ="https://api.ptg.poly.edu/recordings/static/coffee-test-1/imuaccel.json";
+    // const gyrourl ="https://api.ptg.poly.edu/recordings/static/coffee-test-1/imugyro.json";
+    // const magurl ="https://api.ptg.poly.edu/recordings/static/coffee-test-1/imumag.json";
+    const accelurl = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/imuaccel.json`;
+    const accelresponse = await fetch(accelurl).then((res) => res.json());
+
+    const gyrourl = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/imuaccel.json`;
+    const gyroresponse = await fetch(gyrourl).then((res) => res.json());
+
+    const magurl = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/imuaccel.json`;
+    const magresponse = await fetch(magurl).then((res) => res.json());
+
+    return [accelresponse, gyroresponse, magresponse];
+}
+
 export async function getAllRecordings(token, fetchAuth) {
     // query the streamings endpoint (only if we have a token)
     const uid: Key = token && `${API_URL}/recordings`;
