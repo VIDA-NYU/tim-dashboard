@@ -18,6 +18,7 @@ import AudioDataView from './AudioDataView/AudioDataView';
 import VideoDataView from './VideoDataView/VideoDataView';
 import EyesDataView from './EyesDataView/EyesDataView';
 import HandsDataView from './HandsDataView/HandsDataView';
+import IMUDataView from './IMUDataView/IMUDataView';
 import {sampleArray} from "./HandsDataView/visualization/utils";
 
 
@@ -259,6 +260,14 @@ function RecordingsDataView() {
             recordingMetadata={recordingData}
             currentState={state}>  
           </EyesDataView>
+
+          <HandsDataView
+            type={dataType.JSON} 
+            data={handData}
+            recordingMetaData={recordingData}
+            state={state}
+            title={"Hands Data"}>
+          </HandsDataView>
 
           <HandsDataView
             type={dataType.JSON} 
