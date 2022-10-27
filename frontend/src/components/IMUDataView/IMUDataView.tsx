@@ -48,7 +48,8 @@ const EmptyJsonContent = styled("div")(({}) => ({
 
 const Activity_Sample_Rate = 30;
 
-const DefaultHandsView = ({data}: any) => {
+
+const DefaultIMUView = ({data}: any) => {
     return (
         <JsonDataContainer
             sx={{
@@ -103,13 +104,13 @@ const IMUDataView = ({type, title, data, recordingName, state, onProgress, onSee
 
     if (isEmpty(data) || isEmpty(recordingMetaData) || !recordingMetaData['first-entry']) {
         return (
-            <DefaultHandsView data={processedData}></DefaultHandsView>
+            <DefaultIMUView data={processedData}></DefaultIMUView>
         )
     }
 
 
     return (
-        <AccordionView title='Hands Data' height={300}>
+        <AccordionView title='IMU Data' height={300}>
             <Box sx={{display: 'flex', width: '100%', height: '100%', overflow: 'auto'}}>
                 <Container>
                     {!isEmpty(processedData) && <Card>
@@ -123,38 +124,6 @@ const IMUDataView = ({type, title, data, recordingName, state, onProgress, onSee
                                 frameIndex={frameIndex}
                                 frameData={frameData}
                                 state={state} variant={"overview"} data={processedData}/>
-                        </CardContent>
-                    </Card>}
-                    {!isEmpty(processedData) && <Card
-                        sx={{
-                            marginLeft: 10,
-                            marginRight: 10
-                        }}
-                    >
-                        <CardHeader
-                            titleTypographyProps={{
-                                fontSize: 16,
-                            }}
-                            title={"Left Hand"}></CardHeader>
-                        <CardContent>
-                            <HandsCanvas
-                                frameIndex={frameIndex}
-                                frameData={frameData}
-                                state={state} variant={"left"} data={processedData}/>
-                        </CardContent>
-                    </Card>}
-
-                    {true && <Card>
-                        <CardHeader
-                            titleTypographyProps={{
-                                fontSize: 16,
-                            }}
-                            title={"Right Hand"}></CardHeader>
-                        <CardContent>
-                            <HandsCanvas
-                                frameIndex={frameIndex}
-                                frameData={frameData}
-                                state={state} variant={"right"} data={processedData}/>
                         </CardContent>
                     </Card>}
                     <Card>

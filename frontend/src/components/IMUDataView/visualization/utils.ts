@@ -101,12 +101,17 @@ function preprocessIfJSON(dataItem){
 }
 
 function preprocessData(data){
+    console.log("Entered preprocessData")
     if(isEmpty(data)){
         return data;
     }
     const targetLen = 100;
+    console.log("Data length before sample:")
+    console.log(data.length)
     let sampleRate = Math.ceil(data.length / targetLen);
     data = sampleArray(data, sampleRate)
+    console.log("Data after sampling:")
+    console.log(data)
 
     let processedData = data.map(d => {
         if(typeof d.left === "string"){

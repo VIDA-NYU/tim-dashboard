@@ -7,7 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import { Button } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useToken } from '../api/TokenContext';
-import { getAudioPath, getEyeData, getHandData, getIMUData, getVideoPath, useDeleteRecording, useGetAllRecordings, useGetRecording } from '../api/rest';
+import { getAudioPath, getEyeData, getHandData, getIMUAccelData, getIMUGyroData, getIMUMagData, getVideoPath, useDeleteRecording, useGetAllRecordings, useGetRecording } from '../api/rest';
 import { dataType, RequestStatus, streamingType } from '../api/types';
 import Controls from './Controls';
 import screenful from "screenfull";
@@ -47,7 +47,9 @@ function RecordingsDataView() {
     const [recordingName, setRecordingName] = React.useState<string>('');
     const [eyeData, setEyeData] = React.useState({});
     const [handData, setHandData] = React.useState({});
-    const [IMUData, setIMUData] = React.useState({});
+    const [IMUAccelData, setIMUAccelData] = React.useState({});
+    //const [IMUGyroData, setIMUGyroData] = React.useState({});
+    //const [IMUMagData, setIMUMagData] = React.useState({});
     const [openDelDialog, setOpenDelDialog] = React.useState(false);
     const [openConfDelDialog, setOpenConfDelDialog] = React.useState(false);
     const [delData, setDelData] = React.useState<DeleteInfo>({name: "", confirmation: false});
@@ -122,22 +124,42 @@ function RecordingsDataView() {
         }
       };
 
-      const fetchIMUData = async () => {
+      const fetchIMUAccelData = async () => {
         try {
-          const jsonFile = await getIMUData(recordingName);
-          setIMUData(jsonFile);
+          const jsonFile = await getIMUAccelData(recordingName);
+          setIMUAccelData(jsonFile);
         } catch (error) {
           // console.log("error", error);
-          setIMUData("404 Not Found. Hand data was not found.");
+          setIMUAccelData("404 Not Found. Hand data was not found.");
+        }
+      };
+
+      const fetchIMUGyroData = async () => {
+        try {
+          const jsonFile = await getIMUGyroData(recordingName);
+          setIMUGyroData(jsonFile);
+        } catch (error) {
+          // console.log("error", error);
+          setIMUGyroData("404 Not Found. Hand data was not found.");
+        }
+      };
+
+      const fetchIMUMagData = async () => {
+        try {
+          const jsonFile = await getIMUMagData(recordingName);
+          setIMUMagData(jsonFile);
+        } catch (error) {
+          // console.log("error", error);
+          setIMUMagData("404 Not Found. Hand data was not found.");
         }
       };
 
       if (recordingData && recordingData.streams){
         Object.keys(recordingData.streams).includes(streamingType.EYE) && fetchEyeData();
         Object.keys(recordingData.streams).includes(streamingType.HAND) && fetchHandData();
-        Object.keys(recordingData.streams).includes(streamingType.IMUACCEL) && fetchIMUData();
-        Object.keys(recordingData.streams).includes(streamingType.IMUGYRO) && fetchIMUData();
-        Object.keys(recordingData.streams).includes(streamingType.IMUMAG) && fetchIMUData();
+        Object.keys(recordingData.streams).includes(streamingType.IMUACCEL) && fetchIMUAccelData();
+        Object.keys(recordingData.streams).includes(streamingType.IMUGYRO) && fetchIMUGyroData();
+        Object.keys(recordingData.streams).includes(streamingType.IMUMAG) && fetchIMUMagData();
       }
 
     }, [recordingData]);
@@ -285,10 +307,13 @@ function RecordingsDataView() {
 
           <IMUDataView
             type={dataType.JSON} 
-            data={IMUData}
-            recordingMetaData={recordingData}
-            state={state}
-            title={"IMU Data"}>
+            title={"IMU Accel Data"}
+            data={IMUAccelData}
+            recordingName={recordingName} 
+            state={state} 
+            onProgress={(res) => handleProgress(res)} 
+            onSeek={res => handleSeekingFromVideoCard(res)}
+            recordingMetaData={recordingData}>
           </IMUDataView>
           </>
       }
