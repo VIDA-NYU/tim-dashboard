@@ -10,7 +10,7 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import {HandsCanvas} from "./hand-data-vis/canvas";
-import {computeHandsActivity, preprocessData, sampleArray} from "./visualization/utils";
+import {computeIMUActivity, preprocessData, sampleArray} from "./visualization/utils";
 import HandsActivityBarChart from "./visualization/activity-bar-chart";
 import {useEffect, useState} from "react";
 import {Dataset} from './model/dataset';
@@ -75,12 +75,15 @@ const IMUDataView = ({type, title, data, recordingName, state, onProgress, onSee
     // let sampledData = sampleArray(data, Activity_Sample_Rate);
     console.log("Entered IMUDataView")
     let processedData = preprocessData(data);
-    let handsActivity = computeHandsActivity(processedData);
+    console.log(data)
+
+    /*
+    let IMUActivity = computeIMUActivity(processedData);
     const dataset = useRef(null);
 
     const [frameData, setFrameData] = useState();
     const [frameIndex, setFrameIndex] = useState<number>(0);
-
+    
 
     useEffect(() => {
         if (!isEmpty(processedData)) {
@@ -108,7 +111,7 @@ const IMUDataView = ({type, title, data, recordingName, state, onProgress, onSee
             <DefaultIMUView data={processedData}></DefaultIMUView>
         )
     }
-
+    */
 
     return (
         <AccordionView title='IMU Data' height={300}>
@@ -134,7 +137,7 @@ const IMUDataView = ({type, title, data, recordingName, state, onProgress, onSee
                             }}
                             title={"Movement"}></CardHeader>
                         <CardContent>
-                            <HandsActivityBarChart data={handsActivity}></HandsActivityBarChart>
+                            <HandsActivityBarChart data={IMUActivity}></HandsActivityBarChart>
                         </CardContent>
                     </Card>
                     <JsonDataContainer>

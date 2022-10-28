@@ -48,8 +48,8 @@ function RecordingsDataView() {
     const [eyeData, setEyeData] = React.useState({});
     const [handData, setHandData] = React.useState({});
     const [IMUAccelData, setIMUAccelData] = React.useState({});
-    //const [IMUGyroData, setIMUGyroData] = React.useState({});
-    //const [IMUMagData, setIMUMagData] = React.useState({});
+    const [IMUGyroData, setIMUGyroData] = React.useState({});
+    const [IMUMagData, setIMUMagData] = React.useState({});
     const [openDelDialog, setOpenDelDialog] = React.useState(false);
     const [openConfDelDialog, setOpenConfDelDialog] = React.useState(false);
     const [delData, setDelData] = React.useState<DeleteInfo>({name: "", confirmation: false});
@@ -311,8 +311,6 @@ function RecordingsDataView() {
             data={IMUAccelData}
             recordingName={recordingName} 
             state={state} 
-            onProgress={(res) => handleProgress(res)} 
-            onSeek={res => handleSeekingFromVideoCard(res)}
             recordingMetaData={recordingData}>
           </IMUDataView>
           </>

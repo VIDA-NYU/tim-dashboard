@@ -68,7 +68,7 @@ function computeMovingAverage(data){
     return movingAverageData;
 }
 
-function computeHandsActivity(data){
+function computeIMUActivity(data){
     if(isEmpty(data)){
         return [];
     }
@@ -130,4 +130,4 @@ function preprocessData(data){
     return processedData;
 }
 
-export {computeHandsActivity, isEmpty, sampleArray, preprocessData};
+export {computeIMUActivity, isEmpty, sampleArray, preprocessData};
