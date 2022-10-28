@@ -73,6 +73,7 @@ const DefaultIMUView = ({data}: any) => {
 
 const IMUDataView = ({type, title, data, recordingName, state, onProgress, onSeek, recordingMetaData}: any) => {
     // let sampledData = sampleArray(data, Activity_Sample_Rate);
+    console.log("Entered IMUDataView")
     let processedData = preprocessData(data);
     let handsActivity = computeHandsActivity(processedData);
     const dataset = useRef(null);
