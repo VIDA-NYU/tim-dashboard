@@ -6,19 +6,22 @@ import {max} from "d3";
 const SvgWidth = 300;
 const SvgHeight = 200;
 
-interface HandsActivityBarChartProps {
+interface IMUActivityBarChartProps {
     data: Array<FrameMovement>
 }
 
-function maxValue(a, b){
-    if( a > b){
+function maxValue(a, b, c){
+    if( a > b && a > c){
         return a
+    }else if ( b > a && b > c){
+        return b
     }else{
-        return b;
+        return c;
     }
 }
 
 const leftColor = "steelblue"
+const centerColor = "orange"
 const rightColor = "pink"
 
 
@@ -26,7 +29,7 @@ function computePercentage(d, index, data){
     return Math.round(100 * d.frame/data.length)
 }
 
-function HandsActivityBarChart({data}: HandsActivityBarChartProps){
+function IMUActivityBarChart({data}: IMUActivityBarChartProps){
 
     const svgRef = useRef(null);
     const contentRef = useRef(null);
@@ -34,15 +37,18 @@ function HandsActivityBarChart({data}: HandsActivityBarChartProps){
     const xAvisRef = useRef(null);
     const yAxisRef = useRef(null);
     const leftPathRef = useRef(null);
+    const centerPathRef = useRef(null);
     const rightPathRef = useRef(null);
 
     const mouseHoverRef = useRef(null);
     const mouseHoverLeftCircleRef = useRef(null);
+    const mouseHoverCenterCircleRef = useRef(null);
     const mouseHoverRightCircleRef = useRef(null);
     const mouseHoverTextRef = useRef(null);
     const mouseHoverTextLine0Ref = useRef(null);
     const mouseHoverTextLine1Ref = useRef(null);
     const mouseHoverTextLine2Ref = useRef(null);
+    const mouseHoverTextLine3Ref = useRef(null);
     const mouseHoverTextRectRef = useRef(null);
 
     let marginX = 30;
@@ -56,7 +62,7 @@ function HandsActivityBarChart({data}: HandsActivityBarChartProps){
 
 
     const yScale = d3.scaleLinear()
-        .domain([0, 1.2 * d3.max(data, d=>maxValue(d.movement.left, d.movement.right))])
+        .domain([0, 1.2 * d3.max(data, d=>maxValue(d[0], d[1], d[2]))]) 
         .range([contentHeight, 0]);
 
     useEffect(() => {
@@ -64,6 +70,7 @@ function HandsActivityBarChart({data}: HandsActivityBarChartProps){
         let yAxisElm = d3.select(yAxisRef.current);
 
         let leftPathElm = d3.select(leftPathRef.current);
+        let centerPathElm = d3.select(centerPathRef.current);
         let rightPathElm = d3.select(rightPathRef.current);
 
         if(xAxisElm){
@@ -89,7 +96,20 @@ function HandsActivityBarChart({data}: HandsActivityBarChartProps){
                     // @ts-ignore
                         .x(function(d) {  return xScale(d.frame) })
                     // @ts-ignore
-                        .y(function(d) { return yScale(d.movement.left) })
+                        .y(function(d) { return yScale(d[0]) })
+                )
+        }
+        if(centerPathElm){
+            centerPathElm.datum(data)
+                .attr("fill", "none")
+                .attr("stroke", centerColor)
+                .attr("stroke-width", 1.5)
+                // @ts-ignore
+                .attr("d", d3.line()
+                    // @ts-ignore
+                        .x(function(d) {  return xScale(d.frame) })
+                    // @ts-ignore
+                        .y(function(d) { return yScale(d[1]) })
                 )
         }
         if(rightPathElm){
@@ -102,7 +122,7 @@ function HandsActivityBarChart({data}: HandsActivityBarChartProps){
                     // @ts-ignore
                     .x(function(d, i) {  return xScale(d.frame) })
                     // @ts-ignore
-                    .y(function(d) { return yScale(d.movement.right) })
+                    .y(function(d) { return yScale(d[2]) })
                 )
         }
 
@@ -131,19 +151,21 @@ function HandsActivityBarChart({data}: HandsActivityBarChartProps){
         const contentElm = d3.select(contentRef.current);
         const mouseHoverElm = d3.select(mouseHoverRef.current);
         const mouseHoverLeftCircleElm = d3.select(mouseHoverLeftCircleRef.current);
+        const mouseHoverCenterCircleElm = d3.select(mouseHoverCenterCircleRef.current);
         const mouseHoverRightCircleElm = d3.select(mouseHoverRightCircleRef.current);
         const mouseHoverTextElm = d3.select(mouseHoverTextRef.current);
 
         const mouseHoverTextLine0Elm = d3.select(mouseHoverTextLine0Ref.current)
         const mouseHoverTextLine1Elm = d3.select(mouseHoverTextLine1Ref.current)
-        const mouseHoverTextLine2Elm = d3.select(mouseHoverTextLine2Ref.current);
+        const mouseHoverTextLine2Elm = d3.select(mouseHoverTextLine2Ref.current)
+        const mouseHoverTextLine3Elm = d3.select(mouseHoverTextLine3Ref.current);
 
         const mouseHoverTextRectElm = d3.select(mouseHoverTextRectRef.current);
 
-        if(contentElm && mouseHoverElm && mouseHoverLeftCircleElm &&
+        if(contentElm && mouseHoverElm && mouseHoverLeftCircleElm && mouseHoverCenterCircleElm &&
             mouseHoverRightCircleElm && mouseHoverTextElm &&
             mouseHoverTextLine0Elm && mouseHoverTextLine1Elm && mouseHoverTextLine2Elm &&
-            mouseHoverTextRectElm
+            mouseHoverTextLine3Elm && mouseHoverTextRectElm
         ) {
             contentElm.on("mouseover", function(mouse) {
                 contentElm.style('display', 'block');
@@ -151,14 +173,17 @@ function HandsActivityBarChart({data}: HandsActivityBarChartProps){
 
             contentElm.on("mousemove", function (mouse){
                 let mouseFrame = inferX(mouse);
-                const leftValue = data.find(d => d.frame === mouseFrame).movement.left;
-                const rightValue = data.find(d => d.frame === mouseFrame).movement.right;
+                const leftValue = data.find(d => d.frame === mouseFrame)[0];
+                const centerValue = data.find(d => d.frame === mouseFrame)[1];
+                const rightValue = data.find(d => d.frame === mouseFrame)[2];
                 mouseHoverElm.attr("transform", `translate(${xScale(mouseFrame)}, 0)`);
                 mouseHoverLeftCircleElm.attr("cy", yScale(leftValue));
+                mouseHoverCenterCircleElm.attr("cc", yScale(centerValue));
                 mouseHoverRightCircleElm.attr("cy", yScale(rightValue));
                 mouseHoverTextLine0Elm.text(`video: ${mouseFrame}%`);
-                mouseHoverTextLine1Elm.text(`left hand: ${leftValue.toFixed(2)}`);
-                mouseHoverTextLine2Elm.text(`right hand: ${rightValue.toFixed(2)}`);
+                mouseHoverTextLine1Elm.text(`x axis: ${leftValue.toFixed(2)}`);
+                mouseHoverTextLine2Elm.text(`y axis: ${rightValue.toFixed(2)}`)
+                mouseHoverTextLine3Elm.text(`z axis: ${rightValue.toFixed(2)}`);
                 mouseHoverTextElm
                     .attr('text-anchor', mouseFrame < (data.length) / 2 ? "start" : "end")
                     .attr("transform",  `translate(8, 30)`)
@@ -200,6 +225,12 @@ function HandsActivityBarChart({data}: HandsActivityBarChartProps){
                     </path>
 
                     <path
+                        ref={centerPathRef}
+                    >
+
+                    </path>
+
+                    <path
                         ref={rightPathRef}
                     >
 
@@ -220,6 +251,14 @@ function HandsActivityBarChart({data}: HandsActivityBarChartProps){
                             r={3}
                             stroke={leftColor}
                             ref={mouseHoverLeftCircleRef}
+                            fill={"none"}
+                        >
+                        </circle>
+
+                        <circle
+                            r={3}
+                            stroke={centerColor}
+                            ref={mouseHoverCenterCircleRef}
                             fill={"none"}
                         >
                         </circle>
@@ -257,8 +296,11 @@ function HandsActivityBarChart({data}: HandsActivityBarChartProps){
                                 fill={leftColor}
                                 x="0" dy=".8em" ref={mouseHoverTextLine1Ref}></tspan>
                             <tspan
-                                fill={rightColor}
+                                fill={centerColor}
                                 x="0" dy=".9em" ref={mouseHoverTextLine2Ref}></tspan>
+                            <tspan
+                                fill={rightColor}
+                                x="0" dy=".9em" ref={mouseHoverTextLine3Ref}></tspan>
                         </text>
 
 
@@ -279,7 +321,22 @@ function HandsActivityBarChart({data}: HandsActivityBarChartProps){
                                 y={6}
                                 fontSize={12}
                             >
-                                Left Hand
+                                X Axis
+                            </text>
+                        </g>
+                        <g transform={"translate(0, 0)"}>
+                            <circle
+                                fill={centerColor}
+                                r={5}
+                                cx={0}
+                                cy={2.5}
+                            ></circle>
+                            <text
+                                x={12}
+                                y={6}
+                                fontSize={12}
+                            >
+                                Y Axis
                             </text>
                         </g>
                         <g transform={"translate(0, 18)"}>
@@ -294,7 +351,7 @@ function HandsActivityBarChart({data}: HandsActivityBarChartProps){
                                 y={6}
                                 fontSize={12}
                             >
-                                Right Hand
+                                Z Axis
                             </text>
                         </g>
 
@@ -307,4 +364,4 @@ function HandsActivityBarChart({data}: HandsActivityBarChartProps){
 
 }
 
-export default HandsActivityBarChart;
+export default IMUActivityBarChart;
