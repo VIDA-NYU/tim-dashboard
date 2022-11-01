@@ -74,11 +74,12 @@ const DefaultIMUView = ({data}: any) => {
 const IMUDataView = ({type, title, data, recordingName, state, onProgress, onSeek, recordingMetaData}: any) => {
     // let sampledData = sampleArray(data, Activity_Sample_Rate);
     console.log("Entered IMUDataView")
-    let processedData = preprocessData(data);
-    console.log("processed data:")
-    console.log(processedData)
+    let processedAccelData = preprocessData(data[0]);
+    let processedGyroData = preprocessData(data[1]);
+    let processedMagData = preprocessData(data[2]);
 
     //let IMUActivity = computeIMUActivity(processedData);
+    /*
     const dataset = useRef(null);
 
     const [frameData, setFrameData] = useState();
@@ -111,42 +112,69 @@ const IMUDataView = ({type, title, data, recordingName, state, onProgress, onSee
             <DefaultIMUView data={processedData}></DefaultIMUView>
         )
     }
-    
+    */
     return (
         <AccordionView title='IMU Data' height={300}>
             <Box sx={{display: 'flex', width: '100%', height: '100%', overflow: 'auto'}}>
                 <Container>
-                    {!isEmpty(processedData) && <Card>
+                    {!isEmpty(processedAccelData) && <Card>
                         <CardHeader
                             titleTypographyProps={{
                                 fontSize: 16,
                             }}
-                            title={"Overview"}></CardHeader>
+                            title={"Acceleration"}></CardHeader>
                         <CardContent>
-                            <HandsCanvas
-                                frameIndex={frameIndex}
-                                frameData={frameData}
-                                state={state} variant={"overview"} data={processedData}/>
+                            <IMUActivityBarChart data={processedAccelData}></IMUActivityBarChart>
                         </CardContent>
                     </Card>}
-                    <Card>
+                    {!isEmpty(processedGyroData) && <Card>
                         <CardHeader
                             titleTypographyProps={{
                                 fontSize: 16,
                             }}
-                            title={"Movement"}></CardHeader>
+                            title={"Angular Velocity"}></CardHeader>
                         <CardContent>
-                            <IMUActivityBarChart data={processedData}></IMUActivityBarChart>
+                            <IMUActivityBarChart data={processedGyroData}></IMUActivityBarChart>
                         </CardContent>
-                    </Card>
+                    </Card>}
+                    {!isEmpty(processedMagData) && <Card>
+                        <CardHeader
+                            titleTypographyProps={{
+                                fontSize: 16,
+                            }}
+                            title={"Magnetic Force"}></CardHeader>
+                        <CardContent>
+                            <IMUActivityBarChart data={processedMagData}></IMUActivityBarChart>
+                        </CardContent>
+                    </Card>}
                     <JsonDataContainer>
                         <CardHeader
                             titleTypographyProps={{
                                 fontSize: 16,
                             }}
-                            title={"JSON"}></CardHeader>
+                            title={"Accelerometer JSON"}></CardHeader>
                         <JsonContent>
-                            <JSONPretty id="json-pretty" data={processedData}></JSONPretty>
+                            <JSONPretty id="json-pretty" data={processedAccelData}></JSONPretty>
+                        </JsonContent>
+                    </JsonDataContainer>
+                    <JsonDataContainer>
+                        <CardHeader
+                            titleTypographyProps={{
+                                fontSize: 16,
+                            }}
+                            title={"Gyroscope JSON"}></CardHeader>
+                        <JsonContent>
+                            <JSONPretty id="json-pretty" data={processedGyroData}></JSONPretty>
+                        </JsonContent>
+                    </JsonDataContainer>
+                    <JsonDataContainer>
+                        <CardHeader
+                            titleTypographyProps={{
+                                fontSize: 16,
+                            }}
+                            title={"Magnetometer JSON"}></CardHeader>
+                        <JsonContent>
+                            <JSONPretty id="json-pretty" data={processedMagData}></JSONPretty>
                         </JsonContent>
                     </JsonDataContainer>
 

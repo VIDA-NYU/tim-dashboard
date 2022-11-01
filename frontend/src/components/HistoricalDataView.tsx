@@ -267,7 +267,7 @@ function RecordingsDataView() {
     const totalDurationValue = (recordingData && recordingData.duration) ? formatTotalDuration(recordingData.duration) : "0:0";
 
     const renderStreamings= () => {
-      if (recordingData !== undefined && recordingData &&  recordingData.streams){
+      if (recordingData !== undefined && recordingData &&  recordingData.streams && Object.keys(recordingData.streams).includes(streamingType.IMUACCEL) && Object.keys(recordingData.streams).includes(streamingType.IMUGYRO) && Object.keys(recordingData.streams).includes(streamingType.IMUMAG)){
         return <>
           <VideoDataView 
             type={dataType.VIDEO} 
@@ -307,12 +307,55 @@ function RecordingsDataView() {
 
           <IMUDataView
             type={dataType.JSON} 
-            title={"IMU Accel Data"}
-            data={IMUAccelData}
+            title={"IMU Data"}
+            data={[IMUAccelData, IMUGyroData, IMUMagData]}
             recordingName={recordingName} 
             state={state} 
             recordingMetaData={recordingData}>
           </IMUDataView>
+          </>
+      }
+      return <></>;
+    }
+
+    const renderStreamingsNoIMU= () => {
+      if (recordingData !== undefined && recordingData && recordingData.streams && !Object.keys(recordingData.streams).includes(streamingType.IMUACCEL) && !Object.keys(recordingData.streams).includes(streamingType.IMUGYRO) && !Object.keys(recordingData.streams).includes(streamingType.IMUMAG)){
+        return <>
+          <VideoDataView 
+            type={dataType.VIDEO} 
+            data={recordingData} 
+            title={"Cameras"} 
+            state={state} 
+            recordingName={recordingName} 
+            onProgress={(res) => handleProgress(res)} 
+            onSeek={res => handleSeekingFromVideoCard(res)}>
+          </VideoDataView>
+
+          <AudioDataView 
+            type={dataType.AUDIO} 
+            data={recordingData} 
+            title={"Audio"} 
+            state={state} 
+            recordingName={recordingName} 
+            onProgress={(res) => handleProgress(res)} 
+            onSeek={res => handleSeekingFromVideoCard(res)}>  
+          </AudioDataView>
+
+          <EyesDataView 
+            type={dataType.JSON} 
+            data={eyeData} 
+            title={"Eye Data"}
+            recordingMetadata={recordingData}
+            currentState={state}>  
+          </EyesDataView>
+
+          <HandsDataView
+            type={dataType.JSON} 
+            data={handData}
+            recordingMetaData={recordingData}
+            state={state}
+            title={"Hands Data"}>
+          </HandsDataView>
           </>
       }
       return <></>;
@@ -386,6 +429,7 @@ function RecordingsDataView() {
             // onBookmark={addBookmark}
           />
       {renderStreamings()}
+      {renderStreamingsNoIMU()}
     </div>
   );
 }

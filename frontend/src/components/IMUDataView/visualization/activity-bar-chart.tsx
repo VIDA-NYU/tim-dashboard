@@ -20,9 +20,33 @@ function maxValue(a, b, c){
     }
 }
 
-const leftColor = "steelblue"
-const centerColor = "orange"
-const rightColor = "pink"
+function minValue(a, b, c){
+    if( a < b && a < c){
+        return a
+    }else if ( b < a && b < c){
+        return b
+    }else{
+        return c;
+    }
+}
+
+/*
+function taskLines(timestepArray){
+    for (let i = 0; i < timestepArray.length; i = i + 1){
+        var taskline = lineGraph.append("svg:line")
+     .attr("x1", 40)
+     .attr("y1", 50)
+     .attr("x2", 450)
+     .attr("y2", 150)
+     .style("stroke", "rgb(6,120,155)");
+    }
+}
+*/
+
+const xColor = "steelblue"
+const yColor = "orange"
+const zColor = "green"
+const taskColor = "lightgray"
 
 
 function computePercentage(d, index, data){
@@ -30,16 +54,19 @@ function computePercentage(d, index, data){
 }
 
 function IMUActivityBarChart({data}: IMUActivityBarChartProps){
+    console.log("entered activity bar chart")
 
     const svgRef = useRef(null);
     const contentRef = useRef(null);
 
-    const xAvisRef = useRef(null);
+    const xAxisRef = useRef(null);
     const yAxisRef = useRef(null);
-    const leftPathRef = useRef(null);
-    const centerPathRef = useRef(null);
-    const rightPathRef = useRef(null);
+    const xPathRef = useRef(null);
+    const yPathRef = useRef(null);
+    const zPathRef = useRef(null);
+    const taskPathRef = useRef(null);
 
+    /*
     const mouseHoverRef = useRef(null);
     const mouseHoverLeftCircleRef = useRef(null);
     const mouseHoverCenterCircleRef = useRef(null);
@@ -50,28 +77,50 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
     const mouseHoverTextLine2Ref = useRef(null);
     const mouseHoverTextLine3Ref = useRef(null);
     const mouseHoverTextRectRef = useRef(null);
+    */
 
     let marginX = 30;
     let marginY = 10;
     let contentHeight = 160;
     let contentWidth = 230;
 
+    var xCol = data.map(function(value,index) { return value[0]; });
+    var yCol = data.map(function(value,index) { return value[1]; });
+    var zCol = data.map(function(value,index) { return value[2]; });
+    var tCol = data.map(function(value,index) { return value[3]; });
+
+    let xExtent = d3.extent(xCol);
+    let yExtent = d3.extent(yCol);
+    let zExtent = d3.extent(zCol);
+    let tExtent = d3.extent(tCol);
+    let yScaleExtent = [1.2 * parseInt(minValue(xExtent[0], yExtent[0], zExtent[0])), 1.2 * parseInt(maxValue(xExtent[1], yExtent[1], zExtent[1]))];
+    
+    if(xExtent[0] < 3){
+        yScaleExtent = [-0.8, 0.8]
+    }
+
+    let taskStartTimesSecCoffeeTest1 = [4, 18, 34, 45, 47, 50, 51, 78, 83, 97, 129, 241, 246, 251, 391]
+    let coffeeTest1DurationSec = 413.561
+    let taskStartTimestepsCoffeeTest1 = [0.967, 4.352, 8.221, 10.881, 11.364, 12.090, 12.332, 18.861, 20.070, 23.455, 31.192, 58.274, 59.483, 60.692, 94.545]
+
     const xScale = d3.scaleLinear()
-        .domain(d3.extent(data, (d, i) => d.frame))
+        .domain(tExtent)
         .range([0, contentWidth]);
 
 
     const yScale = d3.scaleLinear()
-        .domain([0, 1.2 * d3.max(data, d=>maxValue(d[0], d[1], d[2]))]) 
+        .domain(yScaleExtent) 
         .range([contentHeight, 0]);
-
+    
     useEffect(() => {
-        let xAxisElm = d3.select(xAvisRef.current);
+        let xAxisElm = d3.select(xAxisRef.current);
         let yAxisElm = d3.select(yAxisRef.current);
 
-        let leftPathElm = d3.select(leftPathRef.current);
-        let centerPathElm = d3.select(centerPathRef.current);
-        let rightPathElm = d3.select(rightPathRef.current);
+        let xPathElm = d3.select(xPathRef.current);
+        let yPathElm = d3.select(yPathRef.current);
+        let zPathElm = d3.select(zPathRef.current);
+
+        let taskPathElm = d3.select(taskPathRef.current);
 
         if(xAxisElm){
             xAxisElm
@@ -82,55 +131,76 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
             yAxisElm.call(d3.axisLeft(yScale))
         }
 
+        if(taskPathElm){
+            taskPathElm.datum(taskStartTimestepsCoffeeTest1)
+            .attr("fill", "none")
+            .attr("stroke", taskColor)
+            .attr("stroke-width", 1.5)
+            .style("stroke-dasharray", ("3, 3"))
+            // @ts-ignore
+            /*
+            .attr("d", d3.line()
+                // @ts-ignore
+                    .x(function(d) {  return xScale(d[0]) })
+                // @ts-ignore
+                    .y(function(d) { return yScale(d[0]) })
+            )
+            */
+            .attr("x1", taskStartTimestepsCoffeeTest1[0])  
+            .attr("y1", 0)
+            .attr("x2", taskStartTimestepsCoffeeTest1[0])  
+            .attr("y2", contentHeight - 2 * marginY)
+        }
+
         for(let i = 0; i < data.length; i++){
             let d = data[i];
         }
 
-        if(leftPathElm){
-            leftPathElm.datum(data)
+        if(xPathElm){
+            xPathElm.datum(data)
                 .attr("fill", "none")
-                .attr("stroke", leftColor)
+                .attr("stroke", xColor)
                 .attr("stroke-width", 1.5)
                 // @ts-ignore
                 .attr("d", d3.line()
                     // @ts-ignore
-                        .x(function(d) {  return xScale(d.frame) })
+                        .x(function(d) {  return xScale(d[3]) })
                     // @ts-ignore
                         .y(function(d) { return yScale(d[0]) })
                 )
         }
-        if(centerPathElm){
-            centerPathElm.datum(data)
+        if(yPathElm){
+            yPathElm.datum(data)
                 .attr("fill", "none")
-                .attr("stroke", centerColor)
+                .attr("stroke", yColor)
                 .attr("stroke-width", 1.5)
                 // @ts-ignore
                 .attr("d", d3.line()
                     // @ts-ignore
-                        .x(function(d) {  return xScale(d.frame) })
+                        .x(function(d) {  return xScale(d[3]) })
                     // @ts-ignore
                         .y(function(d) { return yScale(d[1]) })
                 )
         }
-        if(rightPathElm){
-            rightPathElm.datum(data)
+        if(zPathElm){
+            zPathElm.datum(data)
                 .attr("fill", "none")
-                .attr("stroke", rightColor)
+                .attr("stroke", zColor)
                 .attr("stroke-width", 1.5)
                 // @ts-ignore
                 .attr("d", d3.line()
                     // @ts-ignore
-                    .x(function(d, i) {  return xScale(d.frame) })
+                    .x(function(d, i) {  return xScale(d[3]) })
                     // @ts-ignore
                     .y(function(d) { return yScale(d[2]) })
                 )
         }
 
 
-
     }, [xScale, yScale])
+    
 
-
+    /*
     let inferX = (mouse) => {
         const [minX, maxX] = d3.extent(data, d=>d.frame);
         const [xCord,yCord] = d3.pointer(mouse);
@@ -144,8 +214,9 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
         }
         return mouseFrame;
     }
+    */
 
-
+    /*
     useEffect(() => {
 
         const contentElm = d3.select(contentRef.current);
@@ -193,6 +264,7 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
         }
 
     })
+    */
 
     return (
         <div>
@@ -210,7 +282,7 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
                     ref={contentRef}
                 >
                     <g
-                        ref={xAvisRef}
+                        ref={xAxisRef}
                         transform={`translate(0,${contentHeight})`}
                     >
                     </g>
@@ -220,98 +292,28 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
                     ></g>
 
                     <path
-                        ref={leftPathRef}
+                        ref={xPathRef}
                     >
                     </path>
 
                     <path
-                        ref={centerPathRef}
+                        ref={yPathRef}
                     >
 
                     </path>
 
                     <path
-                        ref={rightPathRef}
+                        ref={zPathRef}
                     >
 
                     </path>
 
-                    <g
-                        ref={mouseHoverRef}
-                    >
-                        <rect
-                            width={2}
-                            x={-1}
-                            height={contentHeight}
-                            fill={"lightgray"}
-                        >
-                        </rect>
-
-                        <circle
-                            r={3}
-                            stroke={leftColor}
-                            ref={mouseHoverLeftCircleRef}
-                            fill={"none"}
-                        >
-                        </circle>
-
-                        <circle
-                            r={3}
-                            stroke={centerColor}
-                            ref={mouseHoverCenterCircleRef}
-                            fill={"none"}
-                        >
-                        </circle>
-
-                        <circle
-                            r={3}
-                            stroke={rightColor}
-                            ref={mouseHoverRightCircleRef}
-                            fill={"none"}
-                        >
-                        </circle>
-                        <rect
-                            ref={mouseHoverTextRectRef}
-                            width={94}
-                            height={42}
-                            fill={"#fdfdfd"}
-                            transform={"translate(5, 19)"}
-                            filter="url(#f1)"
-                            rx={3}
-                        >
-
-                        </rect
-
-                        >
-                        <text
-                            ref={mouseHoverTextRef}
-                            transform={"translate(36, 50)"}
-                            fontSize={12}
-                            textAnchor={"start"}
-
-                        >
-                            <tspan x="0" dy=".6em"
-                                   ref={mouseHoverTextLine0Ref}></tspan>
-                            <tspan
-                                fill={leftColor}
-                                x="0" dy=".8em" ref={mouseHoverTextLine1Ref}></tspan>
-                            <tspan
-                                fill={centerColor}
-                                x="0" dy=".9em" ref={mouseHoverTextLine2Ref}></tspan>
-                            <tspan
-                                fill={rightColor}
-                                x="0" dy=".9em" ref={mouseHoverTextLine3Ref}></tspan>
-                        </text>
-
-
-
-                    </g>
                     <g
                         transform={"translate(190, 0)"}
                     >
                         <g transform={"translate(0, 0)"}>
                             <circle
-                                fill={leftColor}
+                                fill={xColor}
                                 r={5}
                                 cx={0}
                                 cy={2.5}
@@ -321,12 +323,12 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
                                 y={6}
                                 fontSize={12}
                             >
-                                X Axis
+                                X
                             </text>
                         </g>
-                        <g transform={"translate(0, 0)"}>
+                        <g transform={"translate(30, 0)"}>
                             <circle
-                                fill={centerColor}
+                                fill={yColor}
                                 r={5}
                                 cx={0}
                                 cy={2.5}
@@ -336,12 +338,12 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
                                 y={6}
                                 fontSize={12}
                             >
-                                Y Axis
+                                Y
                             </text>
                         </g>
-                        <g transform={"translate(0, 18)"}>
+                        <g transform={"translate(60, 0)"}>
                             <circle
-                                fill={rightColor}
+                                fill={zColor}
                                 r={5}
                                 cx={0}
                                 cy={2.5}
@@ -351,10 +353,9 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
                                 y={6}
                                 fontSize={12}
                             >
-                                Z Axis
+                                Z
                             </text>
                         </g>
-
                     </g>
 
                 </g>

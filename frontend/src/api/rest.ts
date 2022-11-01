@@ -294,6 +294,7 @@ export async function getHandData (recordingName) {
 
 export async function getIMUAccelData (recordingName) {
     // const accelurl ="https://api.ptg.poly.edu/recordings/static/coffee-test-1/imuaccel.json";
+    console.log("Entered getIMUAccelData")
     const url = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/imuaccel.json`;
     const response = await fetch(url).then((res) => res.json());
 

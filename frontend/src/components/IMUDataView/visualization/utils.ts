@@ -105,20 +105,28 @@ function preprocessIfJSON(dataItem){
     }
 }
 
+function addTimestep(data){
+    let dataTime = []
+    for(let i = 1; i < data.length + 1; i=i+1){
+        dataTime.push(data[i-1].concat(i))
+    }
+    return dataTime;
+}
+
 function preprocessData(data){
     console.log("Entered preprocessData")
     if(isEmpty(data)){
         return data;
     }
     const targetLen = 100;
-    console.log("Data length before sample:")
-    console.log(data.length)
     let sampleRate = Math.ceil(data.length / targetLen);
     data = sampleArray(data, sampleRate)
-    console.log("Data after sampling:")
-    console.log(data)
+    let dataTime = addTimestep(data)
 
-    return data;
+    console.log("Data after sampling/adding timestep:")
+    console.log(dataTime)
+
+    return dataTime;
 }
 
 export {computeIMUActivity, isEmpty, sampleArray, preprocessData};
