@@ -97,16 +97,16 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
     let tExtent = d3.extent(tCol);
     let yScaleExtent = [1.2 * parseInt(minValue(xExtent[0], yExtent[0], zExtent[0])), 1.2 * parseInt(maxValue(xExtent[1], yExtent[1], zExtent[1]))];
     
+    if(xExtent[0] < 2){
+        yScaleExtent = [-0.99, 0.99]
+    }
+    
     if(xExtent[0] < 2 && recordingName == "coffee-test-1"){
         yScaleExtent = [-0.8, 0.8]
     }
 
     if(xExtent[0] < 2 && recordingName == "coffee-test-2"){
         yScaleExtent = [-2.0, 0.8]
-    }
-
-    if(xExtent[0] < 2){
-        yScaleExtent = [-0.99, 0.99]
     }
 
     let taskStartTimestepsCoffeeTest1 = [0.967, 4.352, 8.221, 10.881, 11.364, 12.090, 12.332, 18.861, 20.070, 23.455, 31.192, 58.274, 59.483, 60.692, 94.545]
