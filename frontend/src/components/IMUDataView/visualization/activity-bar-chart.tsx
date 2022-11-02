@@ -177,18 +177,20 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
 
             //this needs to be on click play
             /*
-            svgElm.append("line")
-                .style("stroke-width", 2)
-                .style("stroke", "red")
-                .style("fill", "none")
-                .attr("x1", marginX)
-                .attr("y1", marginY)
-                .attr("x2", marginX)
-                .attr("y2", marginY + contentHeight)
-                .transition()
-                .duration(5000)
-                .attr("x1", contentWidth)
-                .attr("x2", contentWidth);
+            if(playing){
+                svgElm.append("line")
+                    .style("stroke-width", 2)
+                    .style("stroke", "red")
+                    .style("fill", "none")
+                    .attr("x1", marginX)
+                    .attr("y1", marginY)
+                    .attr("x2", marginX)
+                    .attr("y2", marginY + contentHeight)
+                    .transition()
+                    .duration(5000)
+                    .attr("x1", contentWidth)
+                    .attr("x2", contentWidth);
+            }
             */
             
         }
