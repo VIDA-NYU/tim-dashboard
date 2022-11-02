@@ -30,19 +30,6 @@ function minValue(a, b, c){
     }
 }
 
-/*
-function taskLines(timestepArray){
-    for (let i = 0; i < timestepArray.length; i = i + 1){
-        var taskline = lineGraph.append("svg:line")
-     .attr("x1", 40)
-     .attr("y1", 50)
-     .attr("x2", 450)
-     .attr("y2", 150)
-     .style("stroke", "rgb(6,120,155)");
-    }
-}
-*/
-
 const xColor = "steelblue"
 const yColor = "orange"
 const zColor = "green"
@@ -106,7 +93,7 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
     }
 
     if(xExtent[0] < 2 && recordingName == "coffee-test-2"){
-        yScaleExtent = [-2.0, 0.8]
+        yScaleExtent = [-3.5, 0.99]
     }
 
     let taskStartTimestepsCoffeeTest1 = [0.967, 4.352, 8.221, 10.881, 11.364, 12.090, 12.332, 18.861, 20.070, 23.455, 31.192, 58.274, 59.483, 60.692, 94.545]
