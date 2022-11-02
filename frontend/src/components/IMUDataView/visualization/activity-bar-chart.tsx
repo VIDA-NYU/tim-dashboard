@@ -46,7 +46,7 @@ function taskLines(timestepArray){
 const xColor = "steelblue"
 const yColor = "orange"
 const zColor = "green"
-const taskColor = "lightgray"
+const taskColor = "darkgray"
 
 
 function computePercentage(d, index, data){
@@ -111,7 +111,7 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
     const yScale = d3.scaleLinear()
         .domain(yScaleExtent) 
         .range([contentHeight, 0]);
-    
+
     useEffect(() => {
         let xAxisElm = d3.select(xAxisRef.current);
         let yAxisElm = d3.select(yAxisRef.current);
@@ -120,6 +120,7 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
         let yPathElm = d3.select(yPathRef.current);
         let zPathElm = d3.select(zPathRef.current);
 
+        let svgElm = d3.select(svgRef.current);
         let taskPathElm = d3.select(taskPathRef.current);
 
         if(xAxisElm){
@@ -129,27 +130,6 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
 
         if(yAxisElm){
             yAxisElm.call(d3.axisLeft(yScale))
-        }
-
-        if(taskPathElm){
-            taskPathElm.datum(taskStartTimestepsCoffeeTest1)
-            .attr("fill", "none")
-            .attr("stroke", taskColor)
-            .attr("stroke-width", 1.5)
-            .style("stroke-dasharray", ("3, 3"))
-            // @ts-ignore
-            /*
-            .attr("d", d3.line()
-                // @ts-ignore
-                    .x(function(d) {  return xScale(d[0]) })
-                // @ts-ignore
-                    .y(function(d) { return yScale(d[0]) })
-            )
-            */
-            .attr("x1", taskStartTimestepsCoffeeTest1[0])  
-            .attr("y1", 0)
-            .attr("x2", taskStartTimestepsCoffeeTest1[0])  
-            .attr("y2", contentHeight - 2 * marginY)
         }
 
         for(let i = 0; i < data.length; i++){
@@ -194,6 +174,38 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
                     // @ts-ignore
                     .y(function(d) { return yScale(d[2]) })
                 )
+        }
+
+        if(svgElm){
+
+            for(let i = 0; i < taskStartTimestepsCoffeeTest1.length; i = i + 1){
+                svgElm.append("line")
+                    .attr("x1", marginX + xScale(taskStartTimestepsCoffeeTest1[i])) 
+                    .attr("y1", marginY)
+                    .attr("x2", marginX + xScale(taskStartTimestepsCoffeeTest1[i]))  
+                    .attr("y2", marginY + contentHeight)
+                    .style("stroke-width", 2)
+                    .style("stroke", taskColor)
+                    .style("fill", "none")
+                    .style("stroke-dasharray", ("3, 3"));
+            }  
+
+            //this needs to be on click play
+            /*
+            svgElm.append("line")
+                .style("stroke-width", 2)
+                .style("stroke", "red")
+                .style("fill", "none")
+                .attr("x1", marginX)
+                .attr("y1", marginY)
+                .attr("x2", marginX)
+                .attr("y2", marginY + contentHeight)
+                .transition()
+                .duration(5000)
+                .attr("x1", contentWidth)
+                .attr("x2", contentWidth);
+            */
+            
         }
 
 
