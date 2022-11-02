@@ -55,7 +55,7 @@ export default function DashboardTabs() {
           <Tab label="Create Data" {...a11yProps(0)} />
           <Tab label="Historical Data" {...a11yProps(1)} />
           <Tab label="Recipe Collection" {...a11yProps(2)} />
-          <Tab label="Debuging Models" {...a11yProps(3)} />
+          <Tab label="Debugging Models" {...a11yProps(3)} />
           <Tab label="Wizard of OZ" {...a11yProps(4)} />
         </Tabs>
       </Box>

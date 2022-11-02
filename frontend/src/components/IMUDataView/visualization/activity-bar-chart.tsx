@@ -55,6 +55,8 @@ function computePercentage(d, index, data){
 
 function IMUActivityBarChart({data}: IMUActivityBarChartProps){
     console.log("entered activity bar chart")
+    let recordingNameArr = data.pop()
+    let recordingName = String(recordingNameArr[0])
 
     const svgRef = useRef(null);
     const contentRef = useRef(null);
@@ -95,13 +97,20 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
     let tExtent = d3.extent(tCol);
     let yScaleExtent = [1.2 * parseInt(minValue(xExtent[0], yExtent[0], zExtent[0])), 1.2 * parseInt(maxValue(xExtent[1], yExtent[1], zExtent[1]))];
     
-    if(xExtent[0] < 3){
+    if(xExtent[0] < 2 && recordingName == "coffee-test-1"){
         yScaleExtent = [-0.8, 0.8]
     }
 
-    let taskStartTimesSecCoffeeTest1 = [4, 18, 34, 45, 47, 50, 51, 78, 83, 97, 129, 241, 246, 251, 391]
-    let coffeeTest1DurationSec = 413.561
+    if(xExtent[0] < 2 && recordingName == "coffee-test-2"){
+        yScaleExtent = [-2.0, 0.8]
+    }
+
+    if(xExtent[0] < 2){
+        yScaleExtent = [-0.99, 0.99]
+    }
+
     let taskStartTimestepsCoffeeTest1 = [0.967, 4.352, 8.221, 10.881, 11.364, 12.090, 12.332, 18.861, 20.070, 23.455, 31.192, 58.274, 59.483, 60.692, 94.545]
+    let taskStartTimestepsCoffeeTest2 = [0.908, 4.315, 9.084, 12.264, 12.718, 12.945, 14.535, 21.575, 23.620, 27.253, 44.060, 59.050, 60.185, 60.866, 96.068]
 
     const xScale = d3.scaleLinear()
         .domain(tExtent)
@@ -134,6 +143,54 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
 
         for(let i = 0; i < data.length; i++){
             let d = data[i];
+        }
+
+        if(svgElm){
+
+            if(recordingName == "coffee-test-1"){
+                for(let i = 0; i < taskStartTimestepsCoffeeTest1.length; i = i + 1){
+                    svgElm.append("line")
+                        .attr("x1", marginX + xScale(taskStartTimestepsCoffeeTest1[i])) 
+                        .attr("y1", marginY)
+                        .attr("x2", marginX + xScale(taskStartTimestepsCoffeeTest1[i]))  
+                        .attr("y2", marginY + contentHeight)
+                        .style("stroke-width", 2)
+                        .style("stroke", taskColor)
+                        .style("fill", "none")
+                        .style("stroke-dasharray", ("3, 3"));
+                } 
+            } 
+
+            if(recordingName == "coffee-test-2"){
+                for(let i = 0; i < taskStartTimestepsCoffeeTest2.length; i = i + 1){
+                    svgElm.append("line")
+                        .attr("x1", marginX + xScale(taskStartTimestepsCoffeeTest2[i])) 
+                        .attr("y1", marginY)
+                        .attr("x2", marginX + xScale(taskStartTimestepsCoffeeTest2[i]))  
+                        .attr("y2", marginY + contentHeight)
+                        .style("stroke-width", 2)
+                        .style("stroke", taskColor)
+                        .style("fill", "none")
+                        .style("stroke-dasharray", ("3, 3"));
+                } 
+            } 
+
+            //this needs to be on click play
+            /*
+            svgElm.append("line")
+                .style("stroke-width", 2)
+                .style("stroke", "red")
+                .style("fill", "none")
+                .attr("x1", marginX)
+                .attr("y1", marginY)
+                .attr("x2", marginX)
+                .attr("y2", marginY + contentHeight)
+                .transition()
+                .duration(5000)
+                .attr("x1", contentWidth)
+                .attr("x2", contentWidth);
+            */
+            
         }
 
         if(xPathElm){
@@ -175,39 +232,6 @@ function IMUActivityBarChart({data}: IMUActivityBarChartProps){
                     .y(function(d) { return yScale(d[2]) })
                 )
         }
-
-        if(svgElm){
-
-            for(let i = 0; i < taskStartTimestepsCoffeeTest1.length; i = i + 1){
-                svgElm.append("line")
-                    .attr("x1", marginX + xScale(taskStartTimestepsCoffeeTest1[i])) 
-                    .attr("y1", marginY)
-                    .attr("x2", marginX + xScale(taskStartTimestepsCoffeeTest1[i]))  
-                    .attr("y2", marginY + contentHeight)
-                    .style("stroke-width", 2)
-                    .style("stroke", taskColor)
-                    .style("fill", "none")
-                    .style("stroke-dasharray", ("3, 3"));
-            }  
-
-            //this needs to be on click play
-            /*
-            svgElm.append("line")
-                .style("stroke-width", 2)
-                .style("stroke", "red")
-                .style("fill", "none")
-                .attr("x1", marginX)
-                .attr("y1", marginY)
-                .attr("x2", marginX)
-                .attr("y2", marginY + contentHeight)
-                .transition()
-                .duration(5000)
-                .attr("x1", contentWidth)
-                .attr("x2", contentWidth);
-            */
-            
-        }
-
 
     }, [xScale, yScale])
     

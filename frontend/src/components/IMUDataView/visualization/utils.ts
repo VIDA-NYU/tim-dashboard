@@ -113,8 +113,7 @@ function addTimestep(data){
     return dataTime;
 }
 
-function preprocessData(data){
-    console.log("Entered preprocessData")
+function preprocessData(data, recordingName){
     if(isEmpty(data)){
         return data;
     }
@@ -122,10 +121,7 @@ function preprocessData(data){
     let sampleRate = Math.ceil(data.length / targetLen);
     data = sampleArray(data, sampleRate)
     let dataTime = addTimestep(data)
-
-    console.log("Data after sampling/adding timestep:")
-    console.log(dataTime)
-
+    dataTime.push([recordingName, recordingName, recordingName])
     return dataTime;
 }
 

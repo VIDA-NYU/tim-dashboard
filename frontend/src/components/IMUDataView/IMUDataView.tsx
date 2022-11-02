@@ -74,9 +74,11 @@ const DefaultIMUView = ({data}: any) => {
 const IMUDataView = ({type, title, data, recordingName, state, onProgress, onSeek, recordingMetaData}: any) => {
     // let sampledData = sampleArray(data, Activity_Sample_Rate);
     console.log("Entered IMUDataView")
-    let processedAccelData = preprocessData(data[0]);
-    let processedGyroData = preprocessData(data[1]);
-    let processedMagData = preprocessData(data[2]);
+    let processedAccelData = preprocessData(data[0], recordingName);
+    console.log("processedAccelData:")
+    console.log(processedAccelData)
+    let processedGyroData = preprocessData(data[1], recordingName);
+    let processedMagData = preprocessData(data[2], recordingName);
 
     //let IMUActivity = computeIMUActivity(processedData);
     /*
