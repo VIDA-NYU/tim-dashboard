@@ -105,6 +105,7 @@ export default function AnnotationControlComp({
                             currentTime={currentTime}
                             errorStatus={errorStatus}
                             recommendingGoingNext={stepProgressValue > progressThreshold}
+                            mode={annotationData.meta.mode}
                         />
                         <RecipeProgressComp
                             numberSteps={recipe.instructions.length}

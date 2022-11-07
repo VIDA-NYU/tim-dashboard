@@ -51,7 +51,7 @@ export default function AnnotationRecipeStepText({instruction, isActivated, step
         <Container>
             <Avatar
                 sx={{ width: 28, height: 28, fontSize: 18, bgcolor: avatarColor }}
-            >{step}</Avatar>
+            >{step+1}</Avatar>
             <TextContainer>
                 <Typography sx={{color: textColor, textAlign: "center"}} variant={"body1"}>{instruction}</Typography>
                 { isActivated && <BorderLinearProgress variant="determinate" value={progressValue} />}
