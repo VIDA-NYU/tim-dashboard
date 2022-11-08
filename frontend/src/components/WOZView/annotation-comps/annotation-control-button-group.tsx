@@ -12,7 +12,8 @@ interface AnnotationControlButtonGroupProps {
     handleGoingPrevStep: (time: number) => void,
     currentTime: number,
     errorStatus: boolean,
-    recommendingGoingNext: boolean
+    recommendingGoingNext: boolean,
+    mode: "online" | "offline" | "undefined"
 }
 
 const Container = styled("div")({
@@ -25,9 +26,15 @@ const Container = styled("div")({
 
 export default function AnnotationControlButtonGroup({handleGoingNextStep, handleGoingPrevStep,
                                                          currentTime, errorStatus,
-                                                        recommendingGoingNext
+                                                        recommendingGoingNext, mode
                                                      }:
     AnnotationControlButtonGroupProps){
+
+    let localCurrentTime = Date.now();
+    if(!currentTime && mode === "online"){
+        currentTime = localCurrentTime;
+    }
+
     return (
         <Container>
             <IconButton aria-label="revert" size="medium"

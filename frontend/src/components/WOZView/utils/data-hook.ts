@@ -87,16 +87,18 @@ function parseStreamBuffer(arrayBufferData: ArrayBuffer | undefined){
 
 function useStreamFrameData(){
     const [cachedTime, setCachedTime] = useState<string>();
+
+    const {time: videoTime} = useStreamData({streamId: "main", parse: null})
+
     const {data: reasoningFrameBuffer, time } = useStreamData({ streamId: "reasoning",
         parse: null });
 
     useEffect(() => {
-        if(time){
-            setCachedTime(time);
+        if(videoTime){
+            setCachedTime(videoTime);
         }
-    }, [time])
+    }, [videoTime])
     const reasoningFrameData = parseStreamBuffer(reasoningFrameBuffer)
-
     const { data: egovlpActionBuffer } = useStreamData({ streamId: "egovlp:action:steps",
         parse: null });
     const egovlpActionFrameData = parseStreamBuffer(egovlpActionBuffer)
