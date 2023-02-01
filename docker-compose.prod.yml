@@ -12,7 +12,8 @@ services:
       context: ./frontend
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.tim-dash.rule=Host(`dashboard.${DOMAIN}`)"
+      - "traefik.http.routers.tim-dash.rule=Host(`${DOMAIN}`)"
+      #- "traefik.http.routers.tim-dash.entrypoints=web"
       - "traefik.http.routers.tim-dash.entrypoints=websecure"
       - "traefik.http.routers.tim-dash.tls.certresolver=le"
       - "traefik.http.routers.tim-dash.tls=true"
