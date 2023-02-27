@@ -30,6 +30,7 @@ import SessionControlGroup from "./session-control/session-control-group";
 import RecipeTextComp from "./recipe/recipe-text";
 import ErrorAlert from "./common/error-alert";
 import PerceptronMainComp from "./perceptron-comps/perceptron-main-comp";
+import RephraseComp from "./instruction-rephrase/rephrase-comp";
 
 
 interface WozStatusCompStatus {
@@ -210,6 +211,12 @@ export default function WozStatusComp({
             </AnnotationContext.Consumer>
 
             {recipe && <RowComponent> <RecipeTextComp recipeInstructions={recipe.instructions} currentStep={currentStep}/></RowComponent>}
+
+            <RowComponent>
+                <RephraseComp recipeInstructions={recipe.instructions} currentStep={currentStep}/>
+
+
+            </RowComponent>
 
             <RowComponent>
                 <AnnotationContext.Consumer>
