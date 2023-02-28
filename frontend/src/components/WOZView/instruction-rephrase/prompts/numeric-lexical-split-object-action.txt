@@ -29,9 +29,3 @@ Original Instruction: Open out the front and back petals. As you open the front 
 Objects in the scene: {}
 Simplified Instruction: Open the front and back petals to reveal the color inside. The side petals should open up too.
 Explanation: Combined the original two sentences into one to make the instruction more concise; Replaced the phrase "revealing the color inside" with a shorter and simpler version "to reveal the color inside;
-
-Please simplify the following case:
-Context: The user is making a coffee. This is one of the steps;
-Original Instruction: Prepare the filter insert by folding the paper filter in half to create a semi-circle, and in half again to create a quarter-circle. Place the paper filter in the dripper and spread open to create a cone..
-Objects in the scene: {}
-Simplified Instruction:

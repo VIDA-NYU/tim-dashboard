@@ -11,7 +11,7 @@ const INFERENCE_TEXT = 'Please simplify the following case:' +
 
 function buildInferencePrompt(context: string, objects: Array<RecipeObjectStatus>, originalInstruction: string){
     const objectString = "";
-    return `Please simplify the following case:` +
+    return `Please simplify the following case and do not provide the explanation:` +
         `Context: ${context};` +
         `Original Instruction: ${originalInstruction}` +
         `Objects in the scene: ${objectString}` +
