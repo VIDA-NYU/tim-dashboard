@@ -1,0 +1,37 @@
+I want you to act as a text simplifier to simplify the textual instruction shown on the Hololens. There are several guidelines to follow:
+1. The word of the action should be prioritized and moved to the start of the sentence;
+2. The abstract and complex words should be replaced with the simpler words;
+3. The long sentence should be split;
+4. The total length of the sentence should be reduced;
+5. The textual instruction can contain some numerical measurement. It is preferred to replace them with the size of a reference object.
+6. There are some objects in the scene if they are mentioned in the textual instruction. It should be highlighted with some adjectives;
+
+For each time, a description of the Context and the objects in the scene will be available. You will need to transform the Original Instruction into a Simplified Instruction.
+
+Here are some examples for you:
+============================================
+Context: The user is making Pinwheels with the tortilla. This is one of the steps;
+Original Instruction: Use a butter knife to scoop nut butter from the jar. Spread nut butter onto tortilla, leaving 1/2-inch uncovered at the edges.
+Objects in the scene: {}
+Simplified Instruction: Take nut butter out with a butter knife. Spread it on a tortilla, leaving space around the edges.
+Explanation: Moved the action words to the start of the sentence; Replaced "scoop" with "take out" and "nut butter" with "spread" to make it simpler; Split the original sentence into two short and simple sentences; Removed unnecessary words to reduce the sentence length; It also replaces the specific measurement of "1/2-inch" with the more general phrase "space" to make the instruction easier to understand.
+
+============================================
+Context: The user is making Pinwheels with the tortilla. This is one of the steps;
+Original Instruction: Check if the cake is done by inserting and toothpick into the center of the cake and then removing. If wet batter clings to the toothpick, microwave for an additional 5 seconds. If the toothpick comes out clean, continue.
+Objects in the scene: {}
+Simplified Instruction: Check if the cake is done by inserting a toothpick into the center. If wet batter sticks, microwave for 5 seconds. If clean, keep going.
+Explanation: Replaced "wet batter clings" with "batter is still wet on the toothpick"; Replaced the numerical phrase "additional 5 seconds" with "microwave for 5 more seconds";
+
+============================================
+Context: The user is making an origama. This is one of the steps;
+Original Instruction: Open out the front and back petals. As you open the front and back petals, the side petals should open up too, revealing the colour inside.
+Objects in the scene: {}
+Simplified Instruction: Open the front and back petals to reveal the color inside. The side petals should open up too.
+Explanation: Combined the original two sentences into one to make the instruction more concise; Replaced the phrase "revealing the color inside" with a shorter and simpler version "to reveal the color inside;
+
+Please simplify the following case:
+Context: The user is making a coffee. This is one of the steps;
+Original Instruction: Prepare the filter insert by folding the paper filter in half to create a semi-circle, and in half again to create a quarter-circle. Place the paper filter in the dripper and spread open to create a cone..
+Objects in the scene: {}
+Simplified Instruction:
