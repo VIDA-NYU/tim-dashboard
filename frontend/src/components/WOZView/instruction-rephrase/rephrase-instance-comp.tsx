@@ -5,7 +5,7 @@ import Avatar from '@mui/material/Avatar';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import {InstructionRephraseInstance} from "./types";
 import Card from "@mui/material/Card";
-
+import RephraseContentComp, {TextCard} from "./rephrase-content-comp";
 
 interface RephraseInstanceProps {
     rephraseInstance: InstructionRephraseInstance,
@@ -18,12 +18,7 @@ const Container = styled("div")({
     flexGrow: 12,
 })
 
-const TextCard = styled(Card)({
-    marginLeft: "8px",
-    paddingLeft: "10px",
-    paddingTop: "2px",
-    paddingBottom: "2px"
-})
+
 
 export default function RephraseInstanceComp({rephraseInstance}: RephraseInstanceProps){
     return (
@@ -42,13 +37,7 @@ export default function RephraseInstanceComp({rephraseInstance}: RephraseInstanc
                 </Typography>
             </TextCard>
 
-            <TextCard>
-                <Typography
-                    variant={"body2"}
-                >
-                    {rephraseInstance.rephrased}
-                </Typography>
-            </TextCard>
+            <RephraseContentComp rephraseInstance={rephraseInstance} humanRephrasedInstruction={""}/>
 
         </Container>
     )
