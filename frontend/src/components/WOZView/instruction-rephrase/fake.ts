@@ -5,7 +5,8 @@ export function generateFakeInstructionRephraseInstanceResponse(original: string
         instance: {
             params: {
                 numericSimplification: true,
-                lexicalSimplification: true
+                lexicalSimplification: true,
+                humanEdited: false
             },
             original: original,
             rephrased: "[rephrased text offline]",

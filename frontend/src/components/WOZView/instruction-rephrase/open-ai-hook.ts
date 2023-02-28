@@ -35,12 +35,14 @@ async function callOpenAIAPI(context: string, objects: Array<RecipeObjectStatus>
 
 }
 
-function useInstructionRephraseAPI (requestParams: InstructionRephraseInstanceRequest){
+function useInstructionRephraseAPI (requestParams: InstructionRephraseInstanceRequest, humanRephrasedInstruction: string){
 
     const [response, setResponse] = useState<InstructionRephraseInstanceResponse>();
     useEffect(() => {
         let response = generateFakeInstructionRephraseInstanceResponse(requestParams.original, requestParams.params);
-        setResponse(response);
+        if(!requestParams.params.humanEdited){
+            setResponse(response);
+        }
         // callOpenAIAPI("The user is making Pinwheels with the tortilla. This is one of the steps",
         //     [], requestParams.original,
         //     requestParams.params).then(res => {
@@ -54,7 +56,22 @@ function useInstructionRephraseAPI (requestParams: InstructionRephraseInstanceRe
         //         setResponse(openaiResponse);
         // });
     }, [requestParams.original,
-        requestParams.params.numericSimplification, requestParams.params.lexicalSimplification])
+        requestParams.params.numericSimplification, requestParams.params.lexicalSimplification,
+        requestParams.params.humanEdited])
+
+    useEffect(() => {
+        if(requestParams.params.humanEdited){
+            setResponse(
+                {
+                    instance: {
+                        params: requestParams.params,
+                        original: requestParams.original,
+                        rephrased: humanRephrasedInstruction
+                    }
+                }
+            )
+        }
+    }, [humanRephrasedInstruction, requestParams.params.humanEdited])
 
     return {
         instructionRephraseInstanceResponse: response

@@ -2,13 +2,16 @@ import {styled} from "@mui/material";
 import {InstructionRephraseParams} from "./types";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { green, pink } from '@mui/material/colors';
+import { green, pink, blueGrey } from '@mui/material/colors';
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import RephraseControlSwitch from "./rephrase-control-switch";
 import NumbersIcon from '@mui/icons-material/Numbers';
 import AbcIcon from '@mui/icons-material/Abc';
 import Typography from "@mui/material/Typography";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import EditIcon from '@mui/icons-material/Edit';
+
 
 interface RephraseControlPanelProps {
     params: InstructionRephraseParams,
@@ -32,7 +35,8 @@ const Content = styled("div")({
 })
 const ActiveColorMap = {
     numericSimplification: pink[500],
-    lexicalSimplification: green[500]
+    lexicalSimplification: green[500],
+    humanEdited: blueGrey[500]
 }
 
 const RephraseOptionList = styled("div")({
@@ -78,6 +82,19 @@ export function RephraseControlPanel ({params, onSettingParams}: RephraseControl
                                 onSettingParams({
                                     ...params,
                                     lexicalSimplification: value
+                                })
+                            }}
+                        />
+
+                        <RephraseControlSwitch
+                            iconElement={<EditIcon/>}
+                            tooltipHint={"human edited"}
+                            colorActivated={ActiveColorMap.humanEdited}
+                            stateActivated={params.humanEdited}
+                            onSettingState={(value: boolean) => {
+                                onSettingParams({
+                                    ...params,
+                                    humanEdited: value
                                 })
                             }}
                         />

@@ -5,7 +5,7 @@ import {InstructionRephraseParams, RephraseDisplayMode} from "./types";
 import {computeCurrentStep} from "../annotation/utils";
 import {AnnotationData} from "../annotation/types";
 
-interface RephraseContainerProps{
+interface RephraseContainerProps {
     recipeInstructions: Array<string>,
     annotationData: AnnotationData,
     currentTimeStampValue: number,
@@ -19,11 +19,17 @@ const Container = styled("div")({
     flexGrow: 7
 })
 
-export default function RephraseComp({recipeInstructions, annotationData, currentTimeStampValue, state}: RephraseContainerProps){
+export default function RephraseComp({
+                                         recipeInstructions,
+                                         annotationData,
+                                         currentTimeStampValue,
+                                         state
+                                     }: RephraseContainerProps) {
 
     const [currParams, setCurrParams] = useState<InstructionRephraseParams>({
-            numericSimplification: true,
-            lexicalSimplification: true
+        numericSimplification: true,
+        lexicalSimplification: true,
+        humanEdited: false
     });
     let currentTime = annotationData.meta.mode === "online" ? (currentTimeStampValue - annotationData.meta.entryTime) / 1000 : state.currentTime;
     let currentStep = computeCurrentStep(annotationData, 0, currentTime);

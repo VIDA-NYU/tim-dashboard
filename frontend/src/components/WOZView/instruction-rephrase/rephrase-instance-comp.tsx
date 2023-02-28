@@ -8,7 +8,9 @@ interface RephraseInstanceProps {
     rephraseDisplayMode: RephraseDisplayMode,
     stepIndex: number,
     onSettingStep: (value: number) => void,
-    recipeInstructions: Array<string>
+    recipeInstructions: Array<string>,
+    onSettingEditing: (value: boolean, humanRephrasedInstruction: string) => void
+
 }
 
 
@@ -21,7 +23,7 @@ const Container = styled("div")({
 
 
 export default function RephraseInstanceComp({rephraseInstance, rephraseDisplayMode,
-                                                 recipeInstructions,
+                                                 recipeInstructions, onSettingEditing,
                                                  stepIndex, onSettingStep}: RephraseInstanceProps){
 
 
@@ -34,7 +36,9 @@ export default function RephraseInstanceComp({rephraseInstance, rephraseDisplayM
                 stepIndex={stepIndex}
                 onSettingStep={onSettingStep}
             />
-            <RephraseContentComp rephraseInstance={rephraseInstance} humanRephrasedInstruction={""}/>
+            <RephraseContentComp
+                onSettingEditing={onSettingEditing}
+                rephraseInstance={rephraseInstance} humanRephrasedInstruction={""}/>
 
         </Container>
     )

@@ -12,7 +12,8 @@ import TextField from '@mui/material/TextField';
 import AccordionDetails from "@mui/material/AccordionDetails";
 interface RephraseContentProps {
     rephraseInstance: InstructionRephraseInstance
-    humanRephrasedInstruction: string
+    humanRephrasedInstruction: string,
+    onSettingEditing: (value: boolean, humanRephrasedInstruction: string) => void
 }
 
 export const TextCard = styled(Card)({
@@ -44,15 +45,24 @@ function renderContent(){
 }
 
 export default function RephraseContentComp({ rephraseInstance,
+                                                onSettingEditing,
                                                 humanRephrasedInstruction}: RephraseContentProps) {
     const [expandState, setExpandState] = useState<boolean>(false)
     const [editState, setEditState] = useState<boolean>(false);
     const [humanInputInstruction, setHumanInputInstruction] = useState<string>("");
     const onClickExpand = () => {
-        setExpandState(!expandState)
+        setExpandState(!expandState);
     }
 
-    const onClockEdit = () => {
+    const editFinished = () => {
+        setEditState(false);
+        onSettingEditing(true, humanInputInstruction);
+    }
+
+    const onClickEdit = () => {
+        if(editState && rephraseInstance.rephrased !== humanInputInstruction){
+            editFinished();
+        }
         setEditState(!editState);
     }
 
@@ -60,7 +70,7 @@ export default function RephraseContentComp({ rephraseInstance,
         // When the user pressed enter
         if(event.keyCode === 13){
             if(editState){
-                setEditState(false);
+                editFinished();
             }
         }
     }
@@ -88,7 +98,7 @@ export default function RephraseContentComp({ rephraseInstance,
                 />}
                 <RephraseInstanceControlPanel>
                     <IconButton
-                        onClick={onClockEdit}
+                        onClick={onClickEdit}
                         sx={{
                             width: 28,
                             height: 28,

@@ -2,11 +2,12 @@ import {styled} from "@mui/material";
 import RephraseInstanceComp from "./rephrase-instance-comp";
 import {useInstructionRephraseAPI} from "./open-ai-hook";
 import {RephraseControlPanel} from "./rephrase-control-panel";
-import {InstructionRephraseParams, RephraseDisplayMode} from "./types";
+import {InstructionRephraseParams, RephraseAnnotation, RephraseDisplayMode} from "./types";
 import RephraseModeSelector from "./rephrase-mode-selector";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import {useEffect, useState} from "react";
+import {computeStepRephrasedInstruction} from "./utils";
 
 interface StepRephraseProps {
     instruction: string,
@@ -41,7 +42,10 @@ export default function StepRephraseComp({instruction, stepIndex, onSettingParam
                                              params, displayMode, setDisplayMode}: StepRephraseProps){
 
     const [rephraseStep, setRephraseStep] = useState<number>(0);
-
+    const [rephraseAnnotation, setRephraseAnnotation] = useState<RephraseAnnotation>({
+        records: []
+    })
+    const [humanRephrasedInstruction, setHumanRephrasedInstruction] = useState<string>("");
 
     useEffect(() => {
         setRephraseStep(stepIndex)
@@ -54,14 +58,25 @@ export default function StepRephraseComp({instruction, stepIndex, onSettingParam
         rephraseDisplayStep = stepIndex;
     }
 
+    const onSettingEditing = (value: boolean, newValue: string) => {
+        setHumanRephrasedInstruction(newValue)
+        onSettingParams({
+            ...params,
+            humanEdited: value
+        })
+    }
+
+
     let stepToDisplay = RephraseDisplayMode.Static ? rephraseStep : rephraseDisplayStep ;
     const rephraseRequest = {
         original: recipeInstructions[stepToDisplay],
         params: params
     }
+    const {instructionRephraseInstanceResponse} = useInstructionRephraseAPI(rephraseRequest, humanRephrasedInstruction);
 
-    const {instructionRephraseInstanceResponse} = useInstructionRephraseAPI(rephraseRequest);
 
+
+    let rephrasedInstruction = computeStepRephrasedInstruction(stepToDisplay, recipeInstructions[stepToDisplay], rephraseAnnotation);
 
 
     return (
@@ -77,6 +92,7 @@ export default function StepRephraseComp({instruction, stepIndex, onSettingParam
             </LeftControlPanels>
 
             {instructionRephraseInstanceResponse && instructionRephraseInstanceResponse.instance && <RephraseInstanceComp
+                onSettingEditing={onSettingEditing}
                 rephraseDisplayMode={displayMode}
                 stepIndex={displayMode === RephraseDisplayMode.Static ? rephraseStep : rephraseDisplayStep}
                 onSettingStep={setRephraseStep}
