@@ -18,7 +18,7 @@ interface RephraseControlPanelProps {
 const Container = styled("div")({
     display: "flex",
     flexGrow: 0,
-    marginRight: "3px"
+    marginBottom: "9px"
 })
 
 const Content = styled("div")({

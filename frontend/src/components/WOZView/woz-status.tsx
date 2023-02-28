@@ -200,9 +200,9 @@ export default function WozStatusComp({
                         <AnnotationControlComp
                             currentTimeStampValue={currentTimestampValue}
                             mode={"auto"} recipe={recipe} state={state}
-                                               annotationData={annotationData}
-                                               setAnnotationData={setAnnotationData}
-                                               errorStatus={errorStatus}
+                            annotationData={annotationData}
+                            setAnnotationData={setAnnotationData}
+                            errorStatus={errorStatus}
 
                         ></AnnotationControlComp>
                     </RowComponent>
@@ -210,13 +210,21 @@ export default function WozStatusComp({
                 )}
             </AnnotationContext.Consumer>
 
-            {recipe && <RowComponent> <RecipeTextComp recipeInstructions={recipe.instructions} currentStep={currentStep}/></RowComponent>}
+            {recipe && <RowComponent> <RecipeTextComp recipeInstructions={recipe.instructions}
+                                                      currentStep={currentStep}/></RowComponent>}
+            <AnnotationContext.Consumer>
+                {({annotationData, setAnnotationData}) => (
+                    <RowComponent>
 
-            <RowComponent>
-                <RephraseComp recipeInstructions={recipe.instructions} currentStep={currentStep}/>
+                        <RephraseComp recipeInstructions={recipe.instructions}
+                                      state={state}
+                                      currentTimeStampValue={currentTimestampValue}
+                                      annotationData={annotationData}
+                        />
+                    </RowComponent>
 
-
-            </RowComponent>
+                )}
+            </AnnotationContext.Consumer>
 
             <RowComponent>
                 <AnnotationContext.Consumer>

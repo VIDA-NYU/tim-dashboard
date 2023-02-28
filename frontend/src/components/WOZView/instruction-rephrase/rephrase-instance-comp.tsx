@@ -1,14 +1,14 @@
-import {styled, Typography} from "@mui/material";
-import Badge from '@mui/material/Badge';
-import { deepOrange, deepPurple, blue, blueGrey } from '@mui/material/colors';
-import Avatar from '@mui/material/Avatar';
-import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
-import {InstructionRephraseInstance} from "./types";
-import Card from "@mui/material/Card";
-import RephraseContentComp, {TextCard} from "./rephrase-content-comp";
+import {styled} from "@mui/material";
+import {InstructionRephraseInstance, RephraseDisplayMode} from "./types";
+import RephraseContentComp from "./rephrase-content-comp";
+import RephraseOriginalTextDisplay from "./rephrase-original-text-display";
 
 interface RephraseInstanceProps {
     rephraseInstance: InstructionRephraseInstance,
+    rephraseDisplayMode: RephraseDisplayMode,
+    stepIndex: number,
+    onSettingStep: (value: number) => void,
+    recipeInstructions: Array<string>
 }
 
 
@@ -20,23 +20,20 @@ const Container = styled("div")({
 
 
 
-export default function RephraseInstanceComp({rephraseInstance}: RephraseInstanceProps){
+export default function RephraseInstanceComp({rephraseInstance, rephraseDisplayMode,
+                                                 recipeInstructions,
+                                                 stepIndex, onSettingStep}: RephraseInstanceProps){
+
+
+
     return (
         <Container>
-            <TextCard
-                sx={{
-                    marginBottom: "3px"
-                }}
-            >
-                <Typography
-                    variant={"body2"}
-                    sx={{
-                    textDecoration: "line-through",
-                }}>
-                    {rephraseInstance.original}
-                </Typography>
-            </TextCard>
-
+            <RephraseOriginalTextDisplay
+                allowStepControl={rephraseDisplayMode === RephraseDisplayMode.Static}
+                rephraseInstance={rephraseInstance}
+                stepIndex={stepIndex}
+                onSettingStep={onSettingStep}
+            />
             <RephraseContentComp rephraseInstance={rephraseInstance} humanRephrasedInstruction={""}/>
 
         </Container>
