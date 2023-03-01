@@ -31,6 +31,7 @@ import RecipeTextComp from "./recipe/recipe-text";
 import ErrorAlert from "./common/error-alert";
 import PerceptronMainComp from "./perceptron-comps/perceptron-main-comp";
 import RephraseComp from "./instruction-rephrase/rephrase-comp";
+import InstructionIllustrationComp from "./instruction-illustration/instruction-illustration-comp";
 
 
 interface WozStatusCompStatus {
@@ -220,6 +221,20 @@ export default function WozStatusComp({
                                       state={state}
                                       currentTimeStampValue={currentTimestampValue}
                                       annotationData={annotationData}
+                        />
+                    </RowComponent>
+
+                )}
+            </AnnotationContext.Consumer>
+
+            <AnnotationContext.Consumer>
+                {({annotationData, setAnnotationData}) => (
+                    <RowComponent>
+                        <InstructionIllustrationComp
+                            recipeInstructions={recipe.instructions}
+                            state={state}
+                            currentTimeStampValue={currentTimestampValue}
+                            annotationData={annotationData}
                         />
                     </RowComponent>
 
