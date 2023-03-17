@@ -65,22 +65,22 @@ function useInstructionRephraseAPI (requestParams: InstructionRephraseInstanceRe
 
     const [response, setResponse] = useState<InstructionRephraseInstanceResponse>();
     useEffect(() => {
-        let response = generateFakeInstructionRephraseInstanceResponse(requestParams.original, requestParams.params);
-        if(!requestParams.params.humanEdited){
-            setResponse(response);
-        }
-        // callOpenAIAPI("The user is making Pinwheels with the tortilla. This is one of the steps",
-        //     [], requestParams.original,
-        //     requestParams.params).then(res => {
-        //         let openaiResponse: InstructionRephraseInstanceResponse = {
-        //             instance: {
-        //                 original: requestParams.original,
-        //                 params: requestParams.params,
-        //                 rephrased: res
-        //             }
-        //         }
-        //         setResponse(openaiResponse);
-        // });
+        // let response = generateFakeInstructionRephraseInstanceResponse(requestParams.original, requestParams.params);
+        // if(!requestParams.params.humanEdited){
+        //     setResponse(response);
+        // }
+        callOpenAIAPI("The user is making Pinwheels with the tortilla. This is one of the steps",
+            [], requestParams.original,
+            requestParams.params).then(res => {
+                let openaiResponse: InstructionRephraseInstanceResponse = {
+                    instance: {
+                        original: requestParams.original,
+                        params: requestParams.params,
+                        rephrased: res
+                    }
+                }
+                setResponse(openaiResponse);
+        });
     }, [requestParams.original,
         requestParams.params.numericSimplification, requestParams.params.lexicalSimplification,
         requestParams.params.humanEdited])

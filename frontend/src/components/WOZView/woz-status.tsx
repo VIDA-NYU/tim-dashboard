@@ -32,6 +32,8 @@ import ErrorAlert from "./common/error-alert";
 import PerceptronMainComp from "./perceptron-comps/perceptron-main-comp";
 import RephraseComp from "./instruction-rephrase/rephrase-comp";
 import InstructionIllustrationComp from "./instruction-illustration/instruction-illustration-comp";
+import VideoSummaryLine from "./video-summary/video-summary-line/video-summary-line";
+import VideoSummaryComp from "./video-summary/video-summary-comp";
 
 
 interface WozStatusCompStatus {
@@ -231,6 +233,20 @@ export default function WozStatusComp({
                 {({annotationData, setAnnotationData}) => (
                     <RowComponent>
                         <InstructionIllustrationComp
+                            recipeInstructions={recipe.instructions}
+                            state={state}
+                            currentTimeStampValue={currentTimestampValue}
+                            annotationData={annotationData}
+                        />
+                    </RowComponent>
+
+                )}
+            </AnnotationContext.Consumer>
+
+            <AnnotationContext.Consumer>
+                {({annotationData, setAnnotationData}) => (
+                    <RowComponent>
+                        <VideoSummaryComp
                             recipeInstructions={recipe.instructions}
                             state={state}
                             currentTimeStampValue={currentTimestampValue}
