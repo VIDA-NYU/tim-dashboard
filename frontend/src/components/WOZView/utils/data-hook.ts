@@ -169,4 +169,4 @@ function useFrameData(mode: "online" | "offline" | "undefined", currentTime, rec
     }
 }
 
-export {useRecordingData, useRecordingFrameData, useStreamFrameData, useFrameData};
+export {useRecordingData, useRecordingFrameData, useStreamFrameData, useFrameData, parseStreamBuffer};

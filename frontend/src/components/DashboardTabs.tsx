@@ -10,6 +10,7 @@ import RecipesView, { Login } from './RecipesView';
 import { TEST_PASS, TEST_USER } from '../config';
 import WOZView from './WOZView/WOZView';
 import DebuggingDataView from './DebuggingDataView';
+import TextReducerView from './TextReducer/text-reducer-view';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -58,6 +59,7 @@ export default function DashboardTabs() {
           <Tab label="Recipe Collection" {...a11yProps(2)} />
           <Tab label="Debuging Models" {...a11yProps(3)} />
           <Tab label="Intervenor" {...a11yProps(4)} />
+          <Tab label="Text Reducer" {...a11yProps(5)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -75,6 +77,9 @@ export default function DashboardTabs() {
       <TabPanel value={value} index={4}>
         <WOZView />
       </TabPanel>
+        <TabPanel value={value} index={5}>
+            <TextReducerView />
+        </TabPanel>
     </Box>
   );
 }
