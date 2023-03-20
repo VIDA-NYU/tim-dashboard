@@ -7,7 +7,7 @@ import {useEffect, useState} from "react";
 import {getJsonData} from "../utils/rest";
 import {API_URL, RECORDINGS_STATIC_PATH} from "../../../config";
 import {generateFakeInstructionRephraseInstanceResponse} from "./fake";
-import {buildInferencePrompt, buildPrompt, buildTaskPrompt} from "./open-ai";
+import {buildChatPrompt, buildInferencePrompt, buildPrompt, buildTaskPrompt} from "./open-ai";
 import {RecipeObjectStatus} from "../object-comps/types";
 import {Configuration, OpenAIApi} from "openai";
 
@@ -20,18 +20,37 @@ async function callOpenAIAPI(context: string, objects: Array<RecipeObjectStatus>
     const configuration = new Configuration({
         apiKey: OPENAI_API_KEY,
     });
+
+    
+
     const openai = new OpenAIApi(configuration);
-    return buildPrompt(context, objects, originalInstruction, params).then(prompt => {
-        return openai.createCompletion({
-            model: "text-davinci-003",
-            prompt: prompt,
-            temperature: 0,
-            max_tokens: 30,
+    return buildChatPrompt(context, objects, originalInstruction, params).then(prompt => {
+        console.log(prompt);
+        return openai.createChatCompletion({
+            model: "gpt-4",
+            messages: prompt,
+            // temperature: 0,
+            max_tokens: 50,
         }).then(res=>{
-            return res.data.choices[0].text.trim() as String;
+            console.log(res);
+            let result = res.data.choices[0].message.content.trim() as String;
+            console.log(result);
+            return result;
             // console.log(res.data.choices[0].text.trim());
         });
-    })
+    });
+
+    // return buildPrompt(context, objects, originalInstruction, params).then(prompt => {
+    //     return openai.createCompletion({
+    //         model: "text-davinci-003",
+    //         prompt: prompt,
+    //         temperature: 0,
+    //         max_tokens: 30,
+    //     }).then(res=>{
+    //         return res.data.choices[0].text.trim() as String;
+    //         // console.log(res.data.choices[0].text.trim());
+    //     });
+    // })
 
 
 }

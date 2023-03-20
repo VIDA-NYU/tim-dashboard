@@ -181,6 +181,7 @@ function useSyncStepWithHololens(textReducerState: TextReducerState,
 }
 
 function useSyncRephraseWithOpenAPI(textReducerState: TextReducerState, setTextReducerState: ((state: TextReducerState) => void)){
+    
     let {step: nextRephraseStep, rephrase: rephraseStatus} = getNextRephraseStep(textReducerState);
     const rephrasedInstruction = useInstructionRephraseAPI({
         params: textReducerState.rephraseParams,
@@ -209,12 +210,13 @@ function useSyncRephraseWithOpenAPI(textReducerState: TextReducerState, setTextR
                     return stepState;
                 })
             }
-        )
+        );
 
         }
                 
 
-    }, [rephrasedInstruction.instructionRephraseInstanceResponse]);
+    }, [rephrasedInstruction.instructionRephraseInstanceResponse, rephraseStatus]);
+
     return {
 
     };

@@ -11,10 +11,10 @@ const INFERENCE_TEXT = 'Please simplify the following case:' +
 
 function buildInferencePrompt(context: string, objects: Array<RecipeObjectStatus>, originalInstruction: string){
     const objectString = "";
-    return `Please simplify the following case and do not provide the explanation:` +
-        `Context: ${context};` +
-        `Original Instruction: ${originalInstruction}` +
-        `Objects in the scene: ${objectString}` +
+    return `Please simplify the following case and do not provide the explanation (only provide the simplified content without any format): \n` +
+        `Context: ${context}; \n` +
+        `Original Instruction: ${originalInstruction} \n` +
+        `Objects in the scene: ${objectString} \n` +
         'Simplified Instruction:';
 }
 
@@ -46,5 +46,24 @@ async function buildPrompt(context: string, objects: Array<RecipeObjectStatus>,
     })
 }
 
+async function loadChatTaskDescription(params: InstructionRephraseParams){
+    let promptFilename = "default.txt"
+    // const promptFile = require("./prompts/" + promptFilename);
+    return loadPromptTxt(promptFilename);
+}
+async function buildChatPrompt(context: string, objects: Array<RecipeObjectStatus>, originalInstruction: string, params: InstructionRephraseParams){
+    let inferencePrompt = buildInferencePrompt(context, objects, originalInstruction);
+    return loadChatTaskDescription(params).then(taskPrompt => {
+        let messages=[
+            {"role": "system", "content": "You are a text simplifier for the augmented reality user."},
+            {"role": "user", "content": taskPrompt},
+            {"role": "assistant", "content": "Sure, please input the text to simplifiy."},
+            {"role": "user", "content": inferencePrompt}
+        ]
+        return messages;
+    });
+    
+}
 
-export {INFERENCE_TEXT, buildInferencePrompt, buildTaskPrompt, buildPrompt}
+
+export {INFERENCE_TEXT, buildInferencePrompt, buildTaskPrompt, buildPrompt, buildChatPrompt}

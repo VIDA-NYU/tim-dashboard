@@ -23,8 +23,6 @@ export default function TextReducerDataConsumer({textReducerState, setTextReduce
     
     const {} = useSyncRephraseWithOpenAPI(textReducerState, setTextReducerState);
 
-    console.log("textReducerStep", textReducerState.currentStep, recipe);
-
     return (
         <TextReducerComp
             recipe={textReducerState.recipe}
