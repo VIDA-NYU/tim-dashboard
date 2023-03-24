@@ -7,7 +7,8 @@ import {VideoSummaryEvent} from "../types";
 import {useEffect, useRef} from "react";
 
 interface VideoSummaryLineProps {
-    videoSummary: VideoSummary
+    videoSummary: VideoSummary,
+    setFocusedEvent: (index: number) => void,
 }
 
 const StyledSVG = styled("svg")({
@@ -19,7 +20,7 @@ const Fake_Data = [
 ]
 
 
-export default function VideoSummaryLine({videoSummary}: VideoSummaryLineProps){
+export default function VideoSummaryLine({videoSummary, setFocusedEvent}: VideoSummaryLineProps){
 
     let xAxisRef = useRef();
 
@@ -59,19 +60,21 @@ export default function VideoSummaryLine({videoSummary}: VideoSummaryLineProps){
                 transform={`translate(${xMargin}, ${yMargin})`}
             >
                 <g transform={`translate(10, 50)`}>
+                    <g ref={xAxisRef}>
+                    </g>
+
                     <g >
                         {
                             videoSummary.events.map((event, i) => (
                                 <VideoSummaryLineEventGraphics
+                                    onClick={() => {setFocusedEvent(i)} }
                                     x={xLiner(event.timestampValue)} y={0} color={colorMap(event)}
                                     desc={event.desc} type={event.type}
                                 />
                             ))
                         }
                     </g>
-                    <g ref={xAxisRef}>
-                </g>
-
+                    
 
                 </g>
             </g>

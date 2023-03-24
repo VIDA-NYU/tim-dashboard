@@ -8,7 +8,8 @@ interface VideoSummaryLineEventGraphicsProps {
     y: number,
     color: string,
     desc: string,
-    type: "action"| "scene" | "entity"
+    type: "action"| "scene" | "entity",
+    onClick: () => void,
 }
 
 
@@ -28,7 +29,7 @@ const renderIcon = (type: "action"| "scene" | "entity") => {
 }
 
 
-export default function VideoSummaryLineEventGraphics({x, y, color, desc, type}: VideoSummaryLineEventGraphicsProps){
+export default function VideoSummaryLineEventGraphics({x, y, color, desc, type, onClick}: VideoSummaryLineEventGraphicsProps){
     return (
         <Container
             transform={`translate(${x}, ${y})`}
@@ -38,6 +39,7 @@ export default function VideoSummaryLineEventGraphics({x, y, color, desc, type}:
                 cy={0}
                 r={25}
                 fill={color}
+                onClick={onClick}
             ></circle>
             {renderIcon(type)}
             {/*<ActionIcon/>*/}
