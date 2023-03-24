@@ -34,6 +34,7 @@ import RephraseComp from "./instruction-rephrase/rephrase-comp";
 import InstructionIllustrationComp from "./instruction-illustration/instruction-illustration-comp";
 import VideoSummaryLine from "./video-summary/video-summary-line/video-summary-line";
 import VideoSummaryComp from "./video-summary/video-summary-comp";
+import DocumentationComp from "./documentation/documentation-comp";
 
 
 interface WozStatusCompStatus {
@@ -237,6 +238,17 @@ export default function WozStatusComp({
                             state={state}
                             currentTimeStampValue={currentTimestampValue}
                             annotationData={annotationData}
+                        />
+                    </RowComponent>
+
+                )}
+            </AnnotationContext.Consumer>
+
+            <AnnotationContext.Consumer>
+                {({annotationData, setAnnotationData}) => (
+                    <RowComponent>
+                        <DocumentationComp
+                            recipeInstructions={recipe.instructions}
                         />
                     </RowComponent>
 
