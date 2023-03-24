@@ -16,7 +16,7 @@ const MyImage = styled("img")({
 export default function IllustrationDisplay({url}: IllustrationDisplayProps){
     return (
         <Container>
-            <MyImage src={url} alt={"Girl in a jacket"}/>
+            <MyImage src={url} alt={"loading"}/>
         </Container>
     )
 }

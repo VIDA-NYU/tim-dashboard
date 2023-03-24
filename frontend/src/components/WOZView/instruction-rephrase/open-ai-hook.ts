@@ -51,12 +51,12 @@ async function callImageGeneration(prompt: string){
 }
 
 function useInstructionIllustration(instruction: string){
-    const [url, setURL] = useState<string>("");
-    useEffect(() => {
-        callImageGeneration(instruction).then(resURL => {
-            setURL(resURL);
-        })
-    }, [instruction]);
+    const [url, setURL] = useState<string>("https://openaicom.imgix.net/c3ca91b1-f41d-4ba0-84b2-84b2b9c0530e/dall-e-api-now-available-in-public-beta.jpg?fm=auto&auto=compress,format&fit=min&rect=,,,&w=3840&h=3840");
+    // useEffect(() => {
+    //     callImageGeneration(instruction).then(resURL => {
+    //         setURL(resURL);
+    //     })
+    // }, [instruction]);
     return {illustrationURL: url};
 }
 
@@ -65,22 +65,22 @@ function useInstructionRephraseAPI (requestParams: InstructionRephraseInstanceRe
 
     const [response, setResponse] = useState<InstructionRephraseInstanceResponse>();
     useEffect(() => {
-        let response = generateFakeInstructionRephraseInstanceResponse(requestParams.original, requestParams.params);
-        if(!requestParams.params.humanEdited){
-            setResponse(response);
-        }
-        // callOpenAIAPI("The user is making Pinwheels with the tortilla. This is one of the steps",
-        //     [], requestParams.original,
-        //     requestParams.params).then(res => {
-        //         let openaiResponse: InstructionRephraseInstanceResponse = {
-        //             instance: {
-        //                 original: requestParams.original,
-        //                 params: requestParams.params,
-        //                 rephrased: res
-        //             }
-        //         }
-        //         setResponse(openaiResponse);
-        // });
+        // let response = generateFakeInstructionRephraseInstanceResponse(requestParams.original, requestParams.params);
+        // if(!requestParams.params.humanEdited){
+        //     setResponse(response);
+        // }
+        callOpenAIAPI("The user is making Pinwheels with the tortilla. This is one of the steps",
+            [], requestParams.original,
+            requestParams.params).then(res => {
+                let openaiResponse: InstructionRephraseInstanceResponse = {
+                    instance: {
+                        original: requestParams.original,
+                        params: requestParams.params,
+                        rephrased: res
+                    }
+                }
+                setResponse(openaiResponse);
+        });
     }, [requestParams.original,
         requestParams.params.numericSimplification, requestParams.params.lexicalSimplification,
         requestParams.params.humanEdited])

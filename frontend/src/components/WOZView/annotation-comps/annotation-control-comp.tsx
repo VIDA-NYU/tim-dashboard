@@ -80,6 +80,8 @@ export default function AnnotationControlComp({
     let currentStepSpentTime = computeCurrentStepSpentTime(annotationData, currentTime)
     let stepProgressValue = computeStepProgressValueByTime(currentStepSpentTime);
 
+
+
     return (
         <Container
         >
