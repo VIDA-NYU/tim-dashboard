@@ -53,6 +53,13 @@ interface WozCompContainerProps {
 
 }
 
+const VideoContainer = styled("div")({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "stretch",
+    justifyContent: "center",
+    height: "100%",
+});
 
 const Container = styled("div")({});
 
@@ -119,13 +126,20 @@ export default function WozCompContainer({
                         gridTemplateAreas: {
                             md: `
               "H H H H H H"
-              "H H H H H H"
               "M M M r r r"
-              "M M M r r r"
-              "N N N r r r"
-              "g g g g g g"
-              "g g g g g g"
-              "g g g g g g"
+              "g g g r r r"
+              "g g g r r r"
+              "g g g r r r"
+              "g g g r r r"
+              "g g g r r r"
+              "g g g r r r"
+              "g g g r r r"
+              "g g g r r r"
+              "g g g r r r"
+              "g g g r r r"
+              "g g g r r r"
+              "g g g r r r"
+              "g g g r r r"
           `,
                             xs: `
               "H H H H H H"
@@ -164,9 +178,13 @@ export default function WozCompContainer({
                     <AnnotationContext.Consumer>
                         {({annotationData}) => (
                             <Box sx={{gridArea: 'M'}}>
+                                <VideoContainer>
                                 {/*{recordingData && videoPlayer }*/}
                                 {annotationData.meta.mode === "offline" && recordingData && videoPlayer}
                                 { annotationData.meta.mode === "online" && <ImageView streamId='main' boxStreamId='detic:image' confidence={annotationData.perceptronParameters.objectConfidenceThreshold} debugMode={false}/>}
+                                {annotationData.meta.mode === "offline" && videoControls}
+                                </VideoContainer>
+                                
                             </Box>
                         )}
 
@@ -176,7 +194,7 @@ export default function WozCompContainer({
                             <Box
                                 sx={{gridArea: "N"}}
                             >
-                                {annotationData.meta.mode === "offline" && videoControls}
+                               
                             </Box>
                         )}
                     </AnnotationContext.Consumer>

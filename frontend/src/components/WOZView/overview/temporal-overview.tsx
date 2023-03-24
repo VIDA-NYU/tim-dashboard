@@ -8,7 +8,10 @@ import Card from "@mui/material/Card";
 import ActionRow from "./action-row";
 import {generateHumanAnnotationTemporalData} from "../annotation/utils";
 
-const Container = styled(Card)({})
+const Container = styled(Card)({
+    overflowX: "scroll",
+    paddingBottom: 20,
+})
 
 const xCellNumber = 50;
 const chartWidth = 1440;

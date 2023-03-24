@@ -194,97 +194,75 @@ export default function WozStatusComp({
 
             <AnnotationContext.Consumer>
                 {({annotationData, setAnnotationData}) => (
-                    <RowComponent>
-                        <SessionControlGroup
-                            annotationData={annotationData}
-                            setAnnotationData={setAnnotationData}
-                            recordingList={recordingList}
-                            recipeIDList={recipeIDList}
-                        />
-                        <AnnotationControlComp
-                            currentTimeStampValue={currentTimestampValue}
-                            mode={"auto"} recipe={recipe} state={state}
-                            annotationData={annotationData}
-                            setAnnotationData={setAnnotationData}
-                            errorStatus={errorStatus}
+                    <div>
+                        <RowComponent>
+                            <SessionControlGroup
+                                annotationData={annotationData}
+                                setAnnotationData={setAnnotationData}
+                                recordingList={recordingList}
+                                recipeIDList={recipeIDList}
+                            />
+                            <AnnotationControlComp
+                                currentTimeStampValue={currentTimestampValue}
+                                mode={"auto"} recipe={recipe} state={state}
+                                annotationData={annotationData}
+                                setAnnotationData={setAnnotationData}
+                                errorStatus={errorStatus}
 
-                        ></AnnotationControlComp>
-                    </RowComponent>
+                            ></AnnotationControlComp>
+                        </RowComponent>
 
-                )}
-            </AnnotationContext.Consumer>
+                        {annotationData.meta.mode === "online" && <RowComponent>
 
-            {recipe && <RowComponent> <RecipeTextComp recipeInstructions={recipe.instructions}
-                                                      currentStep={currentStep}/></RowComponent>}
-            <AnnotationContext.Consumer>
-                {({annotationData, setAnnotationData}) => (
-                    <RowComponent>
-
-                        <RephraseComp recipeInstructions={recipe.instructions}
-                                      state={state}
-                                      currentTimeStampValue={currentTimestampValue}
-                                      annotationData={annotationData}
-                        />
-                    </RowComponent>
-
-                )}
-            </AnnotationContext.Consumer>
-
-            <AnnotationContext.Consumer>
-                {({annotationData, setAnnotationData}) => (
-                    <RowComponent>
-                        <InstructionIllustrationComp
-                            recipeInstructions={recipe.instructions}
-                            state={state}
-                            currentTimeStampValue={currentTimestampValue}
-                            annotationData={annotationData}
-                        />
-                    </RowComponent>
-
-                )}
-            </AnnotationContext.Consumer>
-
-            <AnnotationContext.Consumer>
-                {({annotationData, setAnnotationData}) => (
-                    <RowComponent>
-                        <DocumentationComp
-                            recipeInstructions={recipe.instructions}
-                        />
-                    </RowComponent>
-
-                )}
-            </AnnotationContext.Consumer>
-
-            <AnnotationContext.Consumer>
-                {({annotationData, setAnnotationData}) => (
-                    <RowComponent>
-                        <VideoSummaryComp
-                            recipeInstructions={recipe.instructions}
-                            state={state}
-                            currentTimeStampValue={currentTimestampValue}
-                            annotationData={annotationData}
-                        />
-                    </RowComponent>
-
-                )}
-            </AnnotationContext.Consumer>
-
-            <RowComponent>
-                <AnnotationContext.Consumer>
-                    {
-                        ({annotationData, setAnnotationData}) => (
+                            <RephraseComp recipeInstructions={recipe.instructions}
+                                        state={state}
+                                        currentTimeStampValue={currentTimestampValue}
+                                        annotationData={annotationData}
+                            />
+                        </RowComponent>}
+                        {annotationData.meta.mode === "online" && <RowComponent>
+                            <InstructionIllustrationComp
+                                recipeInstructions={recipe.instructions}
+                                state={state}
+                                currentTimeStampValue={currentTimestampValue}
+                                annotationData={annotationData}
+                            />
+                        </RowComponent>}
+                        {annotationData.meta.mode === "offline" && <RowComponent>
+                            <DocumentationComp
+                                recipeInstructions={recipe.instructions}
+                            />
+                        </RowComponent>}
+                        {annotationData.meta.mode === "offline" && <RowComponent>
+                            <VideoSummaryComp
+                                recipeInstructions={recipe.instructions}
+                                state={state}
+                                currentTimeStampValue={currentTimestampValue}
+                                annotationData={annotationData}
+                            />
+                        </RowComponent>}
+                        {
+                            annotationData.meta.mode === "online" && <RowComponent>
                             <PerceptronMainComp recipe={recipe} worldFrameData={worldFrameData}
                                                 egovlpActionFrameData={egovlpActionFrameData}
                                                 clipActionFrameData={clipActionFrameData}
                                                 reasoningFrameData={reasoningFrameData}
                                                 annotationData={annotationData} setAnnotationData={setAnnotationData}/>
-                        )
-                    }
-                </AnnotationContext.Consumer>
 
 
-            </RowComponent>
+                            </RowComponent>
+                        }
+                        
 
+                        {recipe && annotationData.meta.mode === "online" && <RowComponent> <RecipeTextComp recipeInstructions={recipe.instructions}
+                                                      currentStep={currentStep}/></RowComponent>}
+
+                    </div>
+                    
+
+                )}
+            </AnnotationContext.Consumer>
+            
         </div>
     )
 }
