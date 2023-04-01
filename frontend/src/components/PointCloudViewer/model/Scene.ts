@@ -79,6 +79,7 @@ export class Scene {
 
             // highlighting selected point cloud
             const timestamp: number = this.sceneHighlight.on_point_cloud_highlight( intersection.layerName, intersection.intersect );
+            // console.log(timestamp);
 
             if( timestamp === -1 ) return;
             

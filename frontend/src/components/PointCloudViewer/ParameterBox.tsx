@@ -76,7 +76,7 @@ const ParameterBox = ( props ) => {
 
                         { pointCloudNames.map( ( pointCloudName: string ) => (
                             <Box key={pointCloudName} sx={{ display: 'flex', width: '100%', height: '50px', alignItems: 'center' }}>
-                                <Checkbox id={pointCloudName} onChange={visibilityChangeHandler} defaultChecked />
+                                <Checkbox id={pointCloudName} onChange={visibilityChangeHandler}  />
                                 <Typography>
                                     {pointCloudName}
                                 </Typography>
@@ -102,7 +102,7 @@ const ParameterBox = ( props ) => {
 
                         { lineCloudNames.map( ( lineCloudName: string ) => (
                             <Box key={lineCloudName} sx={{ display: 'flex', width: '100%', height: '50px', alignItems: 'center' }}>
-                                <Checkbox id={lineCloudName} onChange={visibilityChangeHandler} defaultChecked />
+                                <Checkbox id={lineCloudName} onChange={visibilityChangeHandler}  />
                                 <Typography>
                                     {lineCloudName}
                                 </Typography>
@@ -128,7 +128,7 @@ const ParameterBox = ( props ) => {
 
                         { voxelCloudNames.map( ( voxelCloudName: string ) => (
                             <Box key={voxelCloudName} sx={{ display: 'flex', width: '100%', height: '50px', alignItems: 'center' }}>
-                                <Checkbox id={voxelCloudName} onChange={visibilityChangeHandler} defaultChecked />
+                                <Checkbox id={voxelCloudName} onChange={visibilityChangeHandler}  />
                                 <Typography>
                                     {voxelCloudName}
                                 </Typography>

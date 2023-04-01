@@ -103,6 +103,16 @@ const SceneViewer = ( {sceneData} : any ) => {
                 // render
                 sceneViewerController.scene.render();
 
+                const names: string[] = [ 
+                    'gazeProjectionLineCloud',      'gazeorigin-pointcloud',        'lefthands-pointcloud',     'righthands-pointcloud', 
+                    'gazeprojection-pointcloud',    'gazeorigin-voxelcloud',        'lefthands-voxelcloud', 
+                    'righthands-voxelcloud',        'gazeprojection-voxelcloud',    'occupancy-voxelcloud' ];
+
+                names.forEach( (name: string) => {
+                    sceneViewerController.change_cloud_visibility( name, false );
+                });
+
+
                 // removing spinner
                 setLoadingData(false);
 

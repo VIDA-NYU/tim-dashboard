@@ -22,12 +22,12 @@ export class WorldPointCloud extends PointCloud {
     
     public initialize_highlights(): void {
 
-        // // Point highlight
+        // Point highlight
         // const color: THREE.Color = new THREE.Color( 0.215, 0.494, 0.721 );
         // const sphereGeometry = new THREE.SphereGeometry( 0.025, 15, 15 );
         // const sphereMaterial = new THREE.MeshBasicMaterial( { color: color } );
 
-        // // saving refs
+        // saving refs
         // this.highlightObjects['worldIntersectSphere'] = new THREE.Mesh( sphereGeometry, sphereMaterial );
         
     }
@@ -36,6 +36,7 @@ export class WorldPointCloud extends PointCloud {
 
         // const point: THREE.Vector3 = intersects[0].point;
         // this.highlightObjects['worldIntersectSphere'].position.copy(point);
+
 
         return -1;
     }

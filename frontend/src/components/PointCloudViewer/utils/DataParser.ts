@@ -20,7 +20,14 @@ export class DataParser {
                 xyz.push(coord);
                 colors.push(dataset.colors[index]);
             }
+            // if(coord[1] <= -0.9389851841791058 || coord[1] >= -0.39510193769430824){
+            //     xyz.push(coord);
+            //     colors.push(dataset.colors[index]);
+            // }
         })
+
+        // {x: -2.373572930585648, y: -0.9389851841791058, z: -0.0032411424708844727}
+// {x: -1.8469887192028134, y: -0.39510193769430824, z: -0.3886940484429604}
 
         // // creating world point cloud object
         // const worldPointCloud: WorldPointCloud = new WorldPointCloud('world-pointcloud', dataset.xyz_world, dataset.colors, []);
