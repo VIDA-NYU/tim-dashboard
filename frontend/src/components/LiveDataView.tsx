@@ -94,7 +94,7 @@ function LiveVideo() {
           `
           },
         }}>
-        <Box sx={{ gridArea: 'H' }}><RecordingControls /></Box>
+        {/* <Box sx={{ gridArea: 'H' }}><RecordingControls /></Box> */}
         <Box sx={{ gridArea: 'M' }}><ImageView streamId={MAIN_STREAM} boxStreamId={DETIC_IMAGE_STREAM} confidence={0.5} debugMode={false}/></Box>
       </Box>
     </Box>

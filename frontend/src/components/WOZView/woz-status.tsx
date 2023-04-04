@@ -35,6 +35,7 @@ import InstructionIllustrationComp from "./instruction-illustration/instruction-
 import VideoSummaryLine from "./video-summary/video-summary-line/video-summary-line";
 import VideoSummaryComp from "./video-summary/video-summary-comp";
 import DocumentationComp from "./documentation/documentation-comp";
+import RuleVisContainer from "./rule-vis/svg/rule-vis-container";
 
 
 interface WozStatusCompStatus {
@@ -252,7 +253,11 @@ export default function WozStatusComp({
 
                             </RowComponent>
                         }
-                        
+                         {
+                            annotationData.meta.mode === "offline" && <RowComponent>
+                                <RuleVisContainer/>
+                                                        </RowComponent>
+                        }
 
                         {recipe && annotationData.meta.mode === "online" && <RowComponent> <RecipeTextComp recipeInstructions={recipe.instructions}
                                                       currentStep={currentStep}/></RowComponent>}
