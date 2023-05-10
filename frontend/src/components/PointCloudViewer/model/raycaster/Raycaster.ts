@@ -19,7 +19,7 @@ export class Raycaster {
         this.rayCaster.params.Points.threshold = 0.01;
 
         this.projectionRaycaster = new THREE.Raycaster();
-        this.projectionRaycaster.params.Points.threshold = 0.03;
+        this.projectionRaycaster.params.Points.threshold = 0.1;
 
     }
 
@@ -27,14 +27,17 @@ export class Raycaster {
 
         this.projectionRaycaster.set( origin, direction );
 
+        // console.log('INITIAL THRESHOLD: ', this.projectionRaycaster.params.Points.threshold);
+
         let intersections: any [] = []
         do{
             intersections = this.projectionRaycaster.intersectObject(this.scene.getObjectByName(pointCloud.name))
-            this.projectionRaycaster.params.Points.threshold += 0.005;
+            this.projectionRaycaster.params.Points.threshold += 0.02;
         } while( intersections.length === 0 );
         
         // turning back to original threshold
-        this.projectionRaycaster.params.Points.threshold = 0.03;
+        // this.projectionRaycaster.params.Points.threshold = 0.03;
+        this.projectionRaycaster.params.Points.threshold = 0.1;
 
         return intersections.map( intersection => intersection.point );
 

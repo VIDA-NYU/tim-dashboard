@@ -95,7 +95,8 @@ const SessionListView = ({ sortby='first-entry', ...props }) => {
 
           {recordings && <Typography color="text.secondary">  About {recordings && recordings.length} results:</Typography>}
           {recordings && recordings
-            .filter(d=>d.duration && !d.duration.startsWith('0:00:0'))
+            // .filter( d=>d.duration && !d.duration.startsWith('0:00:0') )
+            .filter( d => ( d.name.includes('ngc')  ) )
             .sort((a, b) => (a[sortby]||'').localeCompare(b[sortby]||''))
             .map((recording) => <RecordingCard recording={recording} key={recording.name} onChangeSelectRecording={handleChangeSelectedRecording} {...props} />
             )

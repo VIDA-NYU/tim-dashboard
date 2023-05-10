@@ -16,18 +16,18 @@ export class DataParser {
         if( !('xyz_world' in dataset) ) return new WorldPointCloud('world-pointcloud', xyz, colors, []);
 
         dataset.xyz_world.forEach( (coord: number[],  index: number) => {
-            if(coord[1] <= -0.39 || coord[1] >= -0.018){
-                xyz.push(coord);
-                colors.push(dataset.colors[index]);
-            }
+
+            xyz.push(coord);
+            colors.push(dataset.colors[index]);
+            
+            // if(coord[1] <= -0.39 || coord[1] >= -0.018){
+
+            // }
             // if(coord[1] <= -0.9389851841791058 || coord[1] >= -0.39510193769430824){
             //     xyz.push(coord);
             //     colors.push(dataset.colors[index]);
             // }
         })
-
-        // {x: -2.373572930585648, y: -0.9389851841791058, z: -0.0032411424708844727}
-// {x: -1.8469887192028134, y: -0.39510193769430824, z: -0.3886940484429604}
 
         // // creating world point cloud object
         // const worldPointCloud: WorldPointCloud = new WorldPointCloud('world-pointcloud', dataset.xyz_world, dataset.colors, []);
@@ -71,7 +71,7 @@ export class DataParser {
         dataset.forEach( (point: GazePointCloudRaw) => {
 
             // parsing points
-            const currentPoint: number[] = [ point.GazeOrigin.x, point.GazeOrigin.y, (-1)*point.GazeOrigin.z ];
+            const currentPoint: number[] = [ point.GazeOrigin.x - 4.7, point.GazeOrigin.y + 1.9, (-1)*point.GazeOrigin.z + 0.7 ];
             const currentNormal: number[] = [ point.GazeDirection.x, point.GazeDirection.y, (-1)*point.GazeDirection.z ];
 
             // const currentPoint: number[] = [ point.GazeOrigin.x, point.GazeOrigin.y, point.GazeOrigin.z ];

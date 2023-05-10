@@ -59,7 +59,7 @@ export abstract class PointCloud {
     }
 
     public get_buffer_positions(): [number[], number[], number[]] {
-         
+
         return [ this.points.flat(), this.colors.flat(), this.normals.flat() ];
     
     }
@@ -77,7 +77,5 @@ export abstract class PointCloud {
 
         this.threeObject.geometry.attributes.visibility.needsUpdate = true;
     }
-
-
 
 }

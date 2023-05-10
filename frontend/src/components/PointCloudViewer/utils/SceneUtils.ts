@@ -2,7 +2,6 @@ import * as d3 from 'd3';
 
 export class SceneUtils {
 
-
     public static get_camera_initial_position( extents: number[][] ): number[] {
 
         const x: number = (extents[0][0] + extents[0][1]) / 2; 

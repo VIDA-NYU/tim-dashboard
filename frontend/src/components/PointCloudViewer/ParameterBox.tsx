@@ -20,9 +20,13 @@ const ParameterBox = ( props ) => {
 
     const [ selectedClass, setSelectedClass ] = React.useState('');
 
-    const pointCloudNames: string[] = [ 'gazeorigin-pointcloud', 'lefthands-pointcloud', 'righthands-pointcloud', 'gazeprojection-pointcloud', 'world-pointcloud' ];
-    const voxelCloudNames: string[] = [ 'gazeorigin-voxelcloud', 'lefthands-voxelcloud', 'righthands-voxelcloud', 'gazeprojection-voxelcloud', 'occupancy-voxelcloud' ];
-    const lineCloudNames:  string[] = [ 'gazeProjectionLineCloud' ];
+    // const pointCloudNames: string[] = [ 'gazeorigin-pointcloud', 'lefthands-pointcloud', 'righthands-pointcloud', 'gazeprojection-pointcloud', 'world-pointcloud' ];
+    // const voxelCloudNames: string[] = [ 'gazeorigin-voxelcloud', 'lefthands-voxelcloud', 'righthands-voxelcloud', 'gazeprojection-voxelcloud', 'occupancy-voxelcloud' ];
+    // const lineCloudNames:  string[] = [ 'gazeProjectionLineCloud' ];
+
+    const pointCloudNames: string[] = [ 'gazeorigin-pointcloud', 'gazeprojection-pointcloud', 'world-pointcloud' ];
+    const voxelCloudNames: string[] = [ 'gazeorigin-voxelcloud', 'gazeprojection-voxelcloud' ];
+    // const lineCloudNames:  string[] = [ 'gazeProjectionLineCloud' ];
 
     const visibilityChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -90,7 +94,7 @@ const ParameterBox = ( props ) => {
 
                 </Accordion>
 
-                <Accordion>
+                {/* <Accordion>
 
                     <AccordionSummary>
                         <Typography color={'#1976d2'}>Visibility (lines)</Typography>
@@ -114,7 +118,7 @@ const ParameterBox = ( props ) => {
 
                     </AccordionDetails>
 
-                </Accordion>
+                </Accordion> */}
 
                 <Accordion>
 
@@ -372,7 +376,7 @@ const ParameterBox = ( props ) => {
 
                 </Accordion>
 
-                <Accordion>
+                {/* <Accordion>
 
                     <AccordionSummary>
                         <Typography color={'#1976d2'}>Perception Points</Typography>
@@ -403,7 +407,7 @@ const ParameterBox = ( props ) => {
 
                     </AccordionDetails>
 
-                </Accordion>
+                </Accordion> */}
 
 
 

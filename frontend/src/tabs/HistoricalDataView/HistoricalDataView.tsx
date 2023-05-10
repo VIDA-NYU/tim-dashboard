@@ -61,20 +61,22 @@ const HistoricalDataView = () => {
     // const IMUMagFile = await getIMUMagData( newSelection );
     const pointCloudJSONFile = await getVoxelizedPointCloudData( newSelection );
     const eyeGazeJSONFile = await getEyeData( newSelection );
-    const handDataJSONFile = await getHandData( newSelection );
-    const perceptionJSONFile = await getPerceptionData( newSelection );  
-    const perception3DJSONFile = await get3DObjectPositionData( newSelection ) 
-    // const reasoningJSONFile = await getReasoningData( newSelection ); 
 
-    console.log( perceptionJSONFile );
+    // const handDataJSONFile = await getHandData( newSelection );
+    const perceptionJSONFile = await getPerceptionData( newSelection );  
+    // const perception3DJSONFile = await get3DObjectPositionData( newSelection ) 
+    
+
+    // const reasoningJSONFile = await getReasoningData( newSelection ); 
 
     // initializing timestamps
     TimestampManager.initialize_main_stream( eyeGazeJSONFile.map( (timestamp: GazePointCloudRaw) => parseInt(timestamp.timestamp.split('-')[0]) ) );
-    TimestampManager.index_stream_timestamp( 'perception', perceptionJSONFile.map( (timestamp: any) => parseInt(timestamp.timestamp.split('-')[0]) ) );
-    TimestampManager.index_stream_timestamp( 'perception3D', perception3DJSONFile.map( (timestamp: any) => parseInt(timestamp.timestamp.split('-')[0]) ) );
+    // TimestampManager.index_stream_timestamp( 'perception', perceptionJSONFile.map( (timestamp: any) => parseInt(timestamp.timestamp.split('-')[0]) ) );
+    // TimestampManager.index_stream_timestamp( 'perception3D', perception3DJSONFile.map( (timestamp: any) => parseInt(timestamp.timestamp.split('-')[0]) ) );
 
     // setting session info
-    setSessionInfo({recordingName:newSelection, mainCameraPath, pointCloudJSONFile, eyeGazeJSONFile, handDataJSONFile, perceptionJSONFile, perception3DJSONFile});
+    // setSessionInfo({recordingName:newSelection, mainCameraPath, pointCloudJSONFile, eyeGazeJSONFile, handDataJSONFile, perceptionJSONFile, perception3DJSONFile});
+    setSessionInfo({recordingName:newSelection, mainCameraPath, pointCloudJSONFile, eyeGazeJSONFile});
 
     // // setting spinner flag
     setLoadingData(false);
@@ -143,7 +145,7 @@ const HistoricalDataView = () => {
           <Divider orientation='vertical'/>
 
           <Box sx={{ width: '500px', display: 'flex', flexDirection: 'column' }}>
-            { selectedRecordingName && <ModelView sessionInfo={sessionInfo} recordingName={selectedRecordingName} setTimestamps={setTimestamps} ></ModelView> }
+            {/* { selectedRecordingName && <ModelView sessionInfo={sessionInfo} recordingName={selectedRecordingName} setTimestamps={setTimestamps} ></ModelView> } */}
           </Box>
 
         </Box>

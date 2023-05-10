@@ -161,6 +161,9 @@ export class SceneViewerController {
         this.scene = new Scene();
         this.scene.init( containerRef, tooltipContainerRef,  cameraParams, this.dataset );
 
+        const axesHelper = new THREE.AxesHelper( 5 );
+        this.scene.scene.add( axesHelper );
+
     }
 
     public initialize_tooltip( videoPath: string ){

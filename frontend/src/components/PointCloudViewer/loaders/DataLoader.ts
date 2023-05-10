@@ -38,22 +38,23 @@ export class DataLoader {
 
             const gazeOriginPointCloud: GazeOriginPointCloud = DataParser.parse_gaze_point_cloud_data( sceneData.pointCloudData['gaze'] );
             gazeOriginPointCloud.baseColor = BASE_COLORS['gazeorigin-pointcloud'];
+
             pointClouds['gazeorigin-pointcloud'] = gazeOriginPointCloud;
             
         }
 
-        if( 'pointCloudData' in sceneData && 'hand' in sceneData.pointCloudData ){
+        // if( 'pointCloudData' in sceneData && 'hand' in sceneData.pointCloudData ){
 
-            const leftHandPointCloud: HandPointCloud = DataParser.parse_hand_point_cloud_data( sceneData.pointCloudData['hand'], 'left' );
-            const rightHandPointCloud: HandPointCloud = DataParser.parse_hand_point_cloud_data( sceneData.pointCloudData['hand'], 'right' );
+        //     const leftHandPointCloud: HandPointCloud = DataParser.parse_hand_point_cloud_data( sceneData.pointCloudData['hand'], 'left' );
+        //     const rightHandPointCloud: HandPointCloud = DataParser.parse_hand_point_cloud_data( sceneData.pointCloudData['hand'], 'right' );
 
-            leftHandPointCloud.baseColor = BASE_COLORS['lefthands-pointcloud'];
-            rightHandPointCloud.baseColor = BASE_COLORS['righthands-pointcloud'];
+        //     leftHandPointCloud.baseColor = BASE_COLORS['lefthands-pointcloud'];
+        //     rightHandPointCloud.baseColor = BASE_COLORS['righthands-pointcloud'];
 
-            pointClouds['lefthands-pointcloud'] = leftHandPointCloud;
-            pointClouds['righthands-pointcloud'] = rightHandPointCloud;
+        //     pointClouds['lefthands-pointcloud'] = leftHandPointCloud;
+        //     pointClouds['righthands-pointcloud'] = rightHandPointCloud;
 
-        }
+        // }
 
         return pointClouds;
 

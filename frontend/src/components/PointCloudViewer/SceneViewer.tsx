@@ -16,7 +16,7 @@ import { DataUtils } from './utils/DataUtils';
 
 const SceneViewer = ( {sceneData} : any ) => {
 
-    const debug: boolean = false;
+    const debug: boolean = true;
 
     const [loadingData, setLoadingData] = useState<boolean>(true);
     const [sessionDuration, setSessionDuration] = useState<number[]>([]);
@@ -69,14 +69,14 @@ const SceneViewer = ( {sceneData} : any ) => {
                 debug && console.log('Loading point clouds');
                 sceneViewerController.initialize_dataset( sceneData );
                 sceneViewerController.initialize_scene( containerRef.current, tooltipContainerRef.current );
-                sceneViewerController.initialize_tooltip( sceneData.videoData );
+                // sceneViewerController.initialize_tooltip( sceneData.videoData );
 
                 // adding clouds to scene
                 debug && console.log('Rendering point clouds');
                 sceneViewerController.update_scene_point_clouds();
                 
                 // creating derived data
-                debug && console.log('Creating projections');
+                // debug && console.log('Creating projections');
                 sceneViewerController.create_projections();
                 sceneViewerController.update_scene_point_clouds();
 
@@ -84,17 +84,18 @@ const SceneViewer = ( {sceneData} : any ) => {
                 debug && console.log('Creating Voxel Grid');
                 sceneViewerController.dataset.create_world_voxel_grid();
 
+
                 // updating voxel clouds
                 debug && console.log('Creating density and occupancy clouds');
                 sceneViewerController.dataset.create_density_voxel_clouds();
-                sceneViewerController.dataset.create_occupancy_voxel_cloud();
+                // sceneViewerController.dataset.create_occupancy_voxel_cloud();
                 // sceneViewerController.dataset.create_model_voxel_cloud(['gazeprojection-pointcloud'], 'perception');
                 sceneViewerController.update_scene_voxel_clouds();                
 
-                // creating line clouds
+                // // creating line clouds
                 debug && console.log('Creating line clouds');
-                sceneViewerController.dataset.create_line_clouds();
-                sceneViewerController.update_scene_line_clouds();
+                // sceneViewerController.dataset.create_line_clouds();
+                // sceneViewerController.update_scene_line_clouds();
 
                 // getting scene duration
                 const sessionDuration: number[] = sceneViewerController.dataset.get_session_timestamp_range();
@@ -103,17 +104,18 @@ const SceneViewer = ( {sceneData} : any ) => {
                 // render
                 sceneViewerController.scene.render();
 
-                const names: string[] = [ 
-                    'gazeProjectionLineCloud',      'gazeorigin-pointcloud',        'lefthands-pointcloud',     'righthands-pointcloud', 
-                    'gazeprojection-pointcloud',    'gazeorigin-voxelcloud',        'lefthands-voxelcloud', 
-                    'righthands-voxelcloud',        'gazeprojection-voxelcloud',    'occupancy-voxelcloud' ];
+                // const names: string[] = [ 
+                //     'gazeProjectionLineCloud',      'gazeorigin-pointcloud',        'lefthands-pointcloud',     'righthands-pointcloud', 
+                //     'gazeprojection-pointcloud',    'gazeorigin-voxelcloud',        'lefthands-voxelcloud', 
+                //     'righthands-voxelcloud',        'gazeprojection-voxelcloud',    'occupancy-voxelcloud' ];
 
-                names.forEach( (name: string) => {
-                    sceneViewerController.change_cloud_visibility( name, false );
-                });
+                // names.forEach( (name: string) => {
+                //     sceneViewerController.change_cloud_visibility( name, false );
+                // });
 
 
                 // removing spinner
+                console.log('removing spinner');
                 setLoadingData(false);
 
 
@@ -192,15 +194,15 @@ const SceneViewer = ( {sceneData} : any ) => {
                 position: 'absolute',
                 display: 'flex'}}>
                     <ParameterBox 
-                        perceptionLabels={ DataUtils.extract_perception_labels( sceneData.modelData.perception ) }
-                        onModelClassSelected={onModelClassSelected}
+                        // perceptionLabels={ DataUtils.extract_perception_labels( sceneData.modelData.perception ) }
+                        // onModelClassSelected={onModelClassSelected}
                         onVisibilityChange={onVisibilityChange}
                         onPointCloudStyleChange={onPointCloudStyleChange}
                         onVoxelCloudStyleChange={onVoxelCloudStyleChange}>    
                     </ParameterBox>
             </div>    
 
-            <div style={{ 
+            {/* <div style={{ 
                 top: '50px',
                 left: '10%',
                 width: '80%',
@@ -211,7 +213,7 @@ const SceneViewer = ( {sceneData} : any ) => {
                     <TimestampRangeSelector 
                     onTimestampRangeCommited={onTimestampRangeSelected}
                     timestampRange={ sessionDuration } />
-            </div>    
+            </div>     */}
 
         </div>
         

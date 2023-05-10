@@ -1,6 +1,8 @@
 // third party
 import { line } from 'd3';
 import * as THREE from 'three';
+import { Vector3 } from 'three';
+import { VertexNormalsHelper } from 'three-stdlib';
 import { VoxelCube } from '../types/types';
 import { LineCloud } from './renderables/LineCloud';
 
@@ -56,9 +58,31 @@ export class SceneManager {
         
         const pointCloudObject = new THREE.Points( pointgeometry, pointmaterial );
 
+        if(pointCloud.name === 'gazeorigin-pointcloud'){
+
+            // const origin
+            // const centroid: THREE.Vector3 = new Vector3();
+            // pointCloudObject.geometry.boundingBox.getCenter(centroid);
+
+            // centering and rotating
+            // pointCloudObject.geometry.center();
+
+            // select the Z world axis
+            // const myAxis = new THREE.Vector3(0, 1, 0);
+            // rotate the mesh 45 on this axis
+            // pointCloudObject.rotateOnWorldAxis(myAxis, THREE.MathUtils.degToRad(90));
+            // pointCloudObject.position.set(centroid.x, centroid.y, centroid.z);
+
+
+            // const helper = new VertexNormalsHelper( pointCloudObject, 1, 0xff0000 );
+            // this.scene.add(helper);
+        }
+
+
         // adding to scene
         pointCloudObject.name = pointCloud.name;
         this.scene.add( pointCloudObject );
+        
         
         return pointCloudObject;
     

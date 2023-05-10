@@ -53,8 +53,8 @@ export class Dataset {
         this.videos = this.store_videos( rawData );   
 
         // saving models data
-        this.perception = DataLoader.load_perception_data( rawData.modelData.perception);
-        this.perception3D = DataLoader.load_perception_3D_data( rawData.modelData.perception3D );
+        // this.perception = DataLoader.load_perception_data( rawData.modelData.perception);
+        // this.perception3D = DataLoader.load_perception_3D_data( rawData.modelData.perception3D );
 
     }  
 
@@ -62,8 +62,8 @@ export class Dataset {
 
         const pointCloudNames: string [] = [
             'gazeorigin-pointcloud', 
-            'lefthands-pointcloud',
-            'righthands-pointcloud',
+            // 'lefthands-pointcloud',
+            // 'righthands-pointcloud',
             'gazeprojection-pointcloud'
         ]
 

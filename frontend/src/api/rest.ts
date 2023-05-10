@@ -49,6 +49,7 @@ export function useGetAllRecordingInfo(token, fetchAuth) {
     };
 }
 export function useGetAllRecordingInfoNotoken() {
+
     const { fetchAuth } = useToken();
     // get the authenticated fetch function
     const fetcher = (url: string) => fetchAuth && fetchAuth(url).then((res) => res.json());
