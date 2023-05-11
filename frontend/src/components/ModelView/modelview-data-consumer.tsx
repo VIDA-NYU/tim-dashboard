@@ -120,6 +120,21 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
         currentTime: recordingCurrentPlayedTime,
     } = state;
     let recordingCurrentTime = Math.round(parseVideoStateTime(recordingCurrentPlayedTime) * 1000 + annotationData.meta.entryTime);
+
+    if(boundingBoxData && recordingData && !recordingData["first-entry"]){
+        // Note that timestamps corresponde to the object detection timestamps (time taken to process video and get objects. It will be way less than the duration of the video)
+        const firstEntry = boundingBoxData[0].timestamp;
+        const lastEntry = boundingBoxData[boundingBoxData.length-1].timestamp;
+        recordingData["first-entry"] = firstEntry;
+        recordingData["last-entry"] = lastEntry;
+        recordingData["duration_secs"] = "60";
+    }
+    if(totalDuration && totalDuration !== "0:0"){
+        recordingData["duration_secs"] = totalDuration;
+    }
+
+
+
     // const {
     //     clipActionFrameData,
     //     eyeFrameData

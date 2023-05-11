@@ -62,7 +62,7 @@ export default function ModelViewCompContainer({
                                              videoControls, streamInfo, currentTime, currentStep,
                                              recipePicker, confidenceControl, setTimestamps
                                          }: WozCompContainerProps) {
-
+ 
     const renderTemporalOverview = (annotationData: AnnotationData) => {
         // if(annotationData.meta.mode === "offline" && recordingData && reasoningData && boundingBoxData && reasoningData.length && clipActionData){
         if(annotationData.meta.mode === "offline" && recordingData && boundingBoxData){
@@ -90,7 +90,7 @@ export default function ModelViewCompContainer({
 
     return (
         <Container>
-            <AnnotationContext.Consumer>
+            {/* <AnnotationContext.Consumer>
                 {
                     ({annotationData, setAnnotationData}) => (
                         <div>
@@ -110,7 +110,7 @@ export default function ModelViewCompContainer({
                             annotationData={annotationData} setAnnotationData={setAnnotationData}/>
                     )
                 }
-            </AnnotationContext.Consumer>
+            </AnnotationContext.Consumer> */}
             <Box>
                 <Box
                     sx={{
@@ -164,7 +164,7 @@ export default function ModelViewCompContainer({
                             </Box>
                         )}
                     </AnnotationContext.Consumer>
-                    <AnnotationContext.Consumer>
+                    {/* <AnnotationContext.Consumer>
                         {({annotationData}) => (
                             <Box
                                 sx={{gridArea: "r"}}
@@ -172,7 +172,7 @@ export default function ModelViewCompContainer({
                                 {annotationData.meta.mode === "offline" && confidenceControl}
                             </Box>
                         )}
-                    </AnnotationContext.Consumer>
+                    </AnnotationContext.Consumer> */}
                     {/*{Action and Object Temporal Overview }*/}
                     <AnnotationContext.Consumer>
                         {
