@@ -122,9 +122,9 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, rea
         return a * 1.2 * (b.length ? b.length : 0);
      }
      
-    const actionContainerHeight = computeContainerHeight(cellHeight, individualActionDataList);
-    const objectContainerHeight = computeContainerHeight(cellHeight, individualBoundingBoxList);
-    const stepContainerHeight = computeContainerHeight(cellHeight, individualReasoningList);
+    const actionContainerHeight = (clipActionStatus || clipActionStatus) ? computeContainerHeight(cellHeight, individualActionDataList) : 0;
+    const objectContainerHeight = boundingBoxStatus ? computeContainerHeight(cellHeight, individualBoundingBoxList) : 0;
+    const stepContainerHeight = reasoningStatus ? computeContainerHeight(cellHeight, individualReasoningList) : 0;
 
 
     const chartHeight = marginTop + actionContainerHeight + objectContainerHeight + stepContainerHeight + 70; // 120

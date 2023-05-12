@@ -7,8 +7,8 @@ export function createInitialAnnotationData(): AnnotationData{
         reasoningSteps: [],
         meta: {
             mode: "offline",
-            id: "pinwheels_9.14",
-            recipeID: "pinwheels",
+            id: "ngc_0293_11",
+            recipeID: "",
             entryTime: 0,
             initialized: false,
         },
