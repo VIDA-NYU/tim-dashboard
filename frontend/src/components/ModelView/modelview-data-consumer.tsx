@@ -127,11 +127,11 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
         const lastEntry = boundingBoxData[boundingBoxData.length-1].timestamp;
         recordingData["first-entry"] = firstEntry;
         recordingData["last-entry"] = lastEntry;
-        recordingData["duration_secs"] = "60";
+        recordingData["duration_secs"] = "300"; // 5 min video
     }
-    if(totalDuration && totalDuration !== "0:0"){
-        recordingData["duration_secs"] = totalDuration;
-    }
+    // if(totalDuration && totalDuration !== "0:0"){
+    //     recordingData["duration_secs"] = totalDuration;
+    // }
 
 
 
