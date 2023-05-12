@@ -166,28 +166,6 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, rea
                 transform="translate(440,-450)  rotate(90)"
             > Avg-Confidence
             </text> */}
-            <text
-                x={chartWidth + xMarginLeft + 94}
-                y={-4}
-                fontSize = {".45em"}
-                textAnchor="middle"
-                dominantBaseline="central"
-                transform="rotate(-30, 175, -838)"
-            >
-                <tspan x="-12" dy=".6em">Average</tspan>
-                <tspan x="-8" dy="1.0em">Confidence</tspan>
-            </text>
-            <text
-                x={chartWidth + xMarginLeft + 94}
-                y={-4}
-                fontSize = {".45em"}
-                textAnchor="middle"
-                dominantBaseline="central"
-                transform="rotate(-30, 193, -880)"
-            >
-                <tspan x="-5" dy=".6em">Detection</tspan>
-                <tspan x="-4" dy="1.0em">Coverage</tspan>
-            </text>
             <g>
                 {
                     timedDataList.map((timedData, i) => {
@@ -250,6 +228,28 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, rea
                 <g
                     transform={`translate(${xMarginLeft}, ${yMargin})`}
                 >
+                    <text
+                        x={chartWidth + xMarginLeft + 94}
+                        y={35}
+                        fontSize = {".45em"}
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        transform="rotate(-28, 175, -861)"
+                    >
+                        <tspan x="-12" dy=".6em">Average</tspan>
+                        <tspan x="-8" dy="1.0em">Confidence</tspan>
+                    </text>
+                    <text
+                        x={chartWidth + xMarginLeft + 94}
+                        y={36}
+                        fontSize = {".45em"}
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        transform="rotate(-28, 193, -910)"
+                    >
+                        <tspan x="-5" dy=".6em">Detection</tspan>
+                        <tspan x="-4" dy="1.0em">Coverage</tspan>
+                    </text>
                     {/* Actions Temporal Overview */}
                     {(clipActionStatus || egovlpActionStatus) && renderActions(individualActionDataList, detectedActions)}
                     {/* Objects Temporal Overview */}
