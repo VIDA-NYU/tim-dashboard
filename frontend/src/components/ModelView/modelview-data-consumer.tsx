@@ -127,7 +127,7 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
         const lastEntry = boundingBoxData[boundingBoxData.length-1].timestamp;
         recordingData["first-entry"] = firstEntry;
         recordingData["last-entry"] = lastEntry;
-        recordingData["duration_secs"] = "300"; // 5 min video
+        recordingData["duration_secs"] = "300"; // 5 min video # define the number of bins used in the histogram. It SHOULD be defined at the time the session is created.
     }
     // if(totalDuration && totalDuration !== "0:0"){
     //     recordingData["duration_secs"] = totalDuration;

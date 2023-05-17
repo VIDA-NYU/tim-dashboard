@@ -87,8 +87,8 @@ export function useVideoControl (recordingData: any){
             ? format(currentTime) : "0:0";
     // : `-${format(totalDuration - currentTime)}`;
 
-    // const totalDurationValue = format(totalDuration);
-    const totalDurationValue = (recordingData && recordingData.duration) ? formatTotalDuration(recordingData.duration) : "0:0";
+    const totalDurationValue = format(totalDuration);
+    // const totalDurationValue = (recordingData && recordingData.duration) ? formatTotalDuration(recordingData.duration) : "0:0";
 
 
     const handlePlaybackRate = (rate) => {
