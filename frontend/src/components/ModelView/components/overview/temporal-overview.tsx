@@ -122,7 +122,7 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, rea
         return a * 1.2 * (b.length ? b.length : 0);
      }
      
-    const actionContainerHeight = (clipActionStatus || clipActionStatus) ? computeContainerHeight(cellHeight, individualActionDataList) : 0;
+    const actionContainerHeight = (clipActionStatus || egovlpActionStatus) ? computeContainerHeight(cellHeight, individualActionDataList) : 0;
     const objectContainerHeight = boundingBoxStatus ? computeContainerHeight(cellHeight, individualBoundingBoxList) : 0;
     const stepContainerHeight = reasoningStatus ? computeContainerHeight(cellHeight, individualReasoningList) : 0;
 
@@ -230,22 +230,22 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, rea
                 >
                     <text
                         x={chartWidth + xMarginLeft + 94}
-                        y={35}
+                        y={10}
                         fontSize = {".45em"}
                         textAnchor="middle"
                         dominantBaseline="central"
-                        transform="rotate(-28, 175, -861)"
+                        transform="rotate(-28, 175, -885)"
                     >
                         <tspan x="-12" dy=".6em">Average</tspan>
                         <tspan x="-8" dy="1.0em">Confidence</tspan>
                     </text>
                     <text
                         x={chartWidth + xMarginLeft + 94}
-                        y={36}
+                        y={10}
                         fontSize = {".45em"}
                         textAnchor="middle"
                         dominantBaseline="central"
-                        transform="rotate(-28, 193, -910)"
+                        transform="rotate(-28, 193, -930)"
                     >
                         <tspan x="-5" dy=".6em">Detection</tspan>
                         <tspan x="-4" dy="1.0em">Coverage</tspan>
