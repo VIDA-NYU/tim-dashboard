@@ -1,6 +1,6 @@
 import {useToken} from "../../api/TokenContext";
 import {useGetAllRecordings, useGetRecipeInfo, useGetRecipes, useGetStreamInfo} from "../../api/rest";
-import {parseVideoStateTime} from "./components/utils/video-time";
+import {extractTimestampValue, parseVideoStateTime} from "./components/utils/video-time";
 import ModelViewCompContainer from "./modelview-comp-container";
 import {useVideoControl} from "./components/video/video-hook";
 import {dataType} from '../../api/types'; //"../../../api/types";
@@ -34,11 +34,22 @@ interface ModelViewDataConsumerProps {
     annotationData: AnnotationData,
     playedTime: number,
     setAnnotationData: (newData: AnnotationData) => void,
-    setTimestamps: (ranges: string[][]) => void
+    setTimestamps: (ranges: string[][]) => void,
+    // egovlpActionData: any,
+    // clipActionData: any,
+    // recordingData: any,
+    // reasoningData: any,
+    // boundingBoxData: any,
+    // memoryData: any,
+    // eyeData
 }
 
-export default function ModelViewDataConsumer({recordingName, playedTime, annotationData, setAnnotationData, setTimestamps}: ModelViewDataConsumerProps) {
+export default function ModelViewDataConsumer({recordingName, playedTime, annotationData, setAnnotationData, setTimestamps,
+    // egovlpActionData, clipActionData, recordingData,
+    // reasoningData, boundingBoxData, memoryData, eyeData
+}: ModelViewDataConsumerProps) {
     const [seekingPlayedTime, setSeekingPlayedTime] = useState<boolean>(false);
+
 
     // Update annotationData if the selected recording changes. 
     const setAnnotationMeta = (newMeta: AnnotationMeta) => {
@@ -75,7 +86,6 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
         }
     }, [seekingPlayedTime]);
 
-
     const {token, fetchAuth} = useToken();
 
     const {response: recipeList} = useGetRecipes(token, fetchAuth);
@@ -92,6 +102,15 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
         egovlpActionData, clipActionData, recordingData,
         reasoningData, boundingBoxData, memoryData, eyeData
     } = useRecordingData(recordingID, token, fetchAuth);
+
+    useEffect(() => {
+        if(recordingData && recordingData["first-entry"]){
+            setAnnotationMeta({
+                ...annotationData.meta,
+                entryTime: extractTimestampValue(recordingData["first-entry"])
+            });
+        }
+    }, [recordingData]);
 
     const handleSettingObjectConfidenceThreshold = (value) => {
         setAnnotationData(setNewObjectConfidenceThreshold(annotationData, value));
@@ -119,21 +138,8 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
         totalDuration,
         currentTime: recordingCurrentPlayedTime,
     } = state;
+
     let recordingCurrentTime = Math.round(parseVideoStateTime(recordingCurrentPlayedTime) * 1000 + annotationData.meta.entryTime);
-
-    if(boundingBoxData && recordingData && !recordingData["first-entry"]){
-        // Note that timestamps corresponde to the object detection timestamps (time taken to process video and get objects. It will be way less than the duration of the video)
-        const firstEntry = boundingBoxData[0].timestamp;
-        const lastEntry = boundingBoxData[boundingBoxData.length-1].timestamp;
-        recordingData["first-entry"] = firstEntry;
-        recordingData["last-entry"] = lastEntry;
-        recordingData["duration_secs"] = "300"; // 5 min video # define the number of bins used in the histogram. It SHOULD be defined at the time the session is created.
-    }
-    // if(totalDuration && totalDuration !== "0:0"){
-    //     recordingData["duration_secs"] = totalDuration;
-    // }
-
-
 
     // const {
     //     clipActionFrameData,
