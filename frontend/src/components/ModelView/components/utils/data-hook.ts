@@ -12,6 +12,13 @@ function preprocessResponse(response: any){
 
 function useRecordingData (recordingID: string, token:string, fetchAuth: any){
     const {response: recordingData} = useGetRecording(token, fetchAuth, recordingID);
+    const {data: additionalMetadata} = useGetRecordingJson(recordingID, "additional_metadata");
+    if(recordingData && recordingData["duration_secs"] === null && additionalMetadata) {
+        recordingData["first-entry"] = additionalMetadata["first-entry"];
+        recordingData["last-entry"] = additionalMetadata["last-entry"];
+        recordingData["duration_secs"] = additionalMetadata["duration_secs"];
+    }
+
     const {data: egovlpActionResponse} = useGetRecordingJson(recordingID, "egovlp:action:steps");
     const egovlpActionData = preprocessResponse(egovlpActionResponse);
 
