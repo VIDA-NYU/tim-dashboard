@@ -1,5 +1,9 @@
 // export const API_URL = 'https://api.ptg.poly.edu';
-export const API_URL = 'http://dashboardptg.vida-nyu.org:7890';
+// export const API_URL = 'http://dashboardptg.vida-nyu.org:7890';
+//export const API_URL = 'http://dashboardptg.vida-nyu.org:7890';
+const {protocol, hostname, port} = window.location;
+export const API_URL = `${protocol}//${hostname}${port ? ":7890" : ""}`
+
 export const RECORDINGS_STATIC_PATH = '/recordings/static/';
 export const TEST_USER = 'test';
 export const TEST_PASS = 'test';
