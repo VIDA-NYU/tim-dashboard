@@ -21,7 +21,13 @@ import {
   getIMUMagData,  
   getPerceptionData,
   getReasoningData,
-  get3DObjectPositionData} from '../../api/rest';
+  get3DObjectPositionData,
+  getRecordingMetadata,
+  getEgovlpActionData,
+  getClipActionData,
+  getStepsReasoningData,
+  getAdditionalMetadata
+} from '../../api/rest';
 
 // global components
 import Controls from '../../utils/Controls';
@@ -39,23 +45,43 @@ import { DataUtils } from '../../components/PointCloudViewer/utils/DataUtils';
 const HistoricalDataView = () => {
 
   // get the token and authenticated fetch function
-  // const { token, fetchAuth } = useToken();
+  const { token, fetchAuth } = useToken();
 
   // Recordings
   const [availableRecordings, setAvailableRecordings] = useState([]);
-  const [selectedRecordingName, setSelectedRecordingName] = React.useState<string>('');
   // const [selectedTimestamp, setSelectedTimestamp] = React.useState<number>(0);
 
   const [sessionInfo, setSessionInfo] = useState<any>({});
   const [loadingData, setLoadingData] = useState<boolean>(false);
-
+  const [loadingDataTemporalViewer, setLoadingDataTemporalViewer] = useState<boolean>(false);
 
   const handleChangeSelectRecording = async (newSelection) => {
 
-    setSelectedRecordingName(newSelection);
-    setLoadingData(true);
+    setLoadingDataTemporalViewer(true);
 
     const mainCameraPath: string = getVideoPath( newSelection, 'main' );
+
+    const recordingMetadata = await getRecordingMetadata(token, fetchAuth, newSelection);
+    const egovlpActionJSONFile = await getEgovlpActionData( newSelection );
+    const clipActionJSONFile = await getClipActionData( newSelection );
+    const reasoningJSONFile = await getStepsReasoningData(newSelection);
+    const boundingBoxJSONFile = await getPerceptionData( newSelection );
+
+    // Get missing metadata
+    const additionalMetadata = await getAdditionalMetadata(newSelection);
+    if(recordingMetadata && recordingMetadata["duration_secs"] === null && additionalMetadata) {
+      recordingMetadata["first-entry"] = additionalMetadata["first-entry"];
+      recordingMetadata["last-entry"] = additionalMetadata["last-entry"];
+      recordingMetadata["duration_secs"] = additionalMetadata["duration_secs"];
+    }
+
+    const temporalViewerData = {recordingName:newSelection, recordingMetadata, egovlpActionJSONFile, clipActionJSONFile,
+      reasoningJSONFile, boundingBoxJSONFile, mainCameraPath};
+    setSessionInfo(temporalViewerData);
+    setLoadingDataTemporalViewer(false);
+
+    setLoadingData(true);
+
     // const IMUAccelFile = await getIMUAccelData( newSelection );
     // const IMUGyroFile = await getIMUGyroData( newSelection );
     // const IMUMagFile = await getIMUMagData( newSelection );
@@ -76,7 +102,8 @@ const HistoricalDataView = () => {
 
     // setting session info
     // setSessionInfo({recordingName:newSelection, mainCameraPath, pointCloudJSONFile, eyeGazeJSONFile, handDataJSONFile, perceptionJSONFile, perception3DJSONFile});
-    setSessionInfo({recordingName:newSelection, mainCameraPath, pointCloudJSONFile, eyeGazeJSONFile});
+
+    setSessionInfo({ ...temporalViewerData, pointCloudJSONFile, eyeGazeJSONFile});
 
     // // setting spinner flag
     setLoadingData(false);
@@ -143,10 +170,12 @@ const HistoricalDataView = () => {
           )}
 
           <Divider orientation='vertical'/>
-
-          <Box sx={{ width: '500px', display: 'flex', flexDirection: 'column' }}>
-            { selectedRecordingName && <ModelView sessionInfo={sessionInfo} recordingName={selectedRecordingName} setTimestamps={setTimestamps} ></ModelView> }
-          </Box>
+          { !('egovlpActionJSONFile' in sessionInfo) && !(loadingDataTemporalViewer) ? (emptySelection()):
+          (
+            <Box sx={{ width: '500px', display: 'flex', flexDirection: 'column' }}>
+              { loadingDataTemporalViewer ? loadingSpinner() : <ModelView sessionInfo={sessionInfo} setTimestamps={setTimestamps} ></ModelView> }
+            </Box>
+          )}
 
         </Box>
 

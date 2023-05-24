@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import {styled} from "@mui/material";
 
 // API
-import { getVideoPath } from '../../../../api/rest';
 import {ObjectRecord, preprocessFrameBoundingBoxData} from "./utils/wrapper";
 
 // model
@@ -31,7 +30,7 @@ const Container = styled("div")(({}) => ({
 const validCanvasWidthLower = 800;
 
 
-const VideoDataView = ({ type, title, data, recordingName, state, onProgress, onSeek, boundingBoxData, annotationData, currentTime }: any ) => {
+const VideoDataView = ({ type, title, data, recordingName, state, onProgress, onSeek, boundingBoxData, annotationData, currentTime, mainCameraPath }: any ) => {
     const [count, setCount] = useState<number>(0);
     // let count = 0;
     // const processedBoundingBoxData = preprocessBoundingBoxData(boundingBoxData);
@@ -172,7 +171,7 @@ const VideoDataView = ({ type, title, data, recordingName, state, onProgress, on
                 state={state}
                 onSeek={res => onSeek(res)}
                 onProgress={(res) => onProgress(res)}
-                path={getVideoPath(recordingName, "main")} />
+                path={mainCameraPath} />
             <BoundingBoxCanvas
                 ref={canvasRef}
             >

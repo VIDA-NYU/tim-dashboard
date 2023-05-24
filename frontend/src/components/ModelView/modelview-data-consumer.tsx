@@ -6,7 +6,7 @@ import {useVideoControl} from "./components/video/video-hook";
 import {dataType} from '../../api/types'; //"../../../api/types";
 import ReplayPlayer from "./components/video/replay-player";
 import Controls from '../../utils/Controls';
-import {useFrameData, useRecordingData} from "./components/utils/data-hook";
+import {preprocessResponse, useFrameData} from "./components/utils/data-hook";
 import {filterObjectWithRecipe, generateRecipeObjectIndex} from "./components/object-comps/utils";
 import {AnnotationData, AnnotationMeta} from "./components/annotation/types";
 import {buildNewAnnotationMeta, computeCurrentStep, setNewObjectConfidenceThreshold} from "./components/annotation/utils";
@@ -15,42 +15,16 @@ import { useEffect, useState } from "react";
 import { scaleLinear } from "d3";
 import ObjectConfidenceThresholdAdjuster from "./components/object-comps/object-confidence-threshold-adjuster";
 
-
-interface RecipeData {
-    _id: string,
-    name: string,
-    ingredients: string [],
-    ingredients_simple: string [],
-    instructions: string [],
-    steps: string [],
-    steps_simple: string [],
-    tools: string [],
-    tools_simple: string []
-}
-
-
 interface ModelViewDataConsumerProps {
-    recordingName: string,
+    sessionInfo: any,
     annotationData: AnnotationData,
     playedTime: number,
     setAnnotationData: (newData: AnnotationData) => void,
-    setTimestamps: (ranges: string[][]) => void,
-    // egovlpActionData: any,
-    // clipActionData: any,
-    // recordingData: any,
-    // reasoningData: any,
-    // boundingBoxData: any,
-    // memoryData: any,
-    // eyeData
+    setTimestamps: (ranges: string[][]) => void
 }
 
-export default function ModelViewDataConsumer({recordingName, playedTime, annotationData, setAnnotationData, setTimestamps,
-    // egovlpActionData, clipActionData, recordingData,
-    // reasoningData, boundingBoxData, memoryData, eyeData
-}: ModelViewDataConsumerProps) {
+export default function ModelViewDataConsumer({sessionInfo, playedTime, annotationData, setAnnotationData, setTimestamps}: ModelViewDataConsumerProps) {
     const [seekingPlayedTime, setSeekingPlayedTime] = useState<boolean>(false);
-
-
     // Update annotationData if the selected recording changes. 
     const setAnnotationMeta = (newMeta: AnnotationMeta) => {
         setAnnotationData({
@@ -61,11 +35,11 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
     useEffect(() => {
         setAnnotationMeta(buildNewAnnotationMeta({
             ...annotationData.meta,
-            id: recordingName
+            id: sessionInfo.recordingName,
+            entryTime: extractTimestampValue(sessionInfo.recordingMetadata["first-entry"])
         }));
-    }, [recordingName]);
+    }, [sessionInfo.recordingName]);
     // end Update annotationData
-
 
     // Update model view component if the timestamp is updated through Point Cloud viewer by hovering the red dots (user head location) in the plot.
     useEffect(() => {
@@ -86,31 +60,13 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
         }
     }, [seekingPlayedTime]);
 
-    const {token, fetchAuth} = useToken();
+    const recordingID = sessionInfo.recordingName;
 
-    const {response: recipeList} = useGetRecipes(token, fetchAuth);
-    const recipeIDList = recipeList? recipeList.map(d => d._id) : [];
-    const {response: recordingList} = useGetAllRecordings(token, fetchAuth);
-    const {response: recipeData} = useGetRecipeInfo(token, fetchAuth, annotationData.meta.recipeID);
-
-    // const [ recipeData, setRecipeData ] = useState<RecipeData>();
-    const recordingID = annotationData.meta.id;
-
-    const {response: streamInfo} = useGetStreamInfo(token, fetchAuth, "main");
-
-    const {
-        egovlpActionData, clipActionData, recordingData,
-        reasoningData, boundingBoxData, memoryData, eyeData
-    } = useRecordingData(recordingID, token, fetchAuth);
-
-    useEffect(() => {
-        if(recordingData && recordingData["first-entry"]){
-            setAnnotationMeta({
-                ...annotationData.meta,
-                entryTime: extractTimestampValue(recordingData["first-entry"])
-            });
-        }
-    }, [recordingData]);
+    const recordingData =  preprocessResponse(sessionInfo.recordingMetadata);
+    const egovlpActionData = preprocessResponse(sessionInfo.egovlpActionJSONFile);
+    const clipActionData = preprocessResponse(sessionInfo.clipActionJSONFile);
+    const reasoningData = preprocessResponse(sessionInfo.reasoningJSONFile);
+    const boundingBoxData = preprocessResponse(sessionInfo.boundingBoxJSONFile);
 
     const handleSettingObjectConfidenceThreshold = (value) => {
         setAnnotationData(setNewObjectConfidenceThreshold(annotationData, value));
@@ -141,22 +97,9 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
 
     let recordingCurrentTime = Math.round(parseVideoStateTime(recordingCurrentPlayedTime) * 1000 + annotationData.meta.entryTime);
 
-    // const {
-    //     clipActionFrameData,
-    //     eyeFrameData
-    // } = useRecordingFrameData(
-    //     currentTime, recordingData, reasoningData, memoryData,
-    //     boundingBoxData, egovlpActionData, clipActionData, eyeData
-    // )
-
-    // const {
-    //     reasoningFrameData, egovlpActionFrameData, memoryFrameData, boundingBoxFrameData
-    // } = useStreamFrameData();
-
-    const {reasoningFrameData, egovlpActionFrameData, clipActionFrameData, boundingBoxFrameData,
-        memoryFrameData, eyeFrameData, currentTime} = useFrameData(
+    const {reasoningFrameData, egovlpActionFrameData, clipActionFrameData, boundingBoxFrameData, currentTime} = useFrameData(
         annotationData.meta.mode, recordingCurrentTime, recordingData, reasoningData,
-        memoryData, boundingBoxData, egovlpActionData, clipActionData, eyeData );
+        boundingBoxData, egovlpActionData, clipActionData );
 
     const videoPlayer =
     (<ReplayPlayer
@@ -170,6 +113,7 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
         boundingBoxData={boundingBoxFrameData}
         annotationData={annotationData}
         currentTime={currentTime}
+        mainCameraPath={sessionInfo.mainCameraPath}
     >
     </ReplayPlayer>);
     const videoControls = (
@@ -216,11 +160,7 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
             currentTime={currentTime}
             currentStep={currentStep}
             recordingID={recordingID}
-            recordingList={recordingList}
-            recipeIDList={recipeIDList}
             recordingData={recordingData}
-            streamInfo={streamInfo}
-            recipeData={recipeData}
             reasoningData={reasoningData}
             reasoningFrameData={reasoningFrameData}
             boundingBoxData={boundingBoxData}

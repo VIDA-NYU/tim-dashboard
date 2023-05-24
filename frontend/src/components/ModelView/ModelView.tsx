@@ -34,7 +34,7 @@ const ModelView = ({...props}) => {
                 {({annotationData, setAnnotationData}) =>
                   {
                     return <ModelViewDataConsumer
-                        recordingName={props.recordingName}
+                        sessionInfo={props.sessionInfo}
                         playedTime = {currentTimestamp ? TimestampManager.get_elapsed_time(currentTimestamp) : 0}
                         annotationData={annotationData}
                         setAnnotationData={setAnnotationData}

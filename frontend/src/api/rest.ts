@@ -344,6 +344,35 @@ export async function getReasoningData(recordingName) {
     return response;
 }
 
+export async function getClipActionData(recordingName) {
+    const url = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/clip:action:steps.json`;
+    const response = await fetch(url).then((res) => res.json());
+    return response;
+}
+
+export async function getEgovlpActionData(recordingName) {
+    const url = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/egovlp:action:steps.json`;
+    const response = await fetch(url).then((res) => res.json());
+    return response;
+}
+
+export async function getStepsReasoningData(recordingName) {
+    const url = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/reasoning:check_status.json`;
+    const response = await fetch(url).then((res) => res.json());
+    return response;
+}
+
+export async function getMemoryData(recordingName) {
+    const url = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/detic:memory.json`;
+    const response = await fetch(url).then((res) => res.json());
+    return response;
+}
+export async function getAdditionalMetadata(recordingName) {
+    const url = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/additional_metadata.json`;
+    const response = await fetch(url).then((res) => res.json());
+    return response;
+}
+
 export async function getEyeData(recordingName) {
     // const url ="https://api.ptg.poly.edu/recordings/static/coffee-test-1/eye.json";
     const url = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/eye.json`;
@@ -398,6 +427,15 @@ export async function getIMUMagData (recordingName) {
 export async function getAllRecordings(token, fetchAuth) {
     // query the streamings endpoint (only if we have a token)
     const uid: Key = token && `${API_URL}/recordings`;
+    const response = await fetchAuth(uid).then((res) => res.json());
+    return response;
+}
+
+/* fetch data available of an specific recording */
+export async function getRecordingMetadata(token, fetchAuth, recordingName) {
+    // query the streamings endpoint (only if we have a token)
+    const uid: Key = token  && recordingName && `${API_URL}/recordings/` + recordingName;
+    // get the authenticated fetch function
     const response = await fetchAuth(uid).then((res) => res.json());
     return response;
 }

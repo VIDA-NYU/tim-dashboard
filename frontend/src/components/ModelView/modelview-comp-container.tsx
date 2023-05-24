@@ -28,13 +28,9 @@ interface RecipeData {
 interface WozCompContainerProps {
     state: any
     recordingID: string,
-    recordingList: Array<string>,
-    recipeIDList: Array<string>,
     recordingData: any,
-    streamInfo: any,
     reasoningData: any,
     reasoningFrameData: any,
-    recipeData: RecipeData,
     boundingBoxData: any,
     boundingBoxFrameData: any,
     clipActionData: any,
@@ -54,12 +50,12 @@ interface WozCompContainerProps {
 const Container = styled("div")({});
 
 export default function ModelViewCompContainer({
-                                             state, recordingID, recordingList, recipeIDList,
-                                             recordingData, reasoningData, reasoningFrameData, recipeData,
+                                             state,
+                                             recordingData, reasoningData, reasoningFrameData,
                                              boundingBoxData, boundingBoxFrameData,
                                              egovlpActionData, egovlpActionFrameData,
                                              clipActionData, clipActionFrameData, videoPlayer,
-                                             videoControls, streamInfo, currentTime, currentStep,
+                                             videoControls, currentTime, currentStep,
                                              recipePicker, confidenceControl, setTimestamps
                                          }: WozCompContainerProps) {
  
