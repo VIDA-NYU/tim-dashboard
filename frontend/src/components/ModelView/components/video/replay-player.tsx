@@ -30,7 +30,7 @@ const Container = styled("div")(({}) => ({
 const validCanvasWidthLower = 800;
 
 
-const VideoDataView = ({ type, title, data, recordingName, state, onProgress, onSeek, boundingBoxData, internalMetadata, currentTime, mainCameraPath }: any ) => {
+const VideoDataView = ({ state, onProgress, onSeek, boundingBoxData, internalMetadata, currentTime, mainCameraPath }: any ) => {
     const [count, setCount] = useState<number>(0);
     // let count = 0;
     // const processedBoundingBoxData = preprocessBoundingBoxData(boundingBoxData);

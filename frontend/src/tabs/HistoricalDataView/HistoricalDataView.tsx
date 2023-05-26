@@ -30,7 +30,6 @@ import {
 } from '../../api/rest';
 
 // global components
-import Controls from '../../utils/Controls';
 import SummaryView from '../../components/SummaryView/SummaryView';
 import SessionListView from '../../components/SessionListView/SessionListView';
 import ModelView from '../../components/ModelView/ModelView';

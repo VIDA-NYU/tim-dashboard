@@ -1,11 +1,8 @@
-import {useToken} from "../../api/TokenContext";
-import {useGetAllRecordings, useGetRecipeInfo, useGetRecipes, useGetStreamInfo} from "../../api/rest";
 import {extractTimestampValue, parseVideoStateTime} from "./components/utils/video-time";
 import ModelViewCompContainer from "./modelview-comp-container";
 import {useVideoControl} from "./components/video/video-hook";
-import {dataType} from '../../api/types'; //"../../../api/types";
 import ReplayPlayer from "./components/video/replay-player";
-import Controls from '../../utils/Controls';
+import Controls from './components/common/Controls';
 import {preprocessResponse, useFrameData} from "./components/utils/data-hook";
 import { useEffect, useState } from "react";
 import { scaleLinear } from "d3";
@@ -94,11 +91,7 @@ export default function ModelViewDataConsumer({sessionInfo, playedTime, setTimes
 
     const videoPlayer =
     (<ReplayPlayer
-        type={dataType.VIDEO}
-        data={recordingData}
-        title={"Cameras"}
         state={state}
-        recordingName={recordingID}
         onProgress={(res) => handleProgress(res)}
         onSeek={res => handleSeekingFromVideoCard(res)}
         boundingBoxData={boundingBoxFrameData}
