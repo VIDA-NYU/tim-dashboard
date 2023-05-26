@@ -7,39 +7,29 @@ import {dataType} from '../../api/types'; //"../../../api/types";
 import ReplayPlayer from "./components/video/replay-player";
 import Controls from '../../utils/Controls';
 import {preprocessResponse, useFrameData} from "./components/utils/data-hook";
-import {filterObjectWithRecipe, generateRecipeObjectIndex} from "./components/object-comps/utils";
-import {AnnotationData, AnnotationMeta} from "./components/annotation/types";
-import {buildNewAnnotationMeta, computeCurrentStep, setNewObjectConfidenceThreshold} from "./components/annotation/utils";
-import {syncWithVideoTime} from "./components/video/utils/wrapper";
 import { useEffect, useState } from "react";
 import { scaleLinear } from "d3";
 import ObjectConfidenceThresholdAdjuster from "./components/object-comps/object-confidence-threshold-adjuster";
 
+export interface InternalMetadata {
+    objectConfidenceThreshold: number;
+    entryTime: number
+}
+
 interface ModelViewDataConsumerProps {
     sessionInfo: any,
-    annotationData: AnnotationData,
     playedTime: number,
-    setAnnotationData: (newData: AnnotationData) => void,
     setTimestamps: (ranges: string[][]) => void
 }
 
-export default function ModelViewDataConsumer({sessionInfo, playedTime, annotationData, setAnnotationData, setTimestamps}: ModelViewDataConsumerProps) {
+export default function ModelViewDataConsumer({sessionInfo, playedTime, setTimestamps}: ModelViewDataConsumerProps) {
     const [seekingPlayedTime, setSeekingPlayedTime] = useState<boolean>(false);
-    // Update annotationData if the selected recording changes. 
-    const setAnnotationMeta = (newMeta: AnnotationMeta) => {
-        setAnnotationData({
-            ...annotationData,
-            meta: newMeta
-        })
-    }
+    const [internalMetadata, setInternalMetadata] = useState<InternalMetadata>({ objectConfidenceThreshold: 0, entryTime: 0 });
+    // Update internalMetadata if the selected recording changes.
     useEffect(() => {
-        setAnnotationMeta(buildNewAnnotationMeta({
-            ...annotationData.meta,
-            id: sessionInfo.recordingName,
-            entryTime: extractTimestampValue(sessionInfo.recordingMetadata["first-entry"])
-        }));
+        let entryTime = extractTimestampValue(sessionInfo.recordingMetadata["first-entry"]);
+        setInternalMetadata({...internalMetadata, entryTime: entryTime});
     }, [sessionInfo.recordingName]);
-    // end Update annotationData
 
     // Update model view component if the timestamp is updated through Point Cloud viewer by hovering the red dots (user head location) in the plot.
     useEffect(() => {
@@ -69,7 +59,7 @@ export default function ModelViewDataConsumer({sessionInfo, playedTime, annotati
     const boundingBoxData = preprocessResponse(sessionInfo.boundingBoxJSONFile);
 
     const handleSettingObjectConfidenceThreshold = (value) => {
-        setAnnotationData(setNewObjectConfidenceThreshold(annotationData, value));
+        setInternalMetadata({...internalMetadata, objectConfidenceThreshold: value});
     }
     const {
         state,
@@ -95,10 +85,11 @@ export default function ModelViewDataConsumer({sessionInfo, playedTime, annotati
         currentTime: recordingCurrentPlayedTime,
     } = state;
 
-    let recordingCurrentTime = Math.round(parseVideoStateTime(recordingCurrentPlayedTime) * 1000 + annotationData.meta.entryTime);
+    let entryTime = extractTimestampValue(sessionInfo.recordingMetadata["first-entry"]);
+    let recordingCurrentTime = Math.round(parseVideoStateTime(recordingCurrentPlayedTime) * 1000 + entryTime);
 
     const {reasoningFrameData, egovlpActionFrameData, clipActionFrameData, boundingBoxFrameData, currentTime} = useFrameData(
-        annotationData.meta.mode, recordingCurrentTime, recordingData, reasoningData,
+        recordingCurrentTime, recordingData, reasoningData,
         boundingBoxData, egovlpActionData, clipActionData );
 
     const videoPlayer =
@@ -111,7 +102,7 @@ export default function ModelViewDataConsumer({sessionInfo, playedTime, annotati
         onProgress={(res) => handleProgress(res)}
         onSeek={res => handleSeekingFromVideoCard(res)}
         boundingBoxData={boundingBoxFrameData}
-        annotationData={annotationData}
+        internalMetadata={internalMetadata}
         currentTime={currentTime}
         mainCameraPath={sessionInfo.mainCameraPath}
     >
@@ -145,36 +136,30 @@ export default function ModelViewDataConsumer({sessionInfo, playedTime, annotati
 
     const confidenceControl = (
         <ObjectConfidenceThresholdAdjuster
-        thresholdValue={annotationData.perceptronParameters.objectConfidenceThreshold}
+        thresholdValue={internalMetadata.objectConfidenceThreshold}
         onSettingThresholdValue={handleSettingObjectConfidenceThreshold}
     />
     )
-    const recipePicker = (
-        <div/>
-    )
-    const currentStep = computeCurrentStep(annotationData, 0, currentTime);
 
     return (
         <ModelViewCompContainer
             state={state}
             currentTime={currentTime}
-            currentStep={currentStep}
             recordingID={recordingID}
             recordingData={recordingData}
             reasoningData={reasoningData}
             reasoningFrameData={reasoningFrameData}
             boundingBoxData={boundingBoxData}
             boundingBoxFrameData={boundingBoxFrameData}
-            // boundingBoxFrameData={syncWithVideoTime(currentTime, state, annotationData.meta.entryTime, filterObjectWithRecipe(boundingBoxFrameData, generateRecipeObjectIndex(recipeData)))}
             egovlpActionData={egovlpActionData}
             egovlpActionFrameData={egovlpActionFrameData}
             clipActionData={clipActionData}
             clipActionFrameData={clipActionFrameData}
             videoControls={videoControls}
             videoPlayer={videoPlayer}
-            recipePicker={recipePicker}
             confidenceControl={confidenceControl}
             setTimestamps={setTimestamps}
+            internalMetadata={internalMetadata}
         />
     )
 

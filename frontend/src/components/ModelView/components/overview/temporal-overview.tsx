@@ -6,10 +6,7 @@ import {schemeGnBu, interpolateTurbo, interpolateBuPu} from "d3-scale-chromatic"
 import {Tooltip} from "react-svg-tooltip"
 import Card from "@mui/material/Card";
 import HistogramRow from "./histogram-row";
-import {generateHumanAnnotationTemporalData, setNewObjectConfidenceThreshold} from "../annotation/utils";
-import { preprocessFrameBoundingBoxData, syncWithVideoTime } from "../video/utils/wrapper";
 import Legend from "./legend";
-import ObjectConfidenceThresholdAdjuster from "../object-comps/object-confidence-threshold-adjuster";
 // import * from "color-legend-element";
 
 const Container = styled(Card)({})
@@ -48,12 +45,12 @@ const yAxisLabelOffsetY = 6;
 
 export default function TemporalOverview({currentTime, boundingBoxFrameData, reasoningFrameData, reasoningData, boundingBoxData,
                                              clipActionData, egovlpActionData, clipActionFrameData, egovlpActionFrameData, recordingMeta,
-                                             state, annotationData, setTimestamps}) {
+                                             state, internalMetadata, setTimestamps}) {
     const visRef = useRef(null);
     const xAxisRef = useRef(null);
 
-    const thresholdObjectDetection = annotationData.perceptronParameters.objectConfidenceThreshold;
-    const thresholdActionDetection = annotationData.perceptronParameters.objectConfidenceThreshold;
+    const thresholdObjectDetection = internalMetadata.objectConfidenceThreshold;
+    const thresholdActionDetection = internalMetadata.objectConfidenceThreshold;
 
     // create as many bins as seconds (duration of the session/video in seconds)
     xCellNumber = Math.floor(recordingMeta.duration_secs);
@@ -116,6 +113,7 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, rea
                             :
                             egovlpActionFrameData && Object.keys(egovlpActionFrameData).length > 0 ? Object.keys(egovlpActionFrameData).filter((key) => egovlpActionFrameData[key]> thresholdActionDetection).map(d => ({'label': d, 'confidence': egovlpActionFrameData[d]}) ) : [];
     const detectedSteps = (reasoningStatus && reasoningFrameData) ? [{'label': reasoningFrameData.step_id.toString(), 'confidence': 1}] : [];
+console.log("Hi");
 
     const cellHeight = 10; //5
     let computeContainerHeight = (a, b) => {
@@ -144,7 +142,7 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, rea
                 playedTimes={playedTimes} timedData={timedData}
                 selectedItem={""}
                 setTimestamps={setTimestamps}
-                ></HistogramRow>
+            ></HistogramRow>
         )
     }
 

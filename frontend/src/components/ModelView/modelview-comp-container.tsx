@@ -1,29 +1,8 @@
 import {Box, styled} from "@mui/material";
-import {AnnotationContext} from "./components/annotation/provider";
-import MachineReasoningInitializer from "./components/annotation/machine-reasoning-initializer";
-// import {StreamView} from '../LiveDataView/components/StreamDataView/LiveStream';
-// import {ReasoningOutputsWOZView} from "../LiveDataView/components/StreamDataView/ReasoningOutputsView";
 import {ReactElement} from "react";
-import {REASONING_CHECK_STREAM} from "../../config";
-import {ImageView} from './components/video/online-image-view';
-import MachineReasoningRecorder from "./components/annotation/machine-reasoning-recorder";
-import OnlineStreamInitializer from "./components/annotation/online-stream-initializer";
 import ErrorAlert from "./components/common/error-alert";
-import {AnnotationData} from "./components/annotation/types";
 import TemporalOverview from "./components/overview/temporal-overview";
-
-
-interface RecipeData {
-    _id: string,
-    name: string,
-    ingredients: string [],
-    ingredients_simple: string [],
-    instructions: string [],
-    steps: string [],
-    steps_simple: string [],
-    tools: string [],
-    tools_simple: string []
-}
+import { InternalMetadata } from "./modelview-data-consumer";
 
 interface WozCompContainerProps {
     state: any
@@ -40,10 +19,9 @@ interface WozCompContainerProps {
     videoPlayer: ReactElement,
     videoControls: ReactElement,
     currentTime: number,
-    recipePicker: ReactElement,
-    currentStep: number,
     confidenceControl: ReactElement,
-    setTimestamps: (ranges: string[][]) => void
+    setTimestamps: (ranges: string[][]) => void,
+    internalMetadata: InternalMetadata
 }
 
 
@@ -55,19 +33,19 @@ export default function ModelViewCompContainer({
                                              boundingBoxData, boundingBoxFrameData,
                                              egovlpActionData, egovlpActionFrameData,
                                              clipActionData, clipActionFrameData, videoPlayer,
-                                             videoControls, currentTime, currentStep,
-                                             recipePicker, confidenceControl, setTimestamps
+                                             videoControls, currentTime,
+                                             confidenceControl, setTimestamps,
+                                             internalMetadata
                                          }: WozCompContainerProps) {
  
-    const renderTemporalOverview = (annotationData: AnnotationData) => {
-        // if(annotationData.meta.mode === "offline" && recordingData && reasoningData && boundingBoxData && reasoningData.length && clipActionData){
-        if(annotationData.meta.mode === "offline" && recordingData && boundingBoxData){
+    const renderTemporalOverview = () => {
+        if(recordingData && boundingBoxData){
 
             return (<TemporalOverview
                 currentTime={currentTime}
                 boundingBoxFrameData={boundingBoxFrameData}
                 reasoningFrameData={reasoningFrameData}
-                annotationData={annotationData}
+                internalMetadata={internalMetadata}
                 state={state}
                 clipActionData={clipActionData}
                 egovlpActionData={egovlpActionData}
@@ -78,7 +56,7 @@ export default function ModelViewCompContainer({
                 recordingMeta={recordingData}
                 setTimestamps={setTimestamps}
             ></TemporalOverview>)
-        }else if (annotationData.meta.mode === "offline" && (!reasoningData || reasoningData.length === 0)) {
+        }else if ((!reasoningData || reasoningData.length === 0)) {
             return (<ErrorAlert message={"Reasoning data is not available for this recording"}/>)
         }
 
@@ -86,27 +64,6 @@ export default function ModelViewCompContainer({
 
     return (
         <Container>
-            {/* <AnnotationContext.Consumer>
-                {
-                    ({annotationData, setAnnotationData}) => (
-                        <div>
-                            {annotationData.meta.mode === "offline" && <MachineReasoningInitializer
-                            recordingMeta={recordingData} reasoningData={reasoningData}
-                            annotationData={annotationData} setAnnotationData={setAnnotationData}/>}
-                        </div>
-                    )
-                }
-            </AnnotationContext.Consumer>
-            <AnnotationContext.Consumer>
-                {
-                    ({annotationData, setAnnotationData}) => (
-                        <MachineReasoningRecorder
-                            currentTime={currentTime}
-                            reasoningFrameData={reasoningFrameData}
-                            annotationData={annotationData} setAnnotationData={setAnnotationData}/>
-                    )
-                }
-            </AnnotationContext.Consumer> */}
             <Box>
                 <Box
                     sx={{
@@ -141,47 +98,27 @@ export default function ModelViewCompContainer({
                         },
                     }}>
                     {/*{recordingData && videoPlayer }*/}
-                    <AnnotationContext.Consumer>
-                        {({annotationData}) => (
-                            <Box sx={{gridArea: 'M'}}>
-                                {annotationData.meta.mode === "offline" && recordingData && videoPlayer}
-                                {/* { annotationData.meta.mode === "online" && <ImageView streamId='main' boxStreamId='detic:image' confidence={annotationData.perceptronParameters.objectConfidenceThreshold} debugMode={false}/>} */}
-                            </Box>
-                        )}
-
-                    </AnnotationContext.Consumer>
+                    <Box sx={{gridArea: 'M'}}>
+                        {recordingData && videoPlayer}
+                    </Box>
                     {/*{Video Player Controls }*/}
-                    <AnnotationContext.Consumer>
-                        {({annotationData}) => (
-                            <Box
-                                sx={{gridArea: "N"}}
-                            >
-                                {annotationData.meta.mode === "offline" && videoControls}
-                            </Box>
-                        )}
-                    </AnnotationContext.Consumer>
-                    {/* <AnnotationContext.Consumer>
-                        {({annotationData}) => (
-                            <Box
-                                sx={{gridArea: "r"}}
-                            >
-                                {annotationData.meta.mode === "offline" && confidenceControl}
-                            </Box>
-                        )}
-                    </AnnotationContext.Consumer> */}
+                    <Box
+                        sx={{gridArea: "N"}}
+                    >
+                        {videoControls}
+                    </Box>
+                    <Box
+                        sx={{gridArea: "r"}}
+                    >
+                        {confidenceControl}
+                    </Box>
                     {/*{Action and Object Temporal Overview }*/}
-                    <AnnotationContext.Consumer>
+                    <Box sx={{gridArea: 'g'}}>
                         {
-                            ({annotationData}) => (
-                                <Box sx={{gridArea: 'g'}}>
-                                    {
-                                        renderTemporalOverview(annotationData)
+                            renderTemporalOverview()
 
-                                    }
-                                </Box>
-                            )
                         }
-                    </AnnotationContext.Consumer>
+                    </Box>
                 </Box>
             </Box>
         </Container>

@@ -37,7 +37,7 @@ function useRecordingFrameData(currentTime, recordingData, reasoningData,
 
 export const prettyJSON = msg => msg ? JSON.stringify(JSON.parse(msg), null, 2) : msg
 
-function useFrameData(mode: "online" | "offline" | "undefined", currentTime, recordingData, reasoningData,
+function useFrameData( currentTime, recordingData, reasoningData,
                    boundingBoxData, egovlpActionData, clipActionData){
 
     const {
@@ -49,27 +49,6 @@ function useFrameData(mode: "online" | "offline" | "undefined", currentTime, rec
         currentTime, recordingData, reasoningData,
         boundingBoxData, egovlpActionData, clipActionData
     );
-
-    // const {
-    //     reasoningFrameData: streamReasoningFrameDatam,
-    //     egovlpActionFrameData: streamEgovlpActionFrameData,
-    //     memoryFrameData: streamMemoryFrameData,
-    //     boundingBoxFrameData: streamBoundingBoxFrameData,
-    //     clipActionFrameData: streamClipActionFrameData,
-    //     eyeFrameData: streamEyeFrameData,
-    //     currentTime: streamCurrentTime
-    // } = useStreamFrameData();
-    // if(mode === "online"){
-    //     return {
-    //         reasoningFrameData: streamReasoningFrameDatam,
-    //         egovlpActionFrameData: streamEgovlpActionFrameData,
-    //         memoryFrameData: streamMemoryFrameData,
-    //         boundingBoxFrameData: streamBoundingBoxFrameData,
-    //         clipActionFrameData: streamClipActionFrameData,
-    //         eyeFrameData: streamEyeFrameData,
-    //         currentTime: streamCurrentTime
-    //     }
-    // }else{
         return {
             reasoningFrameData: recordingReasoningFrameData,
             egovlpActionFrameData: recordingEgovlpActionFrameData,
@@ -77,7 +56,6 @@ function useFrameData(mode: "online" | "offline" | "undefined", currentTime, rec
             boundingBoxFrameData: recordingBoundingBoxFrameData,
             currentTime: currentTime
         }
-    // }
 }
 
 export {useRecordingFrameData, useFrameData};

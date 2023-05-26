@@ -30,7 +30,7 @@ const Container = styled("div")(({}) => ({
 const validCanvasWidthLower = 800;
 
 
-const VideoDataView = ({ type, title, data, recordingName, state, onProgress, onSeek, boundingBoxData, annotationData, currentTime, mainCameraPath }: any ) => {
+const VideoDataView = ({ type, title, data, recordingName, state, onProgress, onSeek, boundingBoxData, internalMetadata, currentTime, mainCameraPath }: any ) => {
     const [count, setCount] = useState<number>(0);
     // let count = 0;
     // const processedBoundingBoxData = preprocessBoundingBoxData(boundingBoxData);
@@ -142,9 +142,9 @@ const VideoDataView = ({ type, title, data, recordingName, state, onProgress, on
             // ctx.beginPath();
 
 
-            const syncedBoundingBoxData = syncWithVideoTime(currentTime, state, annotationData.meta.entryTime, boundingBoxData)
+            const syncedBoundingBoxData = syncWithVideoTime(currentTime, state, internalMetadata.entryTime, boundingBoxData)
             let frameData = preprocessFrameBoundingBoxData(syncedBoundingBoxData,
-                annotationData.perceptronParameters.objectConfidenceThreshold);
+                internalMetadata.objectConfidenceThreshold);
 
             if (frameData && frameData.objects) {
                 for (let object of frameData.objects) {
@@ -164,7 +164,7 @@ const VideoDataView = ({ type, title, data, recordingName, state, onProgress, on
             setCount(value => value + 1)
         }
 
-    }, [played, boundingBoxData, annotationData.perceptronParameters.objectConfidenceThreshold]);
+    }, [played, boundingBoxData, internalMetadata.objectConfidenceThreshold]);
     return (
         <Container>
             <PlayerContainer
