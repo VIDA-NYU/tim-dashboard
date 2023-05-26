@@ -1,4 +1,4 @@
-import { Dataset } from '../../../../components/HandsDataView/model/dataset';
+import { Dataset } from '../../../HandsDataView/model/dataset';
 
 function preprocessTimestampData (data, recordingMetaData, playedTimes, totalDuration){
 

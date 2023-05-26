@@ -1,7 +1,7 @@
 import {Box, styled} from "@mui/material";
 import {ReactElement} from "react";
 import ErrorAlert from "./components/common/error-alert";
-import TemporalOverview from "./components/overview/temporal-overview";
+import TemporalOverview from "./components/ModelOutputViewer/temporal-overview";
 import { InternalMetadata } from "./modelview-data-consumer";
 
 interface WozCompContainerProps {

@@ -113,7 +113,6 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, rea
                             :
                             egovlpActionFrameData && Object.keys(egovlpActionFrameData).length > 0 ? Object.keys(egovlpActionFrameData).filter((key) => egovlpActionFrameData[key]> thresholdActionDetection).map(d => ({'label': d, 'confidence': egovlpActionFrameData[d]}) ) : [];
     const detectedSteps = (reasoningStatus && reasoningFrameData) ? [{'label': reasoningFrameData.step_id.toString(), 'confidence': 1}] : [];
-console.log("Hi");
 
     const cellHeight = 10; //5
     let computeContainerHeight = (a, b) => {

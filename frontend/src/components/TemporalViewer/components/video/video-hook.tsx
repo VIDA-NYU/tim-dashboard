@@ -1,8 +1,8 @@
-import { onProgressType } from '../../../../components/VideoDataView/VideoCard/VideoCard';
+import { onProgressType } from '../../../VideoDataView/VideoCard/VideoCard';
 import React, {useEffect, useRef} from "react";
 import {format, formatTotalDuration} from '../../../../utils/Helpers';
 import screenful from "screenfull";
-import { MediaState } from "../../../../components/Controls/types/types";
+import { MediaState } from "../../../Controls/types/types";
 
 export function useVideoControl (recordingData: any){
     const [state, setState] = React.useState<MediaState>({

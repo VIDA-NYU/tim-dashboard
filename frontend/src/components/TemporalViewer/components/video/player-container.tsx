@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import ReactPlayer from 'react-player';
-import { MediaState } from '../../../../components/Controls/types/types';
+import { MediaState } from '../../../Controls/types/types';
 
 interface VideoCardProps {
     subtitle?: string;

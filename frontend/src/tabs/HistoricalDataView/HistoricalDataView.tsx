@@ -32,7 +32,7 @@ import {
 // global components
 import SummaryView from '../../components/SummaryView/SummaryView';
 import SessionListView from '../../components/SessionListView/SessionListView';
-import ModelView from '../../components/ModelView/ModelView';
+import ModelView from '../../components/TemporalViewer/ModelView';
 import SessionView from '../../views/SessionView/SessionView';
 import TimestampManager from './services/TimestampManager';
 import { GazePointCloudRaw } from '../../components/PointCloudViewer/types/types';
