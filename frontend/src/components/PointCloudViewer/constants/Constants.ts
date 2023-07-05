@@ -8,6 +8,7 @@ export const BASE_COLORS: { [pointCloudName: string]: number[] } = {
     'lefthands-pointcloud': [0.000, 0.270, 0.160 ], // GREEN
     'righthands-pointcloud': [0.000, 0.270, 0.160 ], // GREEN
     'object-pointcloud': [0.596, 0.305, 0.639 ], // PURPLE
+    'memory-pointcloud': [0.596, 0.305, 0.639 ], // PURPLE
     'default': [0.450, 0.450, 0.450] // GRAY
 }
 

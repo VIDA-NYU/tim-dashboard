@@ -37,6 +37,7 @@ export class Dataset {
     // model outputs
     public perception: { [timestamp: number]: { [className: string]: number }  } = {};
     public perception3D: { [timestamp: number]: { [className: string]: {confidence: number, position: number[] } }} = {};
+    public memory: { [timestamp: number]: { [objectID: number]: {className: string, position: number[] } }} = {};
 
     constructor( rawData: any ){
 
@@ -55,6 +56,7 @@ export class Dataset {
         // saving models data
         this.perception = DataLoader.load_perception_data( rawData.modelData.perception);
         this.perception3D = DataLoader.load_perception_3D_data( rawData.modelData.perception3D );
+        this.memory = DataLoader.load_memory_data( rawData.modelData.memory );
 
     }  
 
@@ -154,6 +156,13 @@ export class Dataset {
         this.pointClouds[pointCloudName] = objectPointCloud;
 
     }
+
+    public create_memory_point_cloud( pointCloudName: string, id: string ): void {
+
+        const objectPointCloud: PointCloud = DataLoader.create_memory_point_cloud( pointCloudName, id, this.memory );
+        this.pointClouds[pointCloudName] = objectPointCloud;
+
+    }   
 
     public create_occupancy_voxel_cloud(): void {
 

@@ -46,4 +46,19 @@ export class DataUtils {
 
         return Array.from(labelSet.values());
     }
+
+    public static extract_memory_ids( rawMemoryFile: any ): string[] {
+
+        const memoryData: any [] = rawMemoryFile.map( (timestamp: any) => timestamp.values || timestamp.data );
+        const objectIds: string[][] = memoryData.map( ( item: any ) => item.map( (info: any) => info.id.toString() ) );
+        
+        const idSet: Set<string> = new Set<string>();
+        objectIds.forEach( (ids: string[]) => { 
+            ids.forEach( (id:string) => {
+                idSet.add( id );
+            })
+        });
+
+        return Array.from(idSet.values());
+    }
 }

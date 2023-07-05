@@ -40,6 +40,13 @@ const SceneViewer = ( {sceneData} : any ) => {
         
     };
 
+    const onObjectIDSelected = ( objectID: string ) => {
+
+        sceneViewerController.remove_scene_objects(['memory-pointcloud']);
+        sceneViewerController.dataset.create_memory_point_cloud( 'memory-pointcloud', objectID );
+        sceneViewerController.update_scene_point_clouds();
+    };
+
     const onVisibilityChange = ( cloudName: string, visibility: boolean ) => {
         sceneViewerController.change_cloud_visibility( cloudName, visibility );
     };
@@ -183,7 +190,9 @@ const SceneViewer = ( {sceneData} : any ) => {
                 display: 'flex'}}>
                     <ParameterBox 
                         perceptionLabels={ DataUtils.extract_perception_labels( sceneData.modelData.perception ) }
+                        memoryIds={ DataUtils.extract_memory_ids( sceneData.modelData.memory ) }
                         onModelClassSelected={onModelClassSelected}
+                        onObjectIDSelected={onObjectIDSelected}
                         onVisibilityChange={onVisibilityChange}
                         onPointCloudStyleChange={onPointCloudStyleChange}
                         onVoxelCloudStyleChange={onVoxelCloudStyleChange}>    

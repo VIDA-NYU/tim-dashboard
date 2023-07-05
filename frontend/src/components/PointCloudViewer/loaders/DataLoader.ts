@@ -108,6 +108,30 @@ export class DataLoader {
 
     }
 
+    public static create_memory_point_cloud( name: string, id: string, indexedMemory: { [timestamp: number]: { [objectID: number]: {className: string, position: number[] } }} ): PointCloud {
+
+        const points: number[][] = [];
+        const colors: number[][] = [];
+        const timestamps: number[] = [];
+        const id_num = parseInt(id);
+
+        for (const [timestamp, value] of Object.entries(indexedMemory)) {
+
+            if( id_num in value ){
+
+                points.push( value[id_num].position );
+                colors.push( BASE_COLORS[name] );
+                timestamps.push( parseInt(timestamp) );
+            
+            }
+        }
+
+        const objectPointCloud: PointCloud = new ObjectPointCloud(name, points, colors, [], timestamps);
+        return objectPointCloud;
+
+    }
+
+
     public static create_gaze_projection_line_cloud( name: string, origin: PointCloud, destination: PointCloud ): LineCloud {
 
         const originPoints: number[][] = [];
@@ -190,6 +214,30 @@ export class DataLoader {
         });
     
         return indexedPerception;
+
+    } 
+
+    public static load_memory_data( rawMemory: any[] ): { [timestamp: number]: { [ objectID: number]: { className: string, position: number[] } }} {
+
+        const indexedMemory: { [timestamp: number]: { [objectID: number]: { className: string, position: number[] } }} = {};
+
+        rawMemory.forEach( (row: any) => {
+
+            const currentTimestamp: number = parseInt(row.timestamp.split('-')[0]);
+            if( !(currentTimestamp in indexedMemory) ) indexedMemory[currentTimestamp] = {};
+            
+            row.values.forEach( (item: any) => {
+
+                const className: string = item.label;
+                const objectID: number = item.id;
+                const objectPosition: number[] = item.pos;
+
+                indexedMemory[currentTimestamp][objectID] = { className: className, position: objectPosition };
+            });
+
+        });
+    
+        return indexedMemory;
 
     } 
 
