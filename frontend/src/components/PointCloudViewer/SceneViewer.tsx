@@ -45,6 +45,10 @@ const SceneViewer = ( {sceneData} : any ) => {
         sceneViewerController.remove_scene_objects(['memory-pointcloud']);
         sceneViewerController.dataset.create_memory_point_cloud( 'memory-pointcloud', objectID );
         sceneViewerController.update_scene_point_clouds();
+
+        sceneViewerController.remove_scene_objects(['memory-linecloud']);
+        sceneViewerController.dataset.create_memory_line_cloud( 'memory-linecloud', objectID );
+        sceneViewerController.update_scene_line_clouds();
     };
 
     const onVisibilityChange = ( cloudName: string, visibility: boolean ) => {

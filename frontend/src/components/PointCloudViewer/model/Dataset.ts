@@ -164,6 +164,13 @@ export class Dataset {
 
     }   
 
+    public create_memory_line_cloud( lineCloudName: string, id: string ): void {
+
+        const objectLineCloud: LineCloud = DataLoader.create_memory_line_cloud( lineCloudName, id, this.memory );
+        this.lineClouds[lineCloudName] = objectLineCloud;
+
+    }  
+
     public create_occupancy_voxel_cloud(): void {
 
         const voxelCloud: VoxelCloud = DataLoader.create_occupancy_voxel_cloud( this.pointClouds['gazeprojection-pointcloud'], 'perception3D', this.perception3D, this.worldVoxelGrid );

@@ -12,6 +12,7 @@ import * as THREE from 'three';
 import { ObjectPointCloud } from "../model/renderables/objects/ObjectPointCloud";
 import { LineCloud } from "../model/renderables/LineCloud";
 import { GazeProjectionLineCloud } from "../model/renderables/gaze/GazeProjectionLineCloud";
+import { ObjectTrajectoryLineCloud } from "../model/renderables/objects/ObjectTrajectoryLineCloud";
 import { VoxelCloud } from "../model/renderables/VoxelCloud";
 import { WorldVoxelGrid } from "../model/voxel/WorldVoxelGrid";
 import { VoxelCell } from "../model/voxel/VoxelCell";
@@ -128,6 +129,31 @@ export class DataLoader {
 
         const objectPointCloud: PointCloud = new ObjectPointCloud(name, points, colors, [], timestamps);
         return objectPointCloud;
+
+    }
+
+    public static create_memory_line_cloud( name: string, id: string, indexedMemory: { [timestamp: number]: { [objectID: number]: {className: string, position: number[] } }} ): LineCloud {
+
+        const points: number[][] = [];
+        let timestamps: number[] = [];
+        const id_num = parseInt(id);
+
+        for (const [timestamp, value] of Object.entries(indexedMemory)) {
+
+            if( id_num in value ){
+
+                points.push( value[id_num].position );
+                timestamps.push( parseInt(timestamp) );
+            
+            }
+        }
+
+        const originPoints = points.slice(0,-1);
+        const destinationPoints = points.slice(1);
+        timestamps = timestamps.slice(0,-1);
+        const colors = Array(originPoints.length).fill(BASE_COLORS['default']);
+
+        return new ObjectTrajectoryLineCloud( name, originPoints, destinationPoints, colors, timestamps );
 
     }
 
