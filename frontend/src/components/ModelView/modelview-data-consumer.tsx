@@ -205,6 +205,8 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
             boundingBoxData={boundingBoxData}
             boundingBoxFrameData={boundingBoxFrameData}
             // boundingBoxFrameData={syncWithVideoTime(currentTime, state, annotationData.meta.entryTime, filterObjectWithRecipe(boundingBoxFrameData, generateRecipeObjectIndex(recipeData)))}
+            memoryData={memoryData}
+            memoryFrameData={memoryFrameData}
             egovlpActionData={egovlpActionData}
             egovlpActionFrameData={egovlpActionFrameData}
             clipActionData={clipActionData}
