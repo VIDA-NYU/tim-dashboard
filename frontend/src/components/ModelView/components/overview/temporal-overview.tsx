@@ -120,7 +120,7 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, mem
 
     const memoryStatus = memoryData && memoryData.length !== 0;
     const memoryTimedData = memoryStatus && preprocessTimestampData(memoryData, recordingMeta, playedTimes, state.totalDuration);
-    const memoryTrackletList = extractMemoryData(memoryTimedData);
+    const memoryTrackletList = memoryStatus && extractMemoryData(memoryTimedData);
 
     const cellHeight = 10; //5
     let computeContainerHeight = (a, b) => {
@@ -298,7 +298,7 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, mem
                     {/* Objects Temporal Overview */}
                     {boundingBoxStatus && renderObjects(individualBoundingBoxList, detectedObjects)}
                     {reasoningStatus && renderSteps(individualReasoningList, detectedSteps)}
-                    {memoryStatus && renderMemory(memoryTrackletList, detectedObjects)}
+                    {memoryStatus && renderMemory(memoryTrackletList, memoryFrameData ? memoryFrameData:[])}
                     
                     {/* X-axis labels */}
                     <g
