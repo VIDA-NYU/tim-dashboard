@@ -80,19 +80,19 @@ export default function MemoryHistogramRow({transform, detectedItems, cellSize, 
                 </circle>
             </g>
             <g
-                fillOpacity={detectedItems.isVideoStart ? '1' : detectedItems.data.map(a => a.label).includes(timedData.label.toString()) ? "1" : '0.1'}
+                fillOpacity={detectedItems.isVideoStart ? '1' : detectedItems.data.values.filter(a => a.status != 'outside').map(a => a.id.toString()).includes(timedData.label) ? "1" : '0.1'}
             >
                 <g>
                     <text
                         x={0}
                         y={cellSize / 2 + yAxisLabelOffsetY}
                         fontSize = {"x-small"}
-                    > {timedData.label}
+                    > {timedData.label + (!detectedItems.isVideoStart && detectedItems.data.values.filter(a => a.id.toString() == timedData.label)[0] ? detectedItems.data.values.filter(a => a.id.toString() == timedData.label)[0].label : "")}
                     </text>
                     <rect
                         x={-2}
                         y={-2}
-                        width={detectedItems.isVideoStart ? 0 : detectedItems.data.map(a => a.label).includes(timedData.label) ? yAxisLabelWidth : 0}
+                        width={detectedItems.isVideoStart ? 0 : detectedItems.data.values.filter(a => a.status != 'outside').map(a => a.id.toString()).includes(timedData.label) ? yAxisLabelWidth : 0}
                         height={actionCellHeight+2}
                         fill={'#F8DE7E'} //still thinking about the color we need to use here
                         fillOpacity={0.4}
