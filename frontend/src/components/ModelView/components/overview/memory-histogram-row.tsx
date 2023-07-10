@@ -3,13 +3,9 @@ import {useEffect, useRef, useState} from "react";
 import * as d3 from "d3";
 import { timestampRanges } from "../utils/utils";
 
-interface detectedItems {
-    label: string,
-    confidence: number
-}
 interface HistogramRowProps {
     transform: string,
-    detectedItems : {isVideoStart: boolean, data: detectedItems [], threshold: number},
+    detectedItems : {isVideoStart: boolean, data: {values: any[]}, threshold: number},
     cellSize: number,
     chartWidth: number,
     actionCellHeight: number
