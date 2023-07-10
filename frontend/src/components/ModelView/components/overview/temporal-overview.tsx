@@ -133,7 +133,7 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, mem
     const memoryContainerHeight = computeContainerHeight(cellHeight, memoryTrackletList);
 
 
-    const chartHeight = marginTop + actionContainerHeight + objectContainerHeight + stepContainerHeight + memoryContainerHeight +  70; // 120
+    const chartHeight = marginTop + actionContainerHeight + objectContainerHeight + stepContainerHeight + memoryContainerHeight + 100; // 120
 
     const xAxisY = chartHeight - 20;
 
@@ -263,7 +263,7 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, mem
     }
     const renderMemory = (timedDataList, detectedItems) => {
         return (<g
-            transform={`translate(0, ${marginTop + actionContainerHeight + objectContainerHeight + stepContainerHeight + 30})`} // 120
+            transform={`translate(0, ${marginTop + actionContainerHeight + objectContainerHeight + stepContainerHeight + 60})`} // 120
         >
             <text
                 x={0}
