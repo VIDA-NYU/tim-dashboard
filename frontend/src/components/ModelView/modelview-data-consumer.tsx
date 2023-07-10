@@ -147,6 +147,7 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
         onProgress={(res) => handleProgress(res)}
         onSeek={res => handleSeekingFromVideoCard(res)}
         boundingBoxData={boundingBoxFrameData}
+        memoryFrameData={memoryFrameData}
         annotationData={annotationData}
         currentTime={currentTime}
     >
