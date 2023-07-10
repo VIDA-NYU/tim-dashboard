@@ -336,10 +336,17 @@ export async function get3DObjectPositionData(recordingName) {
     return response;
 }
 
+function filterOldMemory(json){
+    if (!Array.isArray(json) || ('values' in json && json.values.length > 0 && 'xyz_center' in json.values[0])){
+        return [];
+    }
+    return json;
+}
+
 export async function getMemoryData(recordingName) {
     const url = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/detic:memory3d.json`;
     const response = await fetch(url).then((res) => res.json());
-    return response;
+    return filterOldMemory(response);
 }
 
 export async function getReasoningData(recordingName) {
