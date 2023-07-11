@@ -298,7 +298,7 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, mem
                     {/* Objects Temporal Overview */}
                     {boundingBoxStatus && renderObjects(individualBoundingBoxList, detectedObjects)}
                     {reasoningStatus && renderSteps(individualReasoningList, detectedSteps)}
-                    {memoryStatus && renderMemory(memoryTrackletList, memoryFrameData ? memoryFrameData:[])}
+                    {memoryStatus && renderMemory(memoryTrackletList, memoryFrameData ? memoryFrameData : {values:[]})}
                     
                     {/* X-axis labels */}
                     <g
