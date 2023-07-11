@@ -112,10 +112,11 @@ function extractMemoryData(memoryData){
 
     for (const [index, frame] of memoryData.entries()){
         for (const tracklet of frame.values){
-            if (!(tracklet.id in tmp)) tmp[tracklet.id] = { data:{}, timestamp:{} };
+            const id = tracklet.id + '-' + tracklet.label;
+            if (!(id in tmp)) tmp[id] = { data:{}, timestamp:{} };
 
-            tmp[tracklet.id].data[index] = tracklet;
-            tmp[tracklet.id].timestamp[index] = frame.timestamp;
+            tmp[id].data[index] = tracklet;
+            tmp[id].timestamp[index] = frame.timestamp;
         }
     }
 
@@ -123,6 +124,14 @@ function extractMemoryData(memoryData){
     for (const [k, v] of Object.entries(tmp)){
         result.push({label: k, data: v.data, timestamp: v.timestamp});
     }
+
+    result.sort((a, b) => {
+        a = a.label;
+        b = b.label;
+        const numOrder = parseInt(a.split('-',3)[0]) - parseInt(b.split('-',3)[0]);
+        return numOrder == 0? (a.split('-',3)[1]).localeCompare(b.split('-',3)[1]) : numOrder;
+    });
+
     return result;
 }
 

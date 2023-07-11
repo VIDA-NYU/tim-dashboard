@@ -21,10 +21,10 @@ interface HistogramRowProps {
 
 
 function statusColorMap(status: string) : string{
-    if (status == 'tracked') return '#00EE00';
-    else if (status == 'extended') return '#EEEE00';
-    else if (status == 'hand') return '#EE0000';
-    else if (status == 'outside') return '#0000BE';
+    if (status == 'tracked') return '#00d000';
+    else if (status == 'extended') return '#e0e000';
+    else if (status == 'hand') return '#e00000';
+    else if (status == 'outside') return '#4dd2ff';
     return '#111111';
 }
 
@@ -50,6 +50,7 @@ export default function MemoryHistogramRow({transform, detectedItems, cellSize, 
             })
         }
     })
+    const numId = timedData.label.split('-',3)[0];
 
     return (
         <g transform={transform}>
@@ -76,19 +77,19 @@ export default function MemoryHistogramRow({transform, detectedItems, cellSize, 
                 </circle>
             </g>
             <g
-                fillOpacity={detectedItems.isVideoStart ? '1' : detectedItems.data.values.filter(a => a.status != 'outside').map(a => a.id.toString()).includes(timedData.label) ? "1" : '0.1'}
+                fillOpacity={detectedItems.isVideoStart ? '1' : detectedItems.data.values.filter(a => a.status != 'outside').map(a => a.id.toString()).includes(numId) ? "1" : '0.1'}
             >
                 <g>
                     <text
                         x={0}
                         y={cellSize / 2 + yAxisLabelOffsetY}
                         fontSize = {"x-small"}
-                    > {timedData.label + (!detectedItems.isVideoStart && detectedItems.data.values.filter(a => a.id.toString() == timedData.label)[0] ? detectedItems.data.values.filter(a => a.id.toString() == timedData.label)[0].label : "")}
+                    > {timedData.label}
                     </text>
                     <rect
                         x={-2}
                         y={-2}
-                        width={detectedItems.isVideoStart ? 0 : detectedItems.data.values.filter(a => a.status != 'outside').map(a => a.id.toString()).includes(timedData.label) ? yAxisLabelWidth : 0}
+                        width={detectedItems.isVideoStart ? 0 : detectedItems.data.values.filter(a => a.status != 'outside').map(a => a.id.toString()).includes(numId) ? yAxisLabelWidth : 0}
                         height={actionCellHeight+2}
                         fill={'#F8DE7E'} //still thinking about the color we need to use here
                         fillOpacity={0.4}
