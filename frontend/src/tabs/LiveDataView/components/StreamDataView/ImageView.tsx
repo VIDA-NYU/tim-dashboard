@@ -19,7 +19,7 @@ const useCanvas = ({}={}) => {
     return { canvasRef, contextRef };
 }
 
-const ImageCanvas = ({ image=null, boxes=null, confidence: defaultConfidence=null, ignoreLabels=null, debugMode, ...rest }) => {
+const ImageCanvas = ({ image=null, boxes=null, tracklets=null, confidence: defaultConfidence=null, ignoreLabels=null, debugMode, ...rest }) => {
     const { canvasRef, contextRef } = useCanvas()
     
     const [ confidence, setConfidence ] = useState(defaultConfidence);
@@ -113,6 +113,22 @@ const ImageCanvas = ({ image=null, boxes=null, confidence: defaultConfidence=nul
                     drawObjectLabel({ text: object.label, x, y, w, h }, { color: 'red', textAlign: 'center' });
                 }
             }
+
+            if (canvasEle && tracklets?.data) {
+                // get context of the canvas
+                const ctx = canvasEle.getContext("2d");
+                const W = ctx.canvas.width;
+                const H = ctx.canvas.height;
+                for(const object of tracklets.data) {
+                    if(!object.xyxyn) continue;
+                    if(ignoreLabels && ignoreLabels.includes(object.label)) continue;
+                    const [x1, y1, x2, y2] = object.xyxyn;
+                    const [x, y, w, h] = [x1*W, y1*H, (x2-x1)*W, (y2-y1)*H]
+                    
+                    drawBoundingBox({ x, y, w, h }, { color: 'green', width: 1.5 });
+                    drawObjectLabel({ text: object.id+':'+object.label, x, y, w, h }, { color: 'green', textAlign: 'center' });
+                }
+            }
         }
 
         // attach object to image
@@ -156,9 +172,10 @@ const ImageCanvas = ({ image=null, boxes=null, confidence: defaultConfidence=nul
 export const ImageView = ({ streamId,  showStreamId=true, boxStreamId, debugMode, ...rest}) => {
     const { sid, time, data, readyState } = useStreamData({ streamId, params: { output: 'jpg' } });
     const { data:  boxes } = useStreamData({ streamId: boxStreamId, utf: true, parse: JSON.parse });
+    const tracklets = useStreamData({ streamId: "detic:memory", utf: true, parse: JSON.parse })
     return (
         <StreamInfo sid={showStreamId ? sid||streamId : null} time={time} data={data} readyState={readyState}>
-            <ImageCanvas image={data} boxes={boxes} debugMode ={debugMode} {...rest} />
+            <ImageCanvas image={data} boxes={boxes} tracklets={tracklets} debugMode ={debugMode} {...rest} />
         </StreamInfo>
     )
 }
