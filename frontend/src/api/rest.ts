@@ -344,7 +344,7 @@ function filterOldMemory(json){
 }
 
 export async function getMemoryData(recordingName) {
-    const url = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/detic:memory3d.json`;
+    const url = API_URL +  RECORDINGS_STATIC_PATH + `${recordingName}/detic:memory.json`;
     const response = await fetch(url).then((res) => res.json());
     return filterOldMemory(response);
 }

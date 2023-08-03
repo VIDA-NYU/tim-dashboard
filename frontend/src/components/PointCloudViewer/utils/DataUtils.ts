@@ -50,7 +50,12 @@ export class DataUtils {
     public static extract_memory_ids( rawMemoryFile: any ): string[] {
 
         const memoryData: any [] = rawMemoryFile.map( (timestamp: any) => timestamp.values || timestamp.data );
-        const objectIds: string[][] = memoryData.map( ( item: any ) => item.map( (info: any) => info.id.toString() ) );
+        let objectIds: string[][];
+        try {
+            objectIds = memoryData.map( ( item: any ) => item.map( (info: any) => info.id.toString() ) );
+        } catch {
+            return [];
+        }
         
         const idSet: Set<string> = new Set<string>();
         objectIds.forEach( (ids: string[]) => { 

@@ -18,7 +18,7 @@ function useRecordingData (recordingID: string, token:string, fetchAuth: any){
     const {data: clipActionResponse} = useGetRecordingJson(recordingID, "clip:action:steps");
     const clipActionData = preprocessResponse(clipActionResponse)
 
-    const {data: memoryResponse} = useGetRecordingJson(recordingID, "detic:memory3d");
+    const {data: memoryResponse} = useGetRecordingJson(recordingID, "detic:memory");
     const memoryData = preprocessResponse(memoryResponse)
 
     const {data: eyeResponse} = useGetRecordingJson(recordingID, "eye");

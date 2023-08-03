@@ -118,9 +118,10 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, mem
                             egovlpActionFrameData && Object.keys(egovlpActionFrameData).length > 0 ? Object.keys(egovlpActionFrameData).filter((key) => egovlpActionFrameData[key]> thresholdActionDetection).map(d => ({'label': d, 'confidence': egovlpActionFrameData[d]}) ) : [];
     const detectedSteps = (reasoningStatus && reasoningFrameData) ? [{'label': reasoningFrameData.step_id.toString(), 'confidence': 1}] : [];
 
-    const memoryStatus = memoryData && memoryData.length !== 0;
+    let memoryStatus = memoryData && memoryData.length !== 0;
     const memoryTimedData = memoryStatus && preprocessTimestampData(memoryData, recordingMeta, playedTimes, state.totalDuration);
     const memoryTrackletList = memoryStatus && extractMemoryData(memoryTimedData);
+    memoryStatus = memoryStatus && memoryTrackletList.length !== 0;
 
     const cellHeight = 10; //5
     let computeContainerHeight = (a, b) => {

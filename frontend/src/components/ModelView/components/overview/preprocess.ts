@@ -112,6 +112,7 @@ function extractMemoryData(memoryData){
 
     for (const [index, frame] of memoryData.entries()){
         for (const tracklet of frame.values){
+            if (!('status' in tracklet)) return [];
             const id = tracklet.id + '-' + tracklet.label;
             if (!(id in tmp)) tmp[id] = { data:{}, timestamp:{} };
 
