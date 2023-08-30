@@ -9,7 +9,7 @@ export function generateFakeInstructionRephraseInstanceResponse(original: string
                 humanEdited: false
             },
             original: original,
-            rephrased: "[rephrased text offline]",
+            rephrased: `[rephrased text offline] ${original}`,
         }
     };
     return response;

@@ -1,40 +1,31 @@
 import React from 'react';
 import { Recipe } from '../state/types';
 import { Button, Card } from '@mui/material';
-import RecipeEditorContent from './recipe-editor-content';
+import RecipeEditorContent from '../recipe-editor/recipe-editor-content';
 import { TextReducerState } from '../state/types';
-import RecipeCreator from './recipe-creator';
-import ControlPanel from './control-panel/control-panel';
+import RecipeCreator from '../recipe-editor/recipe-creator';
+import ControlPanel from '../recipe-editor/control-panel/control-panel';
 import { generateInitialStepRephraseStates } from '../state/utils';
-import styled from '@emotion/styled';
-import { useRecipeCreator } from './hooks';
+import { useRecipeCreator } from '../recipe-editor/hooks';
 
 import { RecipeEditorMode } from '../state/types';
-import RephrasePanel from './control-panel/rephrase-panel';
-import StudyControlPanel from './control-panel/study-control';
+import RephrasePanel from '../recipe-editor/control-panel/rephrase-panel';
+import StudyControlPanel from '../recipe-editor/control-panel/study-control';
 import { InstructionRephraseParams } from '../../WOZView/instruction-rephrase/types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import CustomTabPanel from '../tab-panels/custom-tab-panel';
-import UserStudyContainer from '../user-study/user-study-container';
+import { styled } from '@mui/material';
 
 
-interface RecipeEditorProps {
+interface Props {
     recipe: Recipe,
     setRecipe: (newValue: Recipe) => void,
     textReducerState: TextReducerState,
     setTextReducerState: (newValue: TextReducerState) => void,
 }
-
-function a11yProps(index: number) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    };
-}
-
 const ControlRow = styled("div")({
     display: "flex",
     flexDirection: "row",
@@ -44,8 +35,9 @@ const ControlRow = styled("div")({
     boxSizing: "border-box",
     alignItems: "stretch"
 });
+const Container = styled("div")({});
 
-export default function RecipeEditor({ recipe, setRecipe, textReducerState, setTextReducerState }: RecipeEditorProps) {
+export default function UserStudyContainer({ recipe, setRecipe, textReducerState, setTextReducerState }: Props) {
 
     const [mode, setMode] = React.useState<RecipeEditorMode>(RecipeEditorMode.CREATING);
 
@@ -111,30 +103,52 @@ export default function RecipeEditor({ recipe, setRecipe, textReducerState, setT
 
 
     return (
-        <Card>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label="Formative Study" {...a11yProps(0)} />
-                    <Tab label="User Study" {...a11yProps(1)} />
-                    <Tab label="Deployment" {...a11yProps(2)} />
-                </Tabs>
-            </Box>
+        <Container>
+            <ControlRow>
+                <ControlPanel
+                    onCreatorSave={onCreatorSave}
+                    onCreatorDiscard={onCreatorDiscard}
+                    onCreatorOpen={onCreatorOpen}
+                    mode={mode}
+                ></ControlPanel>
 
-            <CustomTabPanel value={value} index={1}>
-                <UserStudyContainer
+                <RephrasePanel
+                    onSettingParams={onSettingParams}
+                    params={textReducerState.rephraseParams}
+                />
+
+                <StudyControlPanel
+                    textReducerState={textReducerState}
+                />
+
+            </ControlRow>
+            {
+                mode === RecipeEditorMode.EDITING && <RecipeEditorContent
+                    textReducerState={textReducerState}
                     recipe={recipe}
                     setRecipe={setRecipe}
-                    textReducerState={textReducerState}
-                    setTextReducerState={setTextReducerState}
+                    onSettingStepContent={onSettingStepContentByHuman}
                 />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={2}>
-                Item Three
-            </CustomTabPanel>
-           
+            }
 
-
-
-        </Card>
+            {
+                mode === RecipeEditorMode.CREATING && <RecipeCreator
+                    creatorContent={creatorContent}
+                    creatorTitle={creatorTitle}
+                    setCreatorContent={setCreatorContent}
+                    setCreatorTitle={setCreatorTitle}
+                    onCreatorDiscard={onCreatorDiscard}
+                    onCreatorSave={onCreatorSave}
+                />
+            }
+            <Button
+                onClick={() => {
+                    setTextReducerState({
+                        ...textReducerState,
+                        currentStep: textReducerState.currentStep + 1,
+                    })
+                }}
+            >Next</Button>
+        </Container>
     )
 }

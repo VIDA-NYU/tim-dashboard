@@ -86,7 +86,9 @@ function useInstructionRephraseAPI (requestParams: InstructionRephraseInstanceRe
     useEffect(() => {
         // let response = generateFakeInstructionRephraseInstanceResponse(requestParams.original, requestParams.params);
         // if(!requestParams.params.humanEdited){
-        //     setResponse(response);
+        //     setTimeout(() => {
+        //         setResponse(response);
+        //     }, 2000);
         // }
         console.log("Call OPENAI");
         callOpenAIAPI("This is one of the steps in a manual",

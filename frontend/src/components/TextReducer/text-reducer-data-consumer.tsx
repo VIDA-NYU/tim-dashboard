@@ -21,7 +21,7 @@ export default function TextReducerDataConsumer({textReducerState, setTextReduce
 
 
     
-    const {} = useSyncRephraseWithOpenAPI(textReducerState, setTextReducerState);
+    // const {} = useSyncRephraseWithOpenAPI(textReducerState, setTextReducerState);
 
     return (
         <TextReducerComp

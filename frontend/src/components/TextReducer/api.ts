@@ -183,6 +183,7 @@ function useSyncStepWithHololens(textReducerState: TextReducerState,
 function useSyncRephraseWithOpenAPI(textReducerState: TextReducerState, setTextReducerState: ((state: TextReducerState) => void)){
     
     let {step: nextRephraseStep, rephrase: rephraseStatus} = getNextRephraseStep(textReducerState);
+    
     const rephrasedInstruction = useInstructionRephraseAPI({
         params: textReducerState.rephraseParams,
         original: nextRephraseStep.original.step,
@@ -215,7 +216,7 @@ function useSyncRephraseWithOpenAPI(textReducerState: TextReducerState, setTextR
         }
                 
 
-    }, [rephrasedInstruction.instructionRephraseInstanceResponse, rephraseStatus]);
+    }, [rephrasedInstruction.instructionRephraseInstanceResponse]);
 
     return {
 

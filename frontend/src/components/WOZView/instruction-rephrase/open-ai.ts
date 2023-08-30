@@ -13,8 +13,8 @@ function buildInferencePrompt(context: string, objects: Array<RecipeObjectStatus
     const objectString = "";
     return `Please simplify the following case and do not provide the explanation (only provide the simplified content without any format): \n` +
         `Context: ${context}; \n` +
+        `Objects in the scene: {${objectString}} \n` +
         `Original Instruction: ${originalInstruction} \n` +
-        `Objects in the scene: ${objectString} \n` +
         'Simplified Instruction:';
 }
 
