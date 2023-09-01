@@ -19,6 +19,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import CustomTabPanel from '../tab-panels/custom-tab-panel';
 import UserStudyContainer from '../user-study/user-study-container';
+import FormativeStudyContainer from '../formative-study/formative-study-container';
 
 
 interface RecipeEditorProps {
@@ -119,6 +120,10 @@ export default function RecipeEditor({ recipe, setRecipe, textReducerState, setT
                     <Tab label="Deployment" {...a11yProps(2)} />
                 </Tabs>
             </Box>
+            <CustomTabPanel value={value} index={0}>
+                <FormativeStudyContainer
+                />
+            </CustomTabPanel>
 
             <CustomTabPanel value={value} index={1}>
                 <UserStudyContainer

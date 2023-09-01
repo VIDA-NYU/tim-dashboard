@@ -17,8 +17,8 @@ export default function TextReducerDataConsumer({textReducerState, setTextReduce
 
     const {step: textReducerStep} = useTextReducerStep();
     
-    const {} = useSyncStepWithHololens(textReducerState, setTextReducerState);    
-
+    const {} = useSyncStepWithHololens(textReducerState, setTextReducerState);
+    
 
     
     // const {} = useSyncRephraseWithOpenAPI(textReducerState, setTextReducerState);

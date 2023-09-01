@@ -13,5 +13,5 @@ export const DETIC_HANDS_STREAM = 'detic:hands';
 export const MAIN_STREAM = 'main';
 
 export const RECORDINGS_UPLOAD_PATh = "/recordings/upload/"
-
+export const AR_TEXT_API_API = "http://127.0.0.1:9000";
 // export {API_URL, RECORDINGS_STATIC_PATH, TEST_USER, TEST_PASS};
