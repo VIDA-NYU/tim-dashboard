@@ -1,18 +1,34 @@
 import React, { useState, useEffect, MouseEvent, Fragment } from 'react';
 import { StudyComparisonQuestion, FormativeStudySession } from './types';
 import StudyComparisonQuestionForm from './study-comparison-question-form';
-import { Button, IconButton, Paper, Typography, Divider, FormControl, InputLabel, Select, MenuItem, Menu, styled } from '@mui/material';
+import { Button, IconButton, Paper, Typography, Divider, FormControl, InputLabel, Select, MenuItem, Menu, styled, Avatar } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add';
-import { useGetFormList } from '../hooks/formative';
+import { useDisplayControl, useGetFormList } from '../hooks/formative';
 import SaveLoadDialog from './save-load-dialogue';
-
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 const Header = styled("div")({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
 })
+
+
+
+const OptionContainer = styled("div")({
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+});
+
+const QuestionHeader = styled("div")({
+
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+});
 
 const StudyQuestionList: React.FC = () => {
     const [questions, setQuestions] = useState<FormativeStudySession>({ title: "", questions: [] });
@@ -22,6 +38,8 @@ const StudyQuestionList: React.FC = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     // New state variable to keep track of the index of the question being edited
     const [editIndex, setEditIndex] = useState<number | null>(null);
+
+
 
     // Same as before
     // ... 
@@ -38,21 +56,28 @@ const StudyQuestionList: React.FC = () => {
         }
     };
 
+    const {
+        displayIndex, goToIndex, goToNext, goToPrev, canGoNext, canGoPrev,
+        optionDisplayIndex, goNextOption, goPrevOption, goOptionIndex
+    } = useDisplayControl(questions);
 
-    
+
+
 
     const addOrUpdateQuestion = (question: StudyComparisonQuestion) => {
         if (editIndex !== null) {
             const updatedQuestions = [...questions.questions];
             updatedQuestions[editIndex] = question;
-            setQuestions(prev => ( { 
+            setQuestions(prev => ({
                 title: prev.title,
-                questions: updatedQuestions }));
+                questions: updatedQuestions
+            }));
             setEditingIndex(null); // Reset editing index after updating
         } else {
-            setQuestions(prev => ({ 
+            setQuestions(prev => ({
                 title: prev.title,
-                questions: [...questions.questions, question] }));
+                questions: [...questions.questions, question]
+            }));
         }
         setShowAddForm(false); // Hide the form after submitting
     };
@@ -60,9 +85,10 @@ const StudyQuestionList: React.FC = () => {
     const deleteQuestion = (index: number) => {
         const updatedQuestions = [...questions.questions];
         updatedQuestions.splice(index, 1);
-        setQuestions(prev => ({ 
+        setQuestions(prev => ({
             title: prev.title,
-            questions: updatedQuestions }));
+            questions: updatedQuestions
+        }));
     };
     return (
         <div style={{ margin: '20px', overflowY: 'scroll', maxHeight: '80vh' }}>
@@ -84,31 +110,82 @@ const StudyQuestionList: React.FC = () => {
                             }}
                         />
                     ) : (
-                        <Paper elevation={1} style={{ margin: '10px', padding: '10px' }}>
-                            <Typography variant="h6">Question {index + 1}</Typography>
+                        <Paper elevation={1} style={{ margin: '10px', padding: '10px', borderColor: displayIndex === index ? "steelblue" : "black", borderWidth: displayIndex === index ? "2px" : 0 }
+                        }
+                            variant="outlined"
+
+                        >
+                            <QuestionHeader>
+                                <Typography variant="h6">Question {index + 1}</Typography>
 
 
 
-                            <IconButton aria-label="edit" onClick={() => setEditIndex(index)}>
-                                <EditIcon />
-                            </IconButton>
-                            <IconButton aria-label="delete" onClick={() => deleteQuestion(index)}>
-                                <DeleteIcon />
-                            </IconButton>
+                                <IconButton aria-label="edit" onClick={() => setEditIndex(index)}>
+                                    <EditIcon />
+                                </IconButton>
+                                <IconButton aria-label="delete" onClick={() => deleteQuestion(index)}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </QuestionHeader>
+
+
+
+                            {question.type === "comparison" && <OptionContainer>
+                                <IconButton
+                                    onClick={() => goPrevOption()}
+                                >
+                                    <ArrowBackIosIcon />
+
+                                </IconButton>
+                                {
+                                    (question as StudyComparisonQuestion).options.map((option, optionIndex) => (
+                                        <Avatar
+                                            sx={{
+                                                marginRight: "5px",
+                                                bgcolor: optionDisplayIndex === optionIndex && displayIndex === index ? "steelblue" : "gray",
+                                            }}
+                                        >
+                                            {index + 1}
+                                        </Avatar>
+                                    ))
+
+                                }
+
+                                <IconButton
+                                    onClick={() => goNextOption()}
+                                >
+                                    <ArrowForwardIosIcon />
+
+                                </IconButton>
+
+                            </OptionContainer>}
                         </Paper>
                         // Render question details here
                     )}
 
 
                 </Fragment>
-            ))}
-            {showAddForm && selectedType === "comparison" && (
-                <StudyComparisonQuestionForm index={-1} onSubmit={(q) => addOrUpdateQuestion(q)} />
-            )}
+            ))
+            }
+            {
+                showAddForm && selectedType === "comparison" && (
+                    <StudyComparisonQuestionForm index={-1} onSubmit={(q) => addOrUpdateQuestion(q)} />
+                )
+            }
 
-            <IconButton color="primary" aria-label="add" onClick={handleAddClick}>
-                <AddIcon />
-            </IconButton>
+            <Button variant="outlined" startIcon={<AddIcon />} onClick={handleAddClick}>
+                Add
+            </Button>
+            <Button variant="outlined" startIcon={<AddIcon />}
+                disabled={!canGoPrev}
+                onClick={goToPrev}>
+                Prev
+            </Button>
+            <Button variant="outlined" startIcon={<AddIcon />}
+                disabled={!canGoNext}
+                onClick={goToNext}>
+                Next
+            </Button>
             <Menu
                 anchorEl={anchorEl}
                 keepMounted
@@ -125,7 +202,7 @@ const StudyQuestionList: React.FC = () => {
                     setQuestions(form);
                 }}
             />
-        </div>
+        </div >
 
     );
 };
