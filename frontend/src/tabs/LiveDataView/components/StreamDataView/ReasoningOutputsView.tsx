@@ -34,23 +34,25 @@ interface RenderedObjLabel {
 let entities: Entities [] = [];
 let flag = true;
 export const ReasoningOutputsView = ({ data }) => {
-    const {step_id, step_status, step_description, error_status, error_description} = data || {};
+    const data_values = data && data[0];
+    const {task_id, step_id, step_status, step_description, error_status, error_description} = data_values || {}; // reading the prediction that has the highest probability.
     const {setStep} = useRecordingControls();
     const current_step = step_id + 1; // Reasoning handles indexes, so we need to add 1 to communicate the user they are in the first (1) step.
     return <Box display='flex' flexDirection='column' pt={5} mr={2} ml={2}>
+        <span><b>Active Task:</b> {task_id}</span>
         <span><b>Current Step:</b> {current_step}</span>
         {/* <span><b>Current Step:</b>{step_id || ' No active step.'}</span> */}
         <span><b>Description:</b> {step_description || 'No active step.'}</span>
         <span><b>Status:</b> {step_status}</span>
         {/* <br/> */}
         <span><b>Errors:</b> {error_description || 'No errors.'}</span><br/>
-        <span><b>Entities:</b></span>
+        {/* <span><b>Entities:</b></span> */}
         <Box sx={{gridArea: 'e', height: 50,}}>
             <StreamView utf streamId={DETIC_IMAGE_STREAM} showStreamId={false} showTime={false}>
                 {data => (<Box><EntitiesView data={JSON.parse(data)} step_id={step_id}/></Box>)}
             </StreamView>
         </Box>
-        <Box sx={{gridArea: 'z', height: 0,}}>
+        {/* <Box sx={{gridArea: 'z', height: 0,}}>
             <StreamView utf streamId={REASONING_ENTITIES_STREAM} showStreamId={false} showTime={false}
                         showStreamStatus={false}>
                 {(data) => {
@@ -60,7 +62,7 @@ export const ReasoningOutputsView = ({ data }) => {
                     }
                 }}
             </StreamView>
-        </Box>
+        </Box> */}
     </Box>
 }
 
@@ -87,11 +89,16 @@ const EntitiesView = ({data, step_id}: {data: ObjLabel [], step_id:number}) => {
     });
 
   return (
-    <ol key={'steps_all'}>
+    <>
+    <span><b>Detected Objects:</b></span>
+    {detectedObjects}
+    {/* <ul key={'steps_all'}>
       <li key={"objectes"}> Target Objects: {targetObjects} </li>
-      <li key={"detected_objectes"}>  Detected Objects: {detectedObjects}
-      </li>
-    </ol>
+      <li key={"detected_objectes"}>  Detected Objects: {detectedObjects} </li>
+      <li key={"detected_objectes"}> {detectedObjects} </li>
+    </ul> */}
+    </>
+
   )
 }
 
