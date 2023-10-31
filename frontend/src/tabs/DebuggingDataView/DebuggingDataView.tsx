@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import { StreamView } from '../LiveDataView/components/StreamDataView/LiveStream';
 import { DeticHandsChart } from '../LiveDataView/components/StreamDataView/LiveCharts';
 import { ImageView } from '../LiveDataView/components/StreamDataView/ImageView';
-import { ClipOutputsView } from '../LiveDataView/components/StreamDataView/PerceptionOutputsView';
+import { ClipOutputsView, DeticOutputsView } from '../LiveDataView/components/StreamDataView/PerceptionOutputsView';
 import { ReasoningOutputsView } from '../LiveDataView/components/StreamDataView/ReasoningOutputsView';
 import { DETIC_HANDS_STREAM, DETIC_IMAGE_STREAM, EGOVLP_ACTION_STEPS_STREAM, MAIN_STREAM, REASONING_CHECK_STREAM } from '../../config';
 
@@ -25,8 +25,8 @@ function DebuggingDataView() {
           </StreamView>
         </Box>
         <Box sx={{ gridArea: 'a' }}>
-          <StreamView utf streamId={EGOVLP_ACTION_STEPS_STREAM} showTime={false}>
-            {data => (<Box mt={8} pt={"34px"}><ClipOutputsView data={JSON.parse(data)} /></Box>)}
+          <StreamView utf streamId={DETIC_IMAGE_STREAM} showTime={false}>
+            {data => (<Box mt={8} pt={"34px"}><DeticOutputsView data_={JSON.parse(data)} /></Box>)}
           </StreamView>
         </Box>
         {/* <Box sx={{ gridArea: 'e' }}><StreamView utf parse='prettyJSON' streamId={'reasoning'} /></Box> */}

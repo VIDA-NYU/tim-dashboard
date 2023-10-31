@@ -32,6 +32,29 @@ export const ClipOutputsView = ({ data, min=0 }: ClipOutputsViewProps) => {
     </Box>)
 }
 
+// Display object's state
+export const DeticOutputsView = ({ data_, min=0 }) => {
+  var detectedObjects = data_ && data_.map((data, index) => {
+    const entries = data && data['state'] && Object.entries(data['state'] );
+    const noAction = entries && entries.every(([t,s]) => s === 0)
+    return  entries && (<Box display='flex' flexDirection='column'>
+      <span> {data['label']}</span>
+    {noAction && <Chip label='No Action' color='error' />}
+    {entries && entries.sort(([ta, sa], [tb,sb]) => ( sb-sa ))
+          .slice(0, noAction ? 2 : 3)
+          .map(([text, similarity]) => (
+            <Chip key={text} label={`${text}: ${(similarity*100).toFixed(2)}`} sx={{ 
+              backgroundColor: probColors[Math.round(Math.max(1, similarity*(probColors.length-1)))],
+              opacity: similarity > min ? 1 : 0,//Math.max(0.7, similarity),
+              transition: 'opacity 0.4s ease-in-out',
+            }} />
+    ))}
+    </Box>)
+  });
+  return detectedObjects;
+  
+}
+
 export const ClipOutputsLiveView = ({ data, min=0 }: ClipOutputsViewProps) => {
   const entries = data && Object.entries(data)
   const noAction = entries && entries.every(([t,s]) => s === 0)
