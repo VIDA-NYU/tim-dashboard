@@ -19,7 +19,7 @@ interface Entities {
   step_id: number,
   step_entities: Entity,
 }
-interface ObjLabel {
+export interface ObjLabel {
   xyxyn: number [],
   confidence: number,
   class_id: number,
@@ -34,36 +34,26 @@ interface RenderedObjLabel {
 let entities: Entities [] = [];
 let flag = true;
 export const ReasoningOutputsView = ({ data }) => {
-    const data_values = data && data[0];
-    const {task_id, step_id, step_status, step_description, error_status, error_description} = data_values || {}; // reading the prediction that has the highest probability.
-    const {setStep} = useRecordingControls();
-    const current_step = step_id + 1; // Reasoning handles indexes, so we need to add 1 to communicate the user they are in the first (1) step.
-    return <Box display='flex' flexDirection='column' pt={5} mr={2} ml={2}>
-        <span><b>Active Task:</b> {task_id}</span>
-        <span><b>Current Step:</b> {current_step}</span>
-        {/* <span><b>Current Step:</b>{step_id || ' No active step.'}</span> */}
-        <span><b>Description:</b> {step_description || 'No active step.'}</span>
-        <span><b>Status:</b> {step_status}</span>
-        {/* <br/> */}
-        <span><b>Errors:</b> {error_description || 'No errors.'}</span><br/>
-        {/* <span><b>Entities:</b></span> */}
-        <Box sx={{gridArea: 'e', height: 50,}}>
-            <StreamView utf streamId={DETIC_IMAGE_STREAM} showStreamId={false} showTime={false}>
-                {data => (<Box><EntitiesView data={JSON.parse(data)} step_id={step_id}/></Box>)}
-            </StreamView>
-        </Box>
-        {/* <Box sx={{gridArea: 'z', height: 0,}}>
-            <StreamView utf streamId={REASONING_ENTITIES_STREAM} showStreamId={false} showTime={false}
-                        showStreamStatus={false}>
-                {(data) => {
-                    if (data) {
-                        entities = JSON.parse(data);
-                        flag = false;
-                    }
-                }}
-            </StreamView>
-        </Box> */}
-    </Box>
+  var activeTasks = data && data['active_tasks'] && data['active_tasks'].map((active_tasks, index) => {
+  const {task_id, task_name, step_id, step_status, step_description, error_status, error_description} = active_tasks || {}; // reading the prediction that has the highest probability.
+  const current_step = step_id + 1; // Reasoning handles indexes, so we need to add 1 to communicate the user they are in the first (1) step.
+  return active_tasks && (<Box display='flex' flexDirection='column' pt={5} mr={2} ml={2}>
+      <span><b>Task ID:</b> {task_id}</span>
+      <span><b>Task Name:</b> {task_name}</span>  
+      <span><b>Current Step:</b> {current_step}</span>
+      <span><b>Description:</b> {step_description || 'No active step.'}</span>
+      <span><b>Status:</b> {step_status}</span>
+      <span><b>Errors:</b> {error_description || 'No errors.'}</span><br/>
+  </Box>)
+  });
+
+  const inprogress_tasks = data && data["inprogress_task_ids"];
+
+  return <Box display='flex' flexDirection='column' pt={5} mr={2} ml={2}>
+    <span><b>Active Tasks:</b> {data && data['active_tasks'] && data['active_tasks'].length} tasks</span>
+    {activeTasks}
+    <span><b>In progress Tasks:</b> {inprogress_tasks && inprogress_tasks.length} tasks</span>
+  </Box>
 }
 
 const EntitiesView = ({data, step_id}: {data: ObjLabel [], step_id:number}) => {
