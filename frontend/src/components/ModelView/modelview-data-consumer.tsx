@@ -147,6 +147,7 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
         onProgress={(res) => handleProgress(res)}
         onSeek={res => handleSeekingFromVideoCard(res)}
         boundingBoxData={boundingBoxFrameData}
+        memoryFrameData={memoryFrameData}
         annotationData={annotationData}
         currentTime={currentTime}
     >
@@ -205,6 +206,8 @@ export default function ModelViewDataConsumer({recordingName, playedTime, annota
             boundingBoxData={boundingBoxData}
             boundingBoxFrameData={boundingBoxFrameData}
             // boundingBoxFrameData={syncWithVideoTime(currentTime, state, annotationData.meta.entryTime, filterObjectWithRecipe(boundingBoxFrameData, generateRecipeObjectIndex(recipeData)))}
+            memoryData={memoryData}
+            memoryFrameData={memoryFrameData}
             egovlpActionData={egovlpActionData}
             egovlpActionFrameData={egovlpActionFrameData}
             clipActionData={clipActionData}

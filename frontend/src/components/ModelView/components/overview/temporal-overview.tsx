@@ -1,11 +1,12 @@
 import {styled} from "@mui/material";
 import {useEffect, useRef} from "react";
 import d3, {scaleLinear, scaleBand, axisBottom, select, timeFormat, timeMinute, tickFormat, range} from "d3";
-import {extractAllStepLabels, extractIndividualActionData, extractIndividualBoundingBoxData, extractIndividualReasoningData, preprocessTimestampData} from "./preprocess";
+import {extractAllStepLabels, extractIndividualActionData, extractIndividualBoundingBoxData, extractIndividualReasoningData, extractMemoryData, preprocessTimestampData} from "./preprocess";
 import {schemeGnBu, interpolateTurbo, interpolateBuPu} from "d3-scale-chromatic";
 import {Tooltip} from "react-svg-tooltip"
 import Card from "@mui/material/Card";
 import HistogramRow from "./histogram-row";
+import MemoryHistogramRow from "./memory-histogram-row";
 import {generateHumanAnnotationTemporalData, setNewObjectConfidenceThreshold} from "../annotation/utils";
 import { preprocessFrameBoundingBoxData, syncWithVideoTime } from "../video/utils/wrapper";
 import Legend from "./legend";
@@ -46,7 +47,7 @@ const chartErrorHighlightColor = "red";
 const yAxisLabelWidth = 98; //70 // label width
 const yAxisLabelOffsetY = 6;
 
-export default function TemporalOverview({currentTime, boundingBoxFrameData, reasoningFrameData, reasoningData, boundingBoxData,
+export default function TemporalOverview({currentTime, boundingBoxFrameData, memoryFrameData, reasoningFrameData, reasoningData, boundingBoxData, memoryData,
                                              clipActionData, egovlpActionData, clipActionFrameData, egovlpActionFrameData, recordingMeta,
                                              state, annotationData, setTimestamps}) {
     const visRef = useRef(null);
@@ -117,6 +118,11 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, rea
                             egovlpActionFrameData && Object.keys(egovlpActionFrameData).length > 0 ? Object.keys(egovlpActionFrameData).filter((key) => egovlpActionFrameData[key]> thresholdActionDetection).map(d => ({'label': d, 'confidence': egovlpActionFrameData[d]}) ) : [];
     const detectedSteps = (reasoningStatus && reasoningFrameData) ? [{'label': reasoningFrameData.step_id.toString(), 'confidence': 1}] : [];
 
+    let memoryStatus = memoryData && memoryData.length !== 0;
+    const memoryTimedData = memoryStatus && preprocessTimestampData(memoryData, recordingMeta, playedTimes, state.totalDuration);
+    const memoryTrackletList = memoryStatus && extractMemoryData(memoryTimedData);
+    memoryStatus = memoryStatus && memoryTrackletList.length !== 0;
+
     const cellHeight = 10; //5
     let computeContainerHeight = (a, b) => {
         return a * 1.2 * (b.length ? b.length : 0);
@@ -125,9 +131,10 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, rea
     const actionContainerHeight = computeContainerHeight(cellHeight, individualActionDataList);
     const objectContainerHeight = computeContainerHeight(cellHeight, individualBoundingBoxList);
     const stepContainerHeight = computeContainerHeight(cellHeight, individualReasoningList);
+    const memoryContainerHeight = computeContainerHeight(cellHeight, memoryTrackletList);
 
 
-    const chartHeight = marginTop + actionContainerHeight + objectContainerHeight + stepContainerHeight + 70; // 120
+    const chartHeight = marginTop + actionContainerHeight + objectContainerHeight + stepContainerHeight + memoryContainerHeight + 100; // 120
 
     const xAxisY = chartHeight - 20;
 
@@ -145,6 +152,23 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, rea
                 selectedItem={""}
                 setTimestamps={setTimestamps}
                 ></HistogramRow>
+        )
+    }
+
+    const renderMemoryHistogramRow = (timedData, index, detectedItems) => {
+        const transform = `translate(${0}, ${index * cellHeight * 1.2})`;
+        return (
+            <MemoryHistogramRow
+                key={`action-row-${index}`}
+                detectedItems={detectedItems}
+                transform={transform} cellSize={cellSize} chartWidth={chartWidth}
+                yAxisLabelOffsetY={yAxisLabelOffsetY} yAxisLabelWidth={yAxisLabelWidth}
+                index={index} xScale={xScale}
+                actionCellHeight={cellHeight}
+                playedTimes={playedTimes} timedData={timedData}
+                selectedItem={""}
+                setTimestamps={setTimestamps}
+                ></MemoryHistogramRow>
         )
     }
 
@@ -238,6 +262,26 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, rea
 
         </g>)
     }
+    const renderMemory = (timedDataList, detectedItems) => {
+        return (<g
+            transform={`translate(0, ${marginTop + actionContainerHeight + objectContainerHeight + stepContainerHeight + 60})`} // 120
+        >
+            <text
+                x={0}
+                y={-5}
+            >
+                Memory
+            </text>
+            <g>
+                {
+                    timedDataList.map((timedData, i) => {
+                        return renderMemoryHistogramRow(timedData, i, {"isVideoStart": state.played === 0, 'data': detectedItems});
+                    })
+                }
+            </g>
+
+        </g>)
+    }
     
     return (
         <Container>
@@ -255,6 +299,7 @@ export default function TemporalOverview({currentTime, boundingBoxFrameData, rea
                     {/* Objects Temporal Overview */}
                     {boundingBoxStatus && renderObjects(individualBoundingBoxList, detectedObjects)}
                     {reasoningStatus && renderSteps(individualReasoningList, detectedSteps)}
+                    {memoryStatus && renderMemory(memoryTrackletList, memoryFrameData ? memoryFrameData : {values:[]})}
                     
                     {/* X-axis labels */}
                     <g

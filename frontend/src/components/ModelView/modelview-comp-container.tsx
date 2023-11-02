@@ -37,6 +37,8 @@ interface WozCompContainerProps {
     recipeData: RecipeData,
     boundingBoxData: any,
     boundingBoxFrameData: any,
+    memoryData: any,
+    memoryFrameData: any,
     clipActionData: any,
     clipActionFrameData: any,
     egovlpActionData: any,
@@ -57,6 +59,7 @@ export default function ModelViewCompContainer({
                                              state, recordingID, recordingList, recipeIDList,
                                              recordingData, reasoningData, reasoningFrameData, recipeData,
                                              boundingBoxData, boundingBoxFrameData,
+                                             memoryData, memoryFrameData,
                                              egovlpActionData, egovlpActionFrameData,
                                              clipActionData, clipActionFrameData, videoPlayer,
                                              videoControls, streamInfo, currentTime, currentStep,
@@ -70,6 +73,7 @@ export default function ModelViewCompContainer({
             return (<TemporalOverview
                 currentTime={currentTime}
                 boundingBoxFrameData={boundingBoxFrameData}
+                memoryFrameData={memoryFrameData}
                 reasoningFrameData={reasoningFrameData}
                 annotationData={annotationData}
                 state={state}
@@ -79,6 +83,7 @@ export default function ModelViewCompContainer({
                 egovlpActionFrameData={egovlpActionFrameData}
                 reasoningData={reasoningData}
                 boundingBoxData={boundingBoxData}
+                memoryData={memoryData}
                 recordingMeta={recordingData}
                 setTimestamps={setTimestamps}
             ></TemporalOverview>)

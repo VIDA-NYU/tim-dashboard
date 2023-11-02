@@ -19,6 +19,7 @@ import {
 const ParameterBox = ( props ) => {
 
     const [ selectedClass, setSelectedClass ] = React.useState('');
+    const [ selectedObjectID, setSelectedObjectID ] = React.useState('');
 
     const pointCloudNames: string[] = [ 'gazeorigin-pointcloud', 'lefthands-pointcloud', 'righthands-pointcloud', 'gazeprojection-pointcloud', 'world-pointcloud' ];
     const voxelCloudNames: string[] = [ 'gazeorigin-voxelcloud', 'lefthands-voxelcloud', 'righthands-voxelcloud', 'gazeprojection-voxelcloud', 'occupancy-voxelcloud' ];
@@ -50,6 +51,13 @@ const ParameterBox = ( props ) => {
 
         setSelectedClass(event.target.value);
         props.onModelClassSelected(event.target.value);
+    
+    }
+
+    const handleObjectIDSelection = (event: SelectChangeEvent) => {
+
+        setSelectedObjectID(event.target.value);
+        props.onObjectIDSelected(event.target.value);
     
     }
 
@@ -405,7 +413,38 @@ const ParameterBox = ( props ) => {
 
                 </Accordion>
 
+                <Accordion>
 
+                    <AccordionSummary>
+                        <Typography color={'#1976d2'}>Memory Objects</Typography>
+                    </AccordionSummary>
+
+                    <AccordionDetails>
+
+                        <Box sx={{ display: 'flex', width: '100%', height: '350px', flexDirection: 'column' }} >
+
+                            <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+
+                                <Typography>
+                                    Object ID:
+                                </Typography>
+
+                                <Select
+                                    labelId="memory-ids"
+                                    id="memory-ids"
+                                    value={selectedObjectID}
+                                    onChange={handleObjectIDSelection}
+                                    label="Class">
+                                        { props.memoryIds.map( (id: string) => <MenuItem key={id} value={id}>{id}</MenuItem> )}
+                                </Select>
+
+                            </Box>
+
+                        </Box>
+
+                    </AccordionDetails>
+
+                </Accordion>
 
 
             </div>   

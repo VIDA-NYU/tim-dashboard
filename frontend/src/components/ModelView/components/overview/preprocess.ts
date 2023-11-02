@@ -107,4 +107,34 @@ function extractIndividualReasoningData(wholeReasoningData){
     return result
 }
 
-export {preprocessTimestampData, extractIndividualActionData, extractIndividualBoundingBoxData, extractIndividualReasoningData, extractAllStepLabels}
+function extractMemoryData(memoryData){
+    const tmp: { [id: number] : any} = {};
+
+    for (const [index, frame] of memoryData.entries()){
+        for (const tracklet of frame.values){
+            if (!('status' in tracklet)) return [];
+            const id = tracklet.id + '-' + tracklet.label;
+            if (!(id in tmp)) tmp[id] = { data:{}, timestamp:{} };
+
+            tmp[id].data[index] = tracklet;
+            tmp[id].timestamp[index] = frame.timestamp;
+        }
+    }
+
+    const result = [];
+    for (const [k, v] of Object.entries(tmp)){
+        result.push({label: k, data: v.data, timestamp: v.timestamp});
+    }
+
+    result.sort((a, b) => {
+        a = a.label;
+        b = b.label;
+        const numOrder = parseInt(a.split('-',3)[0]) - parseInt(b.split('-',3)[0]);
+        return numOrder == 0? (a.split('-',3)[1]).localeCompare(b.split('-',3)[1]) : numOrder;
+    });
+
+    return result;
+}
+
+
+export {preprocessTimestampData, extractIndividualActionData, extractIndividualBoundingBoxData, extractIndividualReasoningData, extractAllStepLabels, extractMemoryData}

@@ -21,6 +21,7 @@ import {
   getIMUMagData,  
   getPerceptionData,
   getReasoningData,
+  getMemoryData,
   get3DObjectPositionData} from '../../api/rest';
 
 // global components
@@ -63,7 +64,8 @@ const HistoricalDataView = () => {
     const eyeGazeJSONFile = await getEyeData( newSelection );
     const handDataJSONFile = await getHandData( newSelection );
     const perceptionJSONFile = await getPerceptionData( newSelection );  
-    const perception3DJSONFile = await get3DObjectPositionData( newSelection ) 
+    const perception3DJSONFile = await get3DObjectPositionData( newSelection );
+    const memory3DJSONFile = await getMemoryData( newSelection );
     // const reasoningJSONFile = await getReasoningData( newSelection ); 
 
     console.log( perceptionJSONFile );
@@ -74,7 +76,7 @@ const HistoricalDataView = () => {
     TimestampManager.index_stream_timestamp( 'perception3D', perception3DJSONFile.map( (timestamp: any) => parseInt(timestamp.timestamp.split('-')[0]) ) );
 
     // setting session info
-    setSessionInfo({recordingName:newSelection, mainCameraPath, pointCloudJSONFile, eyeGazeJSONFile, handDataJSONFile, perceptionJSONFile, perception3DJSONFile});
+    setSessionInfo({recordingName:newSelection, mainCameraPath, pointCloudJSONFile, eyeGazeJSONFile, handDataJSONFile, perceptionJSONFile, perception3DJSONFile, memory3DJSONFile});
 
     // // setting spinner flag
     setLoadingData(false);

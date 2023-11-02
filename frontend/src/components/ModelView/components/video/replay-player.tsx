@@ -31,7 +31,7 @@ const Container = styled("div")(({}) => ({
 const validCanvasWidthLower = 800;
 
 
-const VideoDataView = ({ type, title, data, recordingName, state, onProgress, onSeek, boundingBoxData, annotationData, currentTime }: any ) => {
+const VideoDataView = ({ type, title, data, recordingName, state, onProgress, onSeek, boundingBoxData, memoryFrameData, annotationData, currentTime }: any ) => {
     const [count, setCount] = useState<number>(0);
     // let count = 0;
     // const processedBoundingBoxData = preprocessBoundingBoxData(boundingBoxData);
@@ -157,6 +157,23 @@ const VideoDataView = ({ type, title, data, recordingName, state, onProgress, on
                     // ctx.stroke();
                     drawBoundingBox(object, videoWidth, videoHeight, { color: 'red', width: 1.5 });
                     drawObjectLabel(object, videoWidth, videoHeight, { color: 'red', textAlign: 'center' })
+                }
+            }
+
+            if (memoryFrameData){
+                for (const tracklet of memoryFrameData.values){
+                    if (!("xyxyn" in tracklet)) continue;
+                    const object = {
+                        object: tracklet.id + '-' + tracklet.label,
+                        loc2D: {x: tracklet.xyxyn[0], y:tracklet.xyxyn[1]},
+                        width: tracklet.xyxyn[2] - tracklet.xyxyn[0],
+                        height: tracklet.xyxyn[3] - tracklet.xyxyn[1],
+                        seen: true,
+                        instruction: ""
+                    }
+
+                    drawBoundingBox(object, videoWidth, videoHeight, { color: 'green', width: 1.5 });
+                    drawObjectLabel(object, videoWidth, videoHeight, { color: 'green', textAlign: 'center' })                    
                 }
             }
 
