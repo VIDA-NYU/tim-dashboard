@@ -72,27 +72,18 @@ function LiveVideo() {
             lg: `
               "c c c c c c"
               "h M M M M r"
-              "h M M M M a"
-              "i M M M M a"
-              "i M M M M a"
               "g M M M M a"
               "g M M M M a"
             `,
             md: `
               "c c c c c c"
               "h M M M M r"
-              "h M M M M a"
-              "i M M M M a"
-              "i M M M M a"
               "g M M M M a"
               "g M M M M a"
             `,
             xs: `
               "c c c c c c"
               "h M M M M r"
-              "h M M M M a"
-              "i M M M M a"
-              "i M M M M a"
               "g M M M M a"
               "g M M M M a"
             `
