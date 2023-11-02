@@ -4,6 +4,7 @@ import { useStreamData } from '../../../../api/rest';
 import { StreamInfo } from './LiveStream';
 import colormap from 'colormap';
 import { Alert, Box, Button, Paper, Typography, Chip } from '@mui/material';
+import { ObjLabel } from './ReasoningOutputsView';
 
 let probColors = colormap({
     colormap: 'winter',
@@ -14,6 +15,7 @@ let probColors = colormap({
 // console.log(probColors)
   
 interface ClipOutputsViewProps { data: { [key: string]: number; }, min?: number }
+interface DeticOutputsViewProps { [key: string]: number; }
   
 export const ClipOutputsView = ({ data, min=0 }: ClipOutputsViewProps) => {
     const entries = data && Object.entries(data)
@@ -33,8 +35,8 @@ export const ClipOutputsView = ({ data, min=0 }: ClipOutputsViewProps) => {
 }
 
 // Display object's state
-export const DeticOutputsView = ({ data_, min=0 }) => {
-  var detectedObjects = data_ && data_.map((data, index) => {
+export const DeticStateOutputsView = ({ data_, min=0 } ) => {
+  var objectsState = data_ && data_.map((data: DeticOutputsViewProps, index) => {
     const entries = data && data['state'] && Object.entries(data['state'] );
     const noAction = entries && entries.every(([t,s]) => s === 0)
     return  entries && (<Box display='flex' flexDirection='column'>
@@ -51,7 +53,41 @@ export const DeticOutputsView = ({ data_, min=0 }) => {
     ))}
     </Box>)
   });
-  return detectedObjects;
+  return (
+    <>
+    <span><b>Objects' State:</b></span>
+    <br/>
+    {objectsState}
+    </>
+
+  )
+  
+}
+
+// Display objects
+export const DeticOutputsView = ({data}: {data: ObjLabel []}) => {
+  var listLabels = {};
+  data && data.map((element:ObjLabel, index: number) => {
+    if(element.confidence > 0.5) {
+      if(Object.keys(listLabels).includes(element.label)){
+        listLabels[element.label] = listLabels[element.label] +1;
+      } else {
+        listLabels[element.label] = 1;
+      }
+    }
+  });
+  var detectedObjects = Object.keys(listLabels).length>0 && Object.keys(listLabels).map((element:string, index: number) => {
+    var label= element + ":" + listLabels[element];
+    return <Chip label={label} size="small" />
+    });
+  return (
+    <>
+    <span><b>Detected Objects:</b></span>
+    <br/>
+    {detectedObjects}
+    </>
+
+  )
   
 }
 
