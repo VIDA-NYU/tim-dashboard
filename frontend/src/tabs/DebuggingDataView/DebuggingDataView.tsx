@@ -2,9 +2,9 @@ import { Box } from '@mui/material';
 import { StreamView } from '../LiveDataView/components/StreamDataView/LiveStream';
 import { DeticHandsChart } from '../LiveDataView/components/StreamDataView/LiveCharts';
 import { ImageView } from '../LiveDataView/components/StreamDataView/ImageView';
-import { ClipOutputsView, DeticOutputsView, DeticStateOutputsView } from '../LiveDataView/components/StreamDataView/PerceptionOutputsView';
+import { ClipOutputsView, DeticOutputsView, DeticStateOutputsView, MemoryOutputsView } from '../LiveDataView/components/StreamDataView/PerceptionOutputsView';
 import { ReasoningOutputsView } from '../LiveDataView/components/StreamDataView/ReasoningOutputsView';
-import { DETIC_HANDS_STREAM, DETIC_IMAGE_STREAM, EGOVLP_ACTION_STEPS_STREAM, MAIN_STREAM, REASONING_CHECK_STREAM } from '../../config';
+import { DETIC_HANDS_STREAM, DETIC_IMAGE_STREAM, DETIC_MEMORY, EGOVLP_ACTION_STEPS_STREAM, MAIN_STREAM, REASONING_CHECK_STREAM } from '../../config';
 
 function DebuggingDataView() {
   return (
@@ -17,8 +17,8 @@ function DebuggingDataView() {
           </StreamView>
         </Box> */}
         <Box sx={{ gridArea: 'h'}}>
-            <StreamView utf streamId={DETIC_IMAGE_STREAM} showStreamId={true} showTime={false}>
-                {data => (<Box pt={"28px"}><DeticOutputsView data={JSON.parse(data)} /></Box>)}
+            <StreamView utf streamId={DETIC_MEMORY} showStreamId={true} showTime={false}>
+                {data => (<Box pt={"28px"}><MemoryOutputsView data={JSON.parse(data)} /></Box>)}
             </StreamView>
         </Box>
 
@@ -30,7 +30,7 @@ function DebuggingDataView() {
           </StreamView>
         </Box>
         <Box sx={{ gridArea: 'g' }}>
-          <StreamView utf streamId={DETIC_IMAGE_STREAM} showTime={false}>
+          <StreamView utf streamId={DETIC_MEMORY} showTime={false}>
             {data => (<Box mt={-25} pt={"23px"}><DeticStateOutputsView data_={JSON.parse(data)} /></Box>)}
           </StreamView>
         </Box>

@@ -64,7 +64,7 @@ export const DeticStateOutputsView = ({ data_, min=0 } ) => {
   
 }
 
-// Display objects
+// Display objects from detics
 export const DeticOutputsView = ({data}: {data: ObjLabel []}) => {
   var listLabels = {};
   data && data.map((element:ObjLabel, index: number) => {
@@ -75,6 +75,31 @@ export const DeticOutputsView = ({data}: {data: ObjLabel []}) => {
         listLabels[element.label] = 1;
       }
     }
+  });
+  var detectedObjects = Object.keys(listLabels).length>0 && Object.keys(listLabels).map((element:string, index: number) => {
+    var label= element + ":" + listLabels[element];
+    return <Chip label={label} size="small" />
+    });
+  return (
+    <>
+    <span><b>Detected Objects:</b></span>
+    <br/>
+    {detectedObjects}
+    </>
+
+  )
+  
+}
+
+// Display objects from memory
+export const MemoryOutputsView = ({data}: {data: ObjLabel []}) => {
+  var listLabels = {};
+  data && data.map((element:ObjLabel, index: number) => {
+      if(Object.keys(listLabels).includes(element.label)){
+        listLabels[element.label] = listLabels[element.label] +1;
+      } else {
+        listLabels[element.label] = 1;
+      }
   });
   var detectedObjects = Object.keys(listLabels).length>0 && Object.keys(listLabels).map((element:string, index: number) => {
     var label= element + ":" + listLabels[element];
