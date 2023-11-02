@@ -30,13 +30,24 @@ interface RenderedObjLabel {
   label: string,
   total: number
 }
+interface InProgressTask {
+  id: number,
+  name: string
+}
+  
 
 let entities: Entities [] = [];
+let inProgressTask_: InProgressTask[]=[];
 let flag = true;
 export const ReasoningOutputsView = ({ data }) => {
   var activeTasks = data && data['active_tasks'] && data['active_tasks'].map((active_tasks, index) => {
   const {task_id, task_name, step_id, step_status, step_description, error_status, error_description} = active_tasks || {}; // reading the prediction that has the highest probability.
-  const current_step = step_id + 1; // Reasoning handles indexes, so we need to add 1 to communicate the user they are in the first (1) step.
+  const current_step = step_id; // Reasoning handles indexes, so we need to add 1 to communicate the user they are in the first (1) step.
+  
+  
+  if (!inProgressTask_.find(e => e.id === task_id)) {
+    inProgressTask_.push({id: task_id, name: task_name});
+  } 
   return active_tasks && (<Box display='flex' flexDirection='column' pt={5} mr={2} ml={2}>
       <span><b>Task ID:</b> {task_id}</span>
       <span><b>Task Name:</b> {task_name}</span>  
@@ -48,11 +59,14 @@ export const ReasoningOutputsView = ({ data }) => {
   });
 
   const inprogress_tasks = data && data["inprogress_task_ids"];
-
+  const listinprogress  = inProgressTask_ && inProgressTask_.map((element:InProgressTask, index: number) => {
+    return inprogress_tasks && inprogress_tasks.includes(element.id) && (<Chip label={element.name} size="small" />)
+    });
   return <Box display='flex' flexDirection='column' pt={5} mr={2} ml={2}>
     <span><b>Active Tasks:</b> {data && data['active_tasks'] && data['active_tasks'].length} tasks</span>
     {activeTasks}
     <span><b>In progress Tasks:</b> {inprogress_tasks && inprogress_tasks.length} tasks</span>
+    {listinprogress}
   </Box>
 }
 
