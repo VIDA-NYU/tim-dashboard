@@ -39,9 +39,9 @@ export const DeticStateOutputsView = ({ data_, min=0 } ) => {
   var objectsState = data_ && data_.map((data: DeticOutputsViewProps, index) => {
     const entries = data && data['state'] && Object.entries(data['state'] );
     const noAction = entries && entries.every(([t,s]) => s === 0)
-    return  entries && (<Box display='flex' flexDirection='column'>
+    return  entries && (<Box key={'DeticStateOutputsView_' + index} display='flex' flexDirection='column'>
       <span> {data['label']}</span>
-    {noAction && <Chip label='No Action' color='error' />}
+    {noAction && <Chip key={'DeticStateOutputsView_' +"noaction"+ index} label='No Action' color='error' />}
     {entries && entries.sort(([ta, sa], [tb,sb]) => ( sb-sa ))
           .slice(0, noAction ? 2 : 3)
           .map(([text, similarity]) => (
@@ -78,7 +78,7 @@ export const DeticOutputsView = ({data}: {data: ObjLabel []}) => {
   });
   var detectedObjects = Object.keys(listLabels).length>0 && Object.keys(listLabels).map((element:string, index: number) => {
     var label= element + ":" + listLabels[element];
-    return <Chip label={label} size="small" />
+    return <Chip key={'DeticOutputsView_' + index} label={label} size="small" />
     });
   return (
     <>
@@ -103,7 +103,7 @@ export const MemoryOutputsView = ({data}: {data: ObjLabel []}) => {
   });
   var detectedObjects = Object.keys(listLabels).length>0 && Object.keys(listLabels).map((element:string, index: number) => {
     var label= element + ":" + listLabels[element];
-    return <Chip label={label} size="small" />
+    return <Chip key={'MemoryOutputsView_' + index} label={label} size="small" />
     });
   return (
     <>

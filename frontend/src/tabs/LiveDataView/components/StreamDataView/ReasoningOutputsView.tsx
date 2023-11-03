@@ -1,4 +1,4 @@
-import {Box, Chip, Button } from '@mui/material';
+import {Box, Chip, Button, Alert, AlertTitle } from '@mui/material';
 import { useRecordingControls } from '../../../../api/rest';
 import DoneIcon from '@mui/icons-material/Done';
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
@@ -10,6 +10,7 @@ import { DETIC_IMAGE_STREAM, REASONING_ENTITIES_STREAM } from '../../../../confi
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import WozStatusComp from '../../../IntervenorView/woz-status';
+import React, { useState, useEffect, useContext } from 'react';
 
 interface Entity {
   ingredients: string [],
@@ -39,6 +40,33 @@ interface InProgressTask {
 let entities: Entities [] = [];
 let inProgressTask_: InProgressTask[]=[];
 let flag = true;
+let systemStatus = "Active";
+
+export const PauseView = ({ data }) => {
+  if(data=="start"){
+    systemStatus = "PAUSE";
+  }
+  if(data=="resume"){
+    systemStatus = "Active";
+  }
+  return <Alert severity="info"><strong>System Status: </strong>{systemStatus}</Alert>;
+}
+
+export const ResetView = ({ data }) => {
+  let message = "";
+  let showResetMessage = data=="reset";
+  if(showResetMessage){
+    message = "Resetting ...";
+  }
+  useEffect(() => {
+    // when the component is mounted, the alert is displayed for 3 seconds
+    setTimeout(() => {
+      message = "";
+    }, 3000);
+  }, [data]);
+  return showResetMessage ? <Alert severity="warning"><strong>{message} </strong></Alert> :<></>;
+}
+
 export const ReasoningOutputsView = ({ data }) => {
   var activeTasks = data && data['active_tasks'] && data['active_tasks'].map((active_tasks, index) => {
   const {task_id, task_name, step_id, step_status, step_description, error_status, error_description} = active_tasks || {}; // reading the prediction that has the highest probability.
@@ -48,7 +76,7 @@ export const ReasoningOutputsView = ({ data }) => {
   if (!inProgressTask_.find(e => e.id === task_id)) {
     inProgressTask_.push({id: task_id, name: task_name});
   } 
-  return active_tasks && (<Box display='flex' flexDirection='column' pt={5} mr={2} ml={2}>
+  return active_tasks && (<Box key={'ReasoningOutputsView_activetask_' + index}  display='flex' flexDirection='column' pt={5} mr={2} ml={2}>
       <span><b>Task ID:</b> {task_id}</span>
       <span><b>Task Name:</b> {task_name}</span>  
       <span><b>Current Step:</b> {current_step}</span>
@@ -60,7 +88,7 @@ export const ReasoningOutputsView = ({ data }) => {
 
   const inprogress_tasks = data && data["inprogress_task_ids"];
   const listinprogress  = inProgressTask_ && inProgressTask_.map((element:InProgressTask, index: number) => {
-    return inprogress_tasks && inprogress_tasks.includes(element.id) && (<Chip label={element.name} size="small" />)
+    return inprogress_tasks && inprogress_tasks.includes(element.id) && (<Chip key={'ReasoningOutputsView_inprogresstask_' + index}  label={element.name} size="small" />)
     });
   return <Box display='flex' flexDirection='column' pt={5} mr={2} ml={2}>
     <span><b>Active Tasks:</b> {data && data['active_tasks'] && data['active_tasks'].length} tasks</span>

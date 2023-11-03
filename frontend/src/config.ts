@@ -13,6 +13,8 @@ export const EGOVLP_ACTION_STEPS_STREAM = 'egovlp:action:steps';
 export const CLIP_ACTION_STEPS_STREAM = 'clip:action:steps';
 export const DETIC_HANDS_STREAM = 'detic:hands';
 export const MAIN_STREAM = 'main';
+export const PAUSE_REASONING = 'arui:pause';
+export const RESET_REASONING = 'arui:reset';
 
 export const RECORDINGS_UPLOAD_PATh = "/recordings/upload/"
 

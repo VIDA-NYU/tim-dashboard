@@ -43,13 +43,17 @@ export const StreamInfo = ({ sid, time, displayStatus=true, data, readyState, ch
             {time && <Chip label={new Date(time).toLocaleString()} size="small" />}
         </Box>
         {
-        displayStatus && <Badge color={openNoData ? 'secondary' : STATUS_COLOR[readyState]} badgeContent={
+        displayStatus ? <Badge color={openNoData ? 'secondary' : STATUS_COLOR[readyState]} badgeContent={
         <Tooltip title={openNoData ? 'Open - no data' : STATUS_MSG[readyState]} placement='top'><span style={{opacity: 0}}>0</span></Tooltip>
         } sx={{display: 'block', '& .MuiBadge-badge': {height: '10px', minWidth: '10px'}}}>
             <Box>
             {children}
             </Box>
         </Badge>
+        :
+        <Box>
+            {children}
+        </Box>
         }
 </Box>
 }

@@ -71,21 +71,20 @@ function LiveVideo() {
           gridTemplateAreas: {
             lg: `
               "c c c c c c"
+              "h M M M M i"
               "h M M M M r"
-              "g M M M M a"
-              "g M M M M a"
+              "g M M M M r"
             `,
             md: `
               "c c c c c c"
+              "h M M M M i"
               "h M M M M r"
-              "g M M M M a"
-              "g M M M M a"
+              "g M M M M r"
             `,
             xs: `
               "c c c c c c"
-              "h M M M M r"
-              "g M M M M a"
-              "g M M M M a"
+              "h M M M M i"
+              "g M M M M r"
             `
           },
         }}>
