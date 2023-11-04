@@ -136,7 +136,7 @@ const ImageCanvas = ({ image=null, boxes=null, tracklets=null, confidence: defau
         img.src = src;
         return () => { URL.revokeObjectURL(src) }
     }, [image, boxes, confidence])
-    return <Box>
+    return <Box style={{ fontSize: '13px'}}>
         <canvas ref={canvasRef} style={{width: '100%', borderRadius: '8px', border: '2px solid #ececec'}} {...rest} />
         { debugMode && <Grid container spacing={2} alignItems="center">
             <Grid item style={{marginTop:'-25px'}}>

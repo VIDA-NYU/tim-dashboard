@@ -6,6 +6,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Chip from '@mui/material/Chip';
 import { ReadyState } from 'react-use-websocket';
 import { useStreamData } from '../../../../api/rest';
+import { purple, grey } from '@mui/material/colors';
 
 const STATUS_MSG = {
     [ReadyState.CONNECTING]: 'Connecting',
@@ -39,7 +40,7 @@ export const StreamInfo = ({ sid, time, displayStatus=true, data, readyState, ch
     const openNoData = readyState == ReadyState.OPEN && !data;
     return <Box sx={{ position: 'relative', maxWidth: '100%' }}>
         <Box display='flex' sx={{ gap: '0.5em', zIndex: 1, position: 'absolute' }}>
-            {sid && <Chip label={sid} size="small" color='primary' />}
+            {sid && <Chip label={sid} size="small" color={'primary'}/>}
             {time && <Chip label={new Date(time).toLocaleString()} size="small" />}
         </Box>
         {

@@ -66,29 +66,27 @@ function LiveVideo() {
         sx={{
           display: 'grid',
           gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
-          gap: 1,
+          gap:1,
           gridTemplateRows: 'auto',
           gridTemplateAreas: {
             lg: `
-              "c c c c c c"
-              "h M M M M i"
+              "c c c c c i"
               "h M M M M r"
               "g M M M M r"
             `,
             md: `
-              "c c c c c c"
-              "h M M M M i"
+              "c c c c c i"
               "h M M M M r"
               "g M M M M r"
             `,
             xs: `
-              "c c c c c c"
-              "h M M M M i"
+              "c c c c c i"
+              "h M M M M r"
               "g M M M M r"
             `
           },
         }}>
-        <Box sx={{ gridArea: 'c', marginTop: 4 }}><RecordingControls /></Box>
+        <Box sx={{ gridArea: 'c', marginTop: 2 }}><RecordingControls /></Box>
         <DebuggingDataView />
       </Box>
     </Box>

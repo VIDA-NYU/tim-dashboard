@@ -76,7 +76,7 @@ export const ReasoningOutputsView = ({ data }) => {
   if (!inProgressTask_.find(e => e.id === task_id)) {
     inProgressTask_.push({id: task_id, name: task_name});
   } 
-  return active_tasks && (<Box key={'ReasoningOutputsView_activetask_' + index}  display='flex' flexDirection='column' pt={5} mr={2} ml={2}>
+  return active_tasks && (<Box key={'ReasoningOutputsView_activetask_' + index}  display='flex' flexDirection='column' pt={1} mr={2} ml={2}>
       <span><b>Task ID:</b> {task_id}</span>
       <span><b>Task Name:</b> {task_name}</span>  
       <span><b>Current Step:</b> {current_step}</span>
