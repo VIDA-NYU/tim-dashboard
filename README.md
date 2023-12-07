@@ -10,7 +10,6 @@ Deployment
 The system is currently running at https://dashboard.ptg.poly.edu/. 
 
 
-
 Local deployment / development setup
 ====================================
 
