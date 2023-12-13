@@ -1,5 +1,6 @@
 // export const API_URL = 'https://api.ptg.poly.edu';
-export const API_URL = 'http://dashboardptg.vida-nyu.org:7890';
+// export const API_URL = 'http://dashboardptg.vida-nyu.org:7890';
+export const API_URL = 'argus-api.hsrn.nyu.edu';
 export const RECORDINGS_STATIC_PATH = '/recordings/static/';
 export const TEST_USER = 'test';
 export const TEST_PASS = 'test';
