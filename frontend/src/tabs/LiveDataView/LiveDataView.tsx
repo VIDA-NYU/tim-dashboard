@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Alert, Box, Button, Paper, Typography, Chip } from '@mui/material';
 import { useToken } from '../../api/TokenContext';
 import { Login } from '../../tabs/RecipesCollectionView/RecipesView';
-import { REASONING_CHECK_STREAM, CLIP_ACTION_STEPS_STREAM, DETIC_IMAGE_STREAM, MAIN_STREAM, TEST_PASS, TEST_USER } from '../../config';
+import { REASONING_CHECK_STREAM, CLIP_ACTION_STEPS_STREAM, DETIC_IMAGE_STREAM, MAIN_STREAM, TEST_PASS, TEST_USER, API_URL, WS_API_URL } from '../../config';
 
 
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -15,7 +15,7 @@ import { ImageView } from './components/StreamDataView/ImageView';
 import { ClipOutputsLiveView } from './components/StreamDataView/PerceptionOutputsView';
 import { ReasoningOutputsView } from './components/StreamDataView/ReasoningOutputsView';
 import DebuggingDataView from '../DebuggingDataView/DebuggingDataView';
-
+import { log } from 'console';
 
 const RecordingControls = () => {
   const { recordingId, recordingData, recordingDataError, startError, stopError, finishedRecording, startRecording, stopRecording } = useRecordingControls();
@@ -60,6 +60,11 @@ const RecordingControls = () => {
 const parseTime = (tstr) => new Date(Date.parse(tstr + ' GMT')).toLocaleTimeString()
 
 function LiveVideo() {
+  console.log("API_URL");
+  console.log(API_URL);
+  console.log("WS_API_URL");
+  console.log(WS_API_URL);
+
   return (
     <Box display='flex' justifyContent='center' alignItems='top' height='100%' width='100%'>
       <Box
