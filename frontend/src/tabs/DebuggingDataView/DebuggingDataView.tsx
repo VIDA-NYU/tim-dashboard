@@ -28,6 +28,9 @@ function DebuggingDataView() {
 	  <StreamView utf streamId={"omnimix:step"}>
             {data => (<Box pt={4}><ClipOutputsView data={JSON.parse(data)} /></Box>)}
           </StreamView>
+	  <StreamView utf streamId={"model2omnimix:step"}>
+            {data => (<Box pt={4}><ClipOutputsView data={JSON.parse(data)} /></Box>)}
+          </StreamView>
           <StreamView utf streamId={"omnimix:verb:rgb"}>
             {data => (<Box pt={4}><ClipOutputsView data={JSON.parse(data)} /></Box>)}
           </StreamView>
