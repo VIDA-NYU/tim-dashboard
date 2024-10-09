@@ -24,10 +24,22 @@ function DebuggingDataView() {
             {data => (<Box><ReasoningOutputsView data={JSON.parse(data)} /></Box>)}
           </StreamView>
         </Box>
-        <Box sx={{ gridArea: 'a' }}>
-          <StreamView utf streamId={EGOVLP_ACTION_STEPS_STREAM} showTime={false}>
-            {data => (<Box mt={8} pt={"34px"}><ClipOutputsView data={JSON.parse(data)} /></Box>)}
+        <Box sx={{ gridArea: 'a', mt: 4, pt: "34px" }}>
+	  <StreamView utf streamId={"omnimix:step"}>
+            {data => (<Box pt={4}><ClipOutputsView data={JSON.parse(data)} /></Box>)}
           </StreamView>
+	  <StreamView utf streamId={"model2omnimix:step"}>
+            {data => (<Box pt={4}><ClipOutputsView data={JSON.parse(data)} /></Box>)}
+          </StreamView>
+{/*           <StreamView utf streamId={"omnimix:verb:rgb"}>
+            {data => (<Box pt={4}><ClipOutputsView data={JSON.parse(data)} /></Box>)}
+          </StreamView>
+          <StreamView utf streamId={"omnimix:verb:audio"}>
+            {data => (<Box pt={4}><ClipOutputsView data={JSON.parse(data)} /></Box>)}
+          </StreamView> */}
+{/* 	  <StreamView utf streamId={EGOVLP_ACTION_STEPS_STREAM} showTime={false}>
+            {data => (<Box pt={4}><ClipOutputsView data={JSON.parse(data)} /></Box>)}
+          </StreamView> */}
         </Box>
         {/* <Box sx={{ gridArea: 'e' }}><StreamView utf parse='prettyJSON' streamId={'reasoning'} /></Box> */}
       </>

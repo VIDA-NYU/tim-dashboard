@@ -5,6 +5,7 @@ services:
     restart: always
     ports:
       - "3000:80"
+      - "8033:80"
     networks:
       - web
       - default
@@ -21,7 +22,7 @@ services:
     container_name: dashdocs
     restart: always
     ports:
-      - "8034:80"
+      - "8029:80"
     networks:
       - web
       - default
