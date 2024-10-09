@@ -31,15 +31,15 @@ function DebuggingDataView() {
 	  <StreamView utf streamId={"model2omnimix:step"}>
             {data => (<Box pt={4}><ClipOutputsView data={JSON.parse(data)} /></Box>)}
           </StreamView>
-          <StreamView utf streamId={"omnimix:verb:rgb"}>
+{/*           <StreamView utf streamId={"omnimix:verb:rgb"}>
             {data => (<Box pt={4}><ClipOutputsView data={JSON.parse(data)} /></Box>)}
           </StreamView>
           <StreamView utf streamId={"omnimix:verb:audio"}>
             {data => (<Box pt={4}><ClipOutputsView data={JSON.parse(data)} /></Box>)}
-          </StreamView>
-	  <StreamView utf streamId={EGOVLP_ACTION_STEPS_STREAM} showTime={false}>
+          </StreamView> */}
+{/* 	  <StreamView utf streamId={EGOVLP_ACTION_STEPS_STREAM} showTime={false}>
             {data => (<Box pt={4}><ClipOutputsView data={JSON.parse(data)} /></Box>)}
-          </StreamView>
+          </StreamView> */}
         </Box>
         {/* <Box sx={{ gridArea: 'e' }}><StreamView utf parse='prettyJSON' streamId={'reasoning'} /></Box> */}
       </>
